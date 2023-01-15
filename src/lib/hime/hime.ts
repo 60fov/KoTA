@@ -2,7 +2,8 @@ import { keyLookUp, getKeymap } from './keylayout'
 import {
     isInitialJamo, isMedialJamo, isFinalJamo,
     initialJamoOffset, medialJamoOffset, finalJamoOffset,
-    composeJamo, composeSyllable, composeBlock
+    composeJamo, composeSyllable, composeBlock, compose,
+    decomposeCompatibilityJamo, decomposeBlock, decompose
 } from './jamo'
 
 export default {
@@ -11,7 +12,8 @@ export default {
     getKeymap,
     isInitialJamo, isMedialJamo, isFinalJamo,
     initialJamoOffset, medialJamoOffset, finalJamoOffset,
-    composeJamo, composeSyllable, composeBlock
+    composeJamo, composeSyllable, composeBlock, compose,
+    decomposeCompatibilityJamo, decomposeBlock, decompose
 }
 
 /* TODO consider group access 

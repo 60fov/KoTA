@@ -1,4 +1,4 @@
-import { composeBlock, composeJamo, composeSyllable, initialJamoOffset, isFinalJamo, isInitialJamo, isMedialJamo, jamo } from '../jamo'
+import { compose, composeBlock, composeJamo, composeSyllable, decompose, decomposeBlock, initialJamoOffset, isFinalJamo, isInitialJamo, isMedialJamo, jamo } from '../jamo'
 import { describe, expect, test } from 'vitest'
 
 describe('hangul', () => {
@@ -48,7 +48,6 @@ describe('hangul', () => {
     })
 
 
-    test.todo('fix composeBlock tests')
     test.each([
         { jamo: [''], result: [''] },
         { jamo: [' '], result: [' '] },
@@ -67,5 +66,48 @@ describe('hangul', () => {
     ])('$jamo -> $result', ({ jamo, result }) => {
         expect(composeBlock(jamo)).toStrictEqual(result)
     })
+
+    test.each([
+        { jamo: [''], result: [''] },
+        { jamo: [' '], result: [' '] },
+        { jamo: [' ', 'ㅎ'], result: [' ', 'ㅎ'] },
+        { jamo: ['ㄱ'], result: ['ㄱ'] },
+        { jamo: ['ㄹ', 'ㄹ'], result: ['ㄹ', 'ㄹ'] },
+        { jamo: ['ㅜ', 'ㅓ'], result: ['ㅝ'] },
+        { jamo: ['ㄴ', 'ㅗ', 'ㄹ'], result: ['놀'] },
+        { jamo: ['ㄴ', 'ㅗ', 'ㄹ', 'ㅏ'], result: ['노', '라'] },
+        { jamo: ['ㄱ', 'ㅗ', 'ㅐ'], result: ['괘'] },
+        { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ'], result: ['궉'] },
+        { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㅏ'], result: ['궈', 'ㅏ'] },
+        { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅏ'], result: ['궈', '가'] },
+        { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ'], result: ['궋'] },
+        { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ', 'ㅣ'], result: ['궉', '시'] },
+        { jamo: ['ㄹ', 'ㅓ', 'ㄱ', 'ㅁ', 'ㅏ', 'ㅂ', 'ㅍ', ' ', 'ㅂ', 'ㅏ'], result: ['럭', '맙', 'ㅍ', ' ', '바'] },
+    ])('$jamo -> $result', ({ jamo, result }) => {
+        expect(compose(jamo)).toStrictEqual(result)
+    })
+
+    test.each([
+        { block: '', jamo: [''] },
+        { block: ' ', jamo: [' '] },
+        { block: 'ㄱ', jamo: ['ㄱ'] },
+        { block: '노', jamo: ['ㄴ', 'ㅗ'] },
+        { block: 'ㅝ', jamo: ['ㅜ', 'ㅓ'] },
+        { block: '놀', jamo: ['ㄴ', 'ㅗ', 'ㄹ'] },
+        { block: '괘', jamo: ['ㄱ', 'ㅗ', 'ㅐ'] },
+        { block: '궉', jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ'] },
+        { block: '궋', jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ'] },
+
+    ])('$block -> $jamo', ({ block, jamo }) => {
+        expect(decomposeBlock(block)).toStrictEqual(jamo)
+    })
+
+    test.each([
+        { blocks: '노 놀괘궉 궋', jamo: ['ㄴ', 'ㅗ', ' ', 'ㄴ', 'ㅗ', 'ㄹ', 'ㄱ', 'ㅗ', 'ㅐ', 'ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', ' ', 'ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ'] },
+    ])('$blocks -> $jamo', ({ blocks, jamo }) => {
+        expect(decompose(blocks)).toStrictEqual(jamo)
+    })
+
+
 
 })

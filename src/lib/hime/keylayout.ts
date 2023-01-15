@@ -7,7 +7,8 @@
 export const layout = {
     qwerty: {
         sebeolsik: {
-            // duping feels less gross than performing two lookups for a miss (see keyKookUp fn)
+            // duping feels less gross than performing two lookups for a miss (see keyLookUp fn)
+            // or a reverse map whic seems less gross than the former but still too complex for no gain
             "Q": "ㅃ", "W": "ㅉ", "E": "ㄸ", "R": "ㄲ", "T": "ㅆ", "Y": "ㅛ", "U": "ㅕ", "I": "ㅑ", "O": "ㅒ", "P": "ㅖ",
             "A": "ㅁ", "S": "ㄴ", "D": "ㅇ", "F": "ㄹ", "G": "ㅎ", "H": "ㅗ", "J": "ㅓ", "K": "ㅏ", "L": "ㅣ",
             "Z": "ㅋ", "X": "ㅌ", "C": "ㅊ", "V": "ㅍ", "B": "ㅠ", "N": "ㅜ", "M": "ㅡ",

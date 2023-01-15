@@ -1,8 +1,15 @@
 import { buffer } from "./util"
 
 // TODO: double type option for doubles (ㅃㅉㄸㄲㅆ)
+// TODO: switch to bi directional maps
 
 export const jamo = {
+    single: [
+        'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
+        'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
+        'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ',
+        'ㅗ', 'ㅛ', 'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ'
+    ],
     initial: [
         'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
         'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
@@ -25,6 +32,26 @@ export const jamo = {
         'ㅂ', 'ㅄ',
         'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
     ],
+    decompositionMaps: {
+        'ㅘ': ['ㅗ', 'ㅏ'],
+        'ㅙ': ['ㅗ', 'ㅐ'],
+        'ㅚ': ['ㅗ', 'ㅣ'],
+        'ㅝ': ['ㅜ', 'ㅓ'],
+        'ㅞ': ['ㅜ', 'ㅔ'],
+        'ㅟ': ['ㅜ', 'ㅣ'],
+        'ㅢ': ['ㅡ', 'ㅣ'],
+        'ㄳ': ['ㄱ', 'ㅅ'],
+        'ㄵ': ['ㄴ', 'ㅈ'],
+        'ㄶ': ['ㄴ', 'ㅎ'],
+        'ㄺ': ['ㄹ', 'ㄱ'],
+        'ㄻ': ['ㄹ', 'ㅁ'],
+        'ㄼ': ['ㄹ', 'ㅂ'],
+        'ㄽ': ['ㄹ', 'ㅅ'],
+        'ㄾ': ['ㄹ', 'ㅌ'],
+        'ㄿ': ['ㄹ', 'ㅍ'],
+        'ㅀ': ['ㄹ', 'ㅎ'],
+        'ㅄ': ['ㅂ', 'ㅅ'],
+    },
     complexMaps: {
         'ㅗ': {
             'ㅏ': 'ㅘ',
@@ -100,8 +127,8 @@ function composeSyllable(initial: string, medial: string, final?: string) {
     const m = medialJamoOffset(medial)
     const f = final ? finalJamoOffset(final) + 1 : 0
 
-    const c = (i * 588 + m * 28 + f) + 44032
-    return 0xAC00 <= c && c <= 0xD7A3 ? String.fromCodePoint(c) : undefined
+    const c = (i * 588 + m * 28 + f) + 0xac00
+    return 0xac00 <= c && c <= 0xD7A3 ? String.fromCodePoint(c) : undefined
 }
 
 const composeBlock = (input: string | string[]) => {
@@ -199,8 +226,64 @@ const composeBlock = (input: string | string[]) => {
     return [...buf.data()]
 }
 
+// TODO: dunno how I feel about this, promise version?
+const compose = (blocks: string[], maxIterations = 1000) => {
+    let result: string[] = []
+    let b = blocks
+    let i = 0
+    while (b.length) {
+        i++
+        if (i > maxIterations) break
+        const [block, ...rest] = composeBlock(b)
+        result.push(block)
+        b = rest
+    }
+    return result
+}
+
+const decomposeCompatibilityJamo = (cjamo: string) => {
+    return (jamo.decompositionMaps as any)[cjamo] as string[] | undefined
+}
+
+const decomposeBlock = (block: string) => {
+    const code = block.charCodeAt(0)
+    if (0xac00 <= code && code <= 0xD7A3) {
+        const c = code - 0xac00
+        const fc = c % 28
+        const i = Math.floor(c / 588)
+        const m = (c - fc) % 588 / 28
+        const f = fc ? fc - 1 : undefined
+
+        const initial = jamo.initial[i]
+
+        const decomposedMedial = decomposeCompatibilityJamo(jamo.medial[m])
+        const medial = decomposedMedial ?? [jamo.medial[m]]
+
+        if (f !== undefined) {
+            const decomposedFinal = decomposeCompatibilityJamo(jamo.final[f])
+            const final = decomposedFinal ?? [jamo.final[f]]
+
+            return [initial, ...medial, ...final]
+        }
+        return [initial, ...medial]
+    }
+
+    const decomposedCompatibilityJamo = decomposeCompatibilityJamo(block)
+    return decomposedCompatibilityJamo ?? [block]
+}
+
+const decompose = (blocks: string) => {
+    let result: string[] = []
+    for (let i = 0; i < blocks.length; i++) {
+        const block = blocks[i]
+        result.push(...decomposeBlock(block))
+    }
+    return result
+}
+
 export {
     isInitialJamo, isMedialJamo, isFinalJamo,
     initialJamoOffset, medialJamoOffset, finalJamoOffset,
-    composeJamo, composeSyllable, composeBlock
+    composeJamo, composeSyllable, composeBlock, compose,
+    decomposeCompatibilityJamo, decomposeBlock, decompose
 }
