@@ -9,6 +9,7 @@ import hangul, { Word } from "../util/hangul"
 
 interface Props {
     wordCount: number
+    onWordChange?: (word: Word) => void
     className?: string
     // direction?: 'row' | 'column'
 }
@@ -21,7 +22,7 @@ export interface WordSliderHandle {
 }
 
 const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
-    const { wordCount, ...restProps } = props
+    const { wordCount, onWordChange, ...restProps } = props
     const sliderRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const prevOffsetRef = useRef(0)
@@ -59,6 +60,10 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
 
         prevOffsetRef.current = offsetNew
     }, [wordList, wordIndex])
+
+    useEffect(() => {
+        if (onWordChange) onWordChange(word)
+    }, [word])
 
     const removeWord = (index: number) => {
         setWordList(wordList.filter((word, i) => i !== index))
