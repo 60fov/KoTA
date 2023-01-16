@@ -7,10 +7,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: 'rgb(var(--color-primary) / <alpha-value>)',
-        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
-        "background-primary": 'rgb(var(--color-bg-primary) / <alpha-value>)',
-        "background-secondary": 'rgb(var(--color-bg-secondary) / <alpha-value>)',
+        // primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        // secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        // "background-primary": 'rgb(var(--color-bg-primary) / <alpha-value>)',
+        // "background-secondary": 'rgb(var(--color-bg-secondary) / <alpha-value>)',
         error: 'rgb(var(--color-error) / <alpha-value>)',
         access: 'rgb(var(--color-access) / <alpha-value>)',
         keyboard: 'rgb(var(--color-keyboard) / <alpha-value>)',

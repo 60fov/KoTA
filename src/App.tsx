@@ -1,5 +1,5 @@
 import Keyboard from "./components/Keyboard"
-import ModeDisplay from "./components/ModeDisplay"
+import Display from "./components/Display"
 import SettingsBar from "./components/SettingsBar"
 import useTheme from "./hooks/useTheme"
 import { useKeyboardSettingsStore } from "./util/stores"
@@ -11,42 +11,34 @@ import AlphaDisclaimer from "./components/AlphaDisclaimer"
 // TODO: animations (wip)
 // TODO: responsive
 // TODO: correct feedback
-// TODO: localstorage settings
-// TODO: change game mode names
-// TODO: switch to radix ui
-// TODO: better toggle button indication
+// TODO: better toggle button indication (toast ?)
 // TODO: git + readme + assets
 
 // TODO: bugs
 // shift flicker (verify)
-// word block animation
 
 // soon after
-// TODO: directions
+// TODO: timer + metrics
 // TODO: imporoved focus indications
-// TODO: rework input (lol)
+// TODO: sfx
+// TODO: directions
 // TODO: settings layout (cmd k maybe custom)
 // TODO: theme menu
 // TODO: about
 // TODO: donate
-// TODO: korean input support
-// TODO: per mode settings
 
 // misc
-// TODO: tts format settings (e.g. speak word then definition)
-// TODO: keyboard shortcuts (shown on keyboard)
-// TODO: interact with keyboard?
-// TODO: continuous current goal highlight
-// TODO: sound effect
-// TODO: animate caret better
 // TODO: romaninzation fn (yale and rr at least + ipa + skats + maybe mr)
+// TODO: keyboard shortcuts (+shown on keyboard)
+// TODO: switch to radix ui (?)
+// TODO: interact with keyboard (?)
+// TODO: tts format settings (e.g. speak word then definition)
 
 // big
-// TODO: hangul tut
 // TODO: mobile support
-// TODO: timer + metrics
 // TODO: account
 // TODO: quality tts
+// TODO: hangul tut
 
 
 function App() {
@@ -59,14 +51,11 @@ function App() {
       <MobileWarning />
       <AlphaDisclaimer />
 
-      {/* <div className="absolute left-10 top-0 whitespace-nowrap text-[400px] text-back/5">연습하다</div> */}
       <LayoutGroup>
         <motion.div layout className="h-screen mx-auto w-[700px] flex flex-col justify-center gap-6 px-4 md:p-0 z-10">
 
           <motion.div layout className="flex items-end justify-center grow">
-            <AnimatePresence>
-              <ModeDisplay />
-            </AnimatePresence>
+              <Display />
           </motion.div>
 
           <motion.div layout className="flex flex-col grow">

@@ -1,12 +1,8 @@
-import { RefObject, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import hime from "../hime"
-import { jamo, composeBlock, decompose, decomposeBlock, compose } from "../jamo"
+import { jamo, decomposeBlock, compose } from "../jamo"
 
-// TODO: switch to input events (beforeinput rework)
-// note, can't use react event doesn't have all the needed data
-// i.e. addEventListener on ref
-
-// export type HimeKeyEventHandler = (e: KeyboardEvent) => void
+// TODO: clean up
 
 const useHime = (
     options?: AddEventListenerOptions) => {

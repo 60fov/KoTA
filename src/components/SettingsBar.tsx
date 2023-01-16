@@ -1,5 +1,4 @@
 import { isMode, useKeyboardSettingsStore, useModeStore, useThemeStore, useTTSSettingsStore } from "../util/stores"
-import MultiToggle from "./ui/MultiToggle"
 import ToggleButton from "./ui/ToggleButton"
 import { BsKeyboard, BsLaptop, BsMoonStars, BsSoundwave, BsSun } from 'react-icons/bs'
 import MultiToggleButton from "./ui/MutliToggleButton"
@@ -18,7 +17,7 @@ const SettingsBar = () => {
     return (
         <div className="flex gap-1">
             <div className="mr-auto flex">
-                <MultiToggleButton.Base
+                {/* <MultiToggleButton.Base
                     name="mode"
                     prompt="select mode"
                     value={mode}
@@ -26,7 +25,7 @@ const SettingsBar = () => {
                     <MultiToggleButton.Item value={"jamo"} />
                     <MultiToggleButton.Item value={"word"} />
                     <MultiToggleButton.Item value={"multi-word"} />
-                </MultiToggleButton.Base>
+                </MultiToggleButton.Base> */}
             </div>
 
             <ToggleButton
@@ -35,11 +34,11 @@ const SettingsBar = () => {
                 <BsSoundwave />
             </ToggleButton>
             
-            {/* <ToggleButton
+            <ToggleButton
                 pressed={keyboardVisible}
                 onToggle={(on: boolean) => (setKeyboardVisible(on))}>
                 <BsKeyboard />
-            </ToggleButton> */}
+            </ToggleButton>
 
             <MultiToggleButton.Base
                 name={"theme"}

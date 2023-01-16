@@ -1,13 +1,15 @@
 import { motion, useInView, useSpring } from "framer-motion"
-import { forwardRef, RefObject, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react"
+import { forwardRef, RefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
 import { getRandomFrom, getRandomListFrom } from "../lib/hime/util"
 import { cn } from "../util/css"
 import hangul, { Word } from "../util/hangul"
 
-// TODO: turn into word slider pass in word list
+// TODO: take word list as option before oting for random
+// TODO: make line slider component (or this multipurpose, but probably not)
 
 interface Props {
     wordCount: number
+    className?: string
     // direction?: 'row' | 'column'
 }
 
@@ -24,21 +26,9 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const prevOffsetRef = useRef(0)
 
-    const line1 = useSpring(0, {
-        damping: 20,
-        stiffness: 200
-    })
-    const line2 = useSpring(0, {
-        damping: 20,
-        stiffness: 200
-    })
-    const line3 = useSpring(0, {
-        damping: 20,
-        stiffness: 200
-    })
-
     const [wordList, setWordList] = useState<Word[]>(getRandomListFrom(hangul.words, 10))
     const [wordIndex, setWordIndex] = useState(0)
+    const word = wordList[wordIndex]
 
     const offset = useSpring(0, {
         damping: 15,
@@ -56,16 +46,11 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
         const element = sliderRef.current.children[wordIndex] as HTMLDivElement
         if (!element) return
 
-        // line1.set(offset.get())
-        line2.set(prevOffsetRef.current)
-        // console.log('prev el off', prevOffsetRef.current)
-        line3.set(-element.offsetLeft)
-
         const offsetOld = prevOffsetRef.current
         const offsetNew = -element.offsetLeft
         if (offsetOld < offsetNew) {
             const offsetDiff = offsetOld - offsetNew
-            console.log(offsetDiff)
+            // console.log(offsetDiff)
             offset.jump(offset.get() - offsetDiff)
         }
 
@@ -76,26 +61,20 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
     }, [wordList, wordIndex])
 
     const removeWord = (index: number) => {
-        // console.log('remove word', index, wordList[index].kr)
         setWordList(wordList.filter((word, i) => i !== index))
         setWordIndex(wordIndex - 1)
 
         const element = sliderRef.current?.children[wordIndex] as HTMLDivElement
         if (!element) return
-        // TODO: figure this out
-        // console.log('offset jmp', offset.get(), element.clientWidth)
-        // console.log('offset left', element.offsetLeft)
-        // console.log('offset prev', offset.getPrevious())
-        // offset.jump(offset. + element.clientWidth)
     }
 
     useImperativeHandle(ref, () => {
         return {
             word() {
-                return wordList[wordIndex]
+                return word
             },
             prev() {
-                // setWordIndex(wordIndex - 1)
+                if (wordIndex > 0) setWordIndex(wordIndex - 1)
             },
             next() {
                 setWordList([...wordList, getRandomFrom(hangul.words)])
@@ -111,44 +90,44 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
     // const offset = dir === 'row' ? element?.
 
     return (
-        <div ref={containerRef} className="relative w-[700px] flex justify-center overflow-x-visible">
-            <div className={cn(
-                "absolute top-0 bottom-0 left-0 right-0 z-50",
-                "border-x border-white opacity-75",
-                // "bg-gradient-to-r from-[rgb(var(--color-back))] via-transparent to-[rgb(var(--color-back))]"
-            )} />
-            <motion.div
-                className={cn('relative w-0')}
-            // style={{ width }}
-            >
-                <motion.div style={{ x: line1 }} className={"absolute w-1 h-full bg-red-300"} />
-                <motion.div style={{ x: line2 }} className={"absolute w-1 h-full bg-blue-300"} />
-                <motion.div style={{ x: line3 }} className={"absolute w-1 h-full bg-green-300"} />
+        <div className="flex flex-col" {...restProps}>
+            <div className="text-front/50 italic flex justify-center pb-6">{word.en}</div>
+            <div ref={containerRef} className="relative w-[700px] flex justify-center overflow-x-clip">
+                <div className={cn(
+                    "absolute top-0 bottom-0 left-0 right-0 z-50",
+                    "border-x border-front/25 opacity-90",
+                    "bg-gradient-to-r from-back via-transparent to-back"
+                )} />
                 <motion.div
+                    className={cn('relative w-0')}
                     style={{ width }}
-                    className={cn(
-                        "absolute -top-1 -bottom-1 -left-1 px-1 box-content",
-                        "border-[0.5px] border-white/50 rounded bg-white/5"
-                    )} />
-                <motion.div
-                    ref={sliderRef}
-                    style={{ x: offset }}
-                    className={cn(
-                        'relative flex gap-3',
-                        // dir === 'column' ? 'flex-col' : 'flex-row'
-                    )}>
-                    {
-                        wordList.map((word, i) => (
-                            <Word
-                                key={word.kr + `${i}`}
-                                word={word}
-                                root={containerRef}
-                                onViewLeave={() => removeWord(i)}
-                            />
-                        ))
-                    }
+                >
+                    <motion.div
+                        style={{ width }}
+                        className={cn(
+                            "absolute -top-1 -bottom-1 -left-1 px-1 box-content",
+                            "border-[0.5px] border-front/25 rounded bg-front/5"
+                        )} />
+                    <motion.div
+                        ref={sliderRef}
+                        style={{ x: offset }}
+                        className={cn(
+                            'relative flex gap-3',
+                            // dir === 'column' ? 'flex-col' : 'flex-row'
+                        )}>
+                        {
+                            wordList.map((word, i) => (
+                                <Word
+                                    key={word.kr + `${i}`}
+                                    word={word}
+                                    root={containerRef}
+                                    onViewLeave={() => removeWord(i)}
+                                />
+                            ))
+                        }
+                    </motion.div>
                 </motion.div>
-            </motion.div>
+            </div>
         </div>
     )
 })
@@ -178,7 +157,7 @@ const Word = (props: WordProps) => {
         <div
             ref={ref}
             className={cn(
-                "text-4xl text-white font-semibold whitespace-nowrap"
+                "text-4xl text-front font-semibold whitespace-nowrap"
             )}>
             {word.kr}
         </div>
