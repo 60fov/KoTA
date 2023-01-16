@@ -2,7 +2,7 @@ import { RefObject, useEffect } from "react"
 
 const useFocusElementOnKey = (ref: RefObject<HTMLElement>) => {
     // TODO: explore more semantically correct options (event propagation/capture?)
-    const keydown = (e: KeyboardEvent) => {
+    const onKeyUp = (e: KeyboardEvent) => {
         const nothingFocused = e.target === document.body
         const modKey = e.altKey || e.metaKey || e.ctrlKey || e.shiftKey
         const focusInteractionKey = e.key === ' ' || e.key === 'Enter' || e.key === 'Tab' ||
@@ -16,9 +16,9 @@ const useFocusElementOnKey = (ref: RefObject<HTMLElement>) => {
     }
 
     useEffect(() => {
-        window.addEventListener('keydown', keydown)
+        window.addEventListener('keyup', onKeyUp)
         return () => {
-            window.removeEventListener('keydown', keydown)
+            window.removeEventListener('keyup', onKeyUp)
         }
     }, [])
 }

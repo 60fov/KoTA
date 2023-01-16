@@ -1,6 +1,13 @@
 import { createContext, CSSProperties, FormEventHandler, KeyboardEventHandler, MouseEventHandler, ReactElement, ReactNode } from "react"
 import { createCtx } from "../../util/context-helper"
 
+interface MultiToggleContextInterface {
+    name: string
+    value: unknown
+}
+
+const [useMultiToggleContext, MultiToggleProvider] = createCtx<MultiToggleContextInterface>()
+
 interface Props<T extends string> {
     name: string
     prompt: string
@@ -8,14 +15,6 @@ interface Props<T extends string> {
     setValue: (value: T) => void
     children: ReactElement<ItemProps<T>>[] | ReactElement<ItemProps<T>>
 }
-
-
-interface MultiToggleContextInterface {
-    name: string
-    value: unknown
-}
-
-const [useMultiToggleContext, MultiToggleProvider] = createCtx<MultiToggleContextInterface>()
 
 const Base = <T extends string>({ name, prompt, value, setValue, children }: Props<T>) => {
     const handleChange: FormEventHandler<HTMLFieldSetElement> = (e) => {

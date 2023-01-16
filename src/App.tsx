@@ -13,6 +13,8 @@ import AlphaDisclaimer from "./components/AlphaDisclaimer"
 // TODO: correct feedback
 // TODO: localstorage settings
 // TODO: change game mode names
+// TODO: switch to radix ui
+// TODO: better toggle button indication
 // TODO: git + readme + assets
 
 // TODO: bugs

@@ -32,5 +32,6 @@
   body {
     background: rgb(var(--color-back));
     /* background: rgb(10 10 10); */
+    overflow: hidden;
   }
 }
