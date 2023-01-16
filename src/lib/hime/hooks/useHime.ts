@@ -9,7 +9,6 @@ import { jamo, composeBlock, decompose, decomposeBlock, compose } from "../jamo"
 // export type HimeKeyEventHandler = (e: KeyboardEvent) => void
 
 const useHime = (
-    // onKey: HimeKeyEventHandler,
     options?: AddEventListenerOptions) => {
     // TODO: consider content editable elements
     const inputRef = useRef<HTMLInputElement>(null)
@@ -19,9 +18,6 @@ const useHime = (
         // ts narrowing
         if (!inputRef.current) return
 
-        // console.log('hime keydown', e)
-
-        // console.log(e.key)
         // Escape
         // Shift
 
@@ -44,12 +40,12 @@ const useHime = (
                     }
                 }
                 inputRef.current.value = input.join('')
-                const inputEvent = new InputEvent('input', { data: inputRef.current.value })
-                inputRef.current.dispatchEvent(inputEvent)
+                // const inputEvent = new InputEvent('input', { data: inputRef.current.value })
+                // inputRef.current.dispatchEvent(inputEvent)
                 break
             } case 'Enter': {
-                const event = new CustomEvent('enter', { detail: { value: inputRef.current.value } })
-                inputRef.current.dispatchEvent(event)
+                // const event = new CustomEvent('enter', { detail: { value: inputRef.current.value } })
+                // inputRef.current.dispatchEvent(event)
                 break
             } case 'Tab': {
                 break
@@ -58,7 +54,7 @@ const useHime = (
                 if (e.altKey || e.metaKey || e.ctrlKey) break
 
                 // TODO: consider firing events (spec??? 👀)
-                const typedJamo = hime.keyLookUp(e.key)
+                const typedJamo = jamo.single.includes(e.key) ? e.key : hime.keyLookUp(e.key)
                 if (typedJamo) {
                     e.preventDefault()
                     const composing = composingRef.current
@@ -73,15 +69,19 @@ const useHime = (
                         inputRef.current.value += typedJamo
                         composingRef.current = true
                     }
-                } else if (jamo.single.includes(e.key)) {
-                    // typed hangul
+                } else if (e.key.length === 1) {
+                    // TODO: audit e.key.length === 1
+                    // is there a non typabled key with a length of 1?
+                    e.preventDefault()
                     composingRef.current = false
+                    inputRef.current.value += e.key
                 } else {
-                    // some symbol
-                    composingRef.current = false
+                    // ???
+                    // console.log('key???', e.key)
                 }
-                const inputEvent = new InputEvent('input', { data: inputRef.current.value })
-                inputRef.current.dispatchEvent(inputEvent)
+
+                // const inputEvent = new InputEvent('input', { data: inputRef.current.value })
+                // inputRef.current.dispatchEvent(inputEvent)
             }
         }
     }
@@ -97,6 +97,8 @@ const useHime = (
     useEffect(() => {
         const inputElement = inputRef?.current
         if (!inputElement) return
+
+        inputElement.readOnly = true
 
         inputElement.addEventListener('keydown', onKeyDown)
         inputElement.addEventListener('compositionstart', onCompositionStart)
