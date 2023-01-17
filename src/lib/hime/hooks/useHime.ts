@@ -1,117 +1,125 @@
-import { useEffect, useRef } from "react"
+import { RefObject, useCallback, useEffect, useRef, useState } from "react"
 import hime from "../hime"
 import { jamo, decomposeBlock, compose } from "../jamo"
 
 // TODO: clean up
 
 const useHime = (
-    options?: AddEventListenerOptions) => {
     // TODO: consider content editable elements
-    const inputRef = useRef<HTMLInputElement>(null)
-    const composingRef = useRef(false)
+    inputRef: RefObject<HTMLInputElement>,
+    options?: AddEventListenerOptions) => {
 
-    const onKeyDown = (e: KeyboardEvent) => {
-        // ts narrowing
-        if (!inputRef.current) return
+    const [composing, setComposing] = useState(false)
+    const [value, setValue] = useState('')
 
-        // Escape
-        // Shift
 
-        switch (e.key) {
-            case 'ArrowLeft' || 'ArrowRight' || 'ArrowUp' || 'ArrowDown': {
-                e.preventDefault()
-                break
-            } case 'Backspace': {
-                e.preventDefault()
-                const composing = composingRef.current
-                const input = inputRef.current.value.split('')
-                const last = input.pop()
+    function dispatchHimeInputEvent(v: string) {
+        inputRef.current?.dispatchEvent(new CustomEvent('himeinput', {
+            detail: { value: v }
+        }))
+    }
+
+    const onKeyDown = useCallback((e: KeyboardEvent) => {
+        const typedJamo = jamo.single.includes(e.key) ? e.key : hime.keyLookUp(e.key)
+
+        if (typedJamo) {
+            if (e.altKey || e.metaKey || e.ctrlKey) return
+            e.preventDefault()
+            const splitInput = value.split('')
+            if (composing) {
+                // note: block should not be able to be undefined here since composing
+                const block = splitInput.pop() ?? ''
+                const ending = hime.compose([...hime.decompose(block), typedJamo])
+                splitInput.push(...ending)
+                const newValue = splitInput.join('')
+                dispatchHimeInputEvent(newValue)
+            } else {
+                dispatchHimeInputEvent(value + typedJamo)
+                setComposing(true)
+            }
+
+        } else if (e.key.length === 1) {
+            if (e.altKey || e.metaKey || e.ctrlKey) return
+            // TODO: audit e.key.length === 1
+            // is there a non typabled key with a length of 1?
+            e.preventDefault()
+            setComposing(false)
+            dispatchHimeInputEvent(value + e.key)
+
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault()
+        } else if (e.key === 'Backspace') {
+            e.preventDefault()
+            // TODO: consider mac vs windows
+            if (e.ctrlKey || e.metaKey) {
+                dispatchHimeInputEvent('')
+            } else {
+                const splitInput = value.split('')
+                const last = splitInput.pop()
                 if (composing && last) {
                     let dl = decomposeBlock(last)
                     dl.pop()
                     if (dl.length) {
-                        input.push(compose(dl).join(''))
+                        splitInput.push(compose(dl).join(''))
                     } else {
-                        composingRef.current = false
+                        setComposing(false)
                     }
                 }
-                inputRef.current.value = input.join('')
-                // const inputEvent = new InputEvent('input', { data: inputRef.current.value })
-                // inputRef.current.dispatchEvent(inputEvent)
-                break
-            } case 'Enter': {
-                // const event = new CustomEvent('enter', { detail: { value: inputRef.current.value } })
-                // inputRef.current.dispatchEvent(event)
-                break
-            } case 'Tab': {
-                break
-            } default: {
-                // gotta let em' run em'
-                if (e.altKey || e.metaKey || e.ctrlKey) break
-
-                // TODO: consider firing events (spec??? 👀)
-                const typedJamo = jamo.single.includes(e.key) ? e.key : hime.keyLookUp(e.key)
-                if (typedJamo) {
-                    e.preventDefault()
-                    const composing = composingRef.current
-                    const input = inputRef.current.value.split('')
-                    if (composing) {
-                        // note: block should not be able to be undefined here since composing
-                        const block = input.pop() ?? ''
-                        const ending = hime.compose([...hime.decompose(block), typedJamo])
-                        input.push(...ending)
-                        inputRef.current.value = input.join('')
-                    } else {
-                        inputRef.current.value += typedJamo
-                        composingRef.current = true
-                    }
-                } else if (e.key.length === 1) {
-                    // TODO: audit e.key.length === 1
-                    // is there a non typabled key with a length of 1?
-                    e.preventDefault()
-                    composingRef.current = false
-                    inputRef.current.value += e.key
-                } else {
-                    // ???
-                    // console.log('key???', e.key)
-                }
-
-                // const inputEvent = new InputEvent('input', { data: inputRef.current.value })
-                // inputRef.current.dispatchEvent(inputEvent)
+                const newValue = splitInput.join('')
+                dispatchHimeInputEvent(newValue)
             }
+
+        } else if (e.key === 'Enter') {
+            // TODO: consider submitevent
+            // const event = new CustomEvent('enter', { detail: { value: inputRef.current.value } })
+            // inputRef.current.dispatchEvent(event)
+
+        } else if (e.key === 'Escape') {
+            setComposing(false)
         }
+        else {
+            // ???
+            // console.log('key???', e.key)
+            // TODO: leave console user feedback note if someone checks this
+        }
+    }, [composing, value])
+
+
+    const onHimeInput = (e: Event) => {
+        const event = e as CustomEvent<{ value: string }>
+        setValue(event.detail.value)
     }
 
-    const onCompositionStart = (e: CompositionEvent) => {
-        // composingRef.current = true
-    }
+    const keyDownHandlerRef = useRef(onKeyDown)
 
-    const onCompositionEnd = (e: CompositionEvent) => {
-        // composingRef.current = false
-    }
+    useEffect(() => {
+        keyDownHandlerRef.current = onKeyDown
+    })
 
     useEffect(() => {
         const inputElement = inputRef?.current
         if (!inputElement) return
 
+        // TODO: make readonly param
         inputElement.readOnly = true
 
-        inputElement.addEventListener('keydown', onKeyDown)
-        inputElement.addEventListener('compositionstart', onCompositionStart)
-        inputElement.addEventListener('compositionend', onCompositionEnd)
-
-        // const internalInputHandler = (e: KeyboardEvent) => inputHandlerRef.current(e)
-
-        // inputElement.addEventListener('keydown', internalInputHandler, options)
+        const internalKeyDownHandler = (e: KeyboardEvent) => keyDownHandlerRef.current(e)
+        inputElement.addEventListener('keydown', internalKeyDownHandler)
+        inputElement.addEventListener('himeinput', onHimeInput)
         return () => {
-            inputElement.removeEventListener('keydown', onKeyDown)
-            inputElement.removeEventListener('compositionstart', onCompositionStart)
-            inputElement.removeEventListener('compositionend', onCompositionEnd)
-            // inputElement.removeEventListener('keydown', internalInputHandler, options)
+            inputElement.removeEventListener('keydown', internalKeyDownHandler)
+            inputElement.removeEventListener('himeinput', onHimeInput)
         }
     }, [])
 
-    return inputRef
+    return {
+        input: {
+            value,
+            clear: () => setValue(''),
+            set: (value: string) => setValue(value)
+        },
+        composing
+    }
 
 }
 
