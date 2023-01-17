@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { useKeyState } from "use-key-state"
 import hime from "../lib/hime/hime"
+import { cn } from "../util/css"
 import { KeyboardContext } from "./KeyboardContext"
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
     expand?: boolean
 }
 
-
+// TODO: find alternative to useKeyState repeat flag no work
 // TODO: switch to position centric pacement of key symbols
 const Key = ({ code, down, label, keyWidth = 1, expand = false }: Props) => {
     const { size, showJamo, showCode, showOnShift } = useContext(KeyboardContext)
@@ -25,7 +26,7 @@ const Key = ({ code, down, label, keyWidth = 1, expand = false }: Props) => {
         ignoreInputAcceptingElements: false,
         ignoreRepeatEvents: true
     })
-    
+
     const { state: shiftState } = useKeyState({ state: "shift" }, {
         ignoreInputAcceptingElements: false,
         ignoreRepeatEvents: true
@@ -34,16 +35,14 @@ const Key = ({ code, down, label, keyWidth = 1, expand = false }: Props) => {
     return (
         <div
             style={{ width: w, height: h }}
-            className={`
-                relative inline-grid grid-cols-3 grid-rows-3 items-center 
-                rounded-md leading-none font-medium
-                text-front/90 bg-front-alt/10 border-[rgb(0,0,0)]/20
-                transition-all duration-75 select-none
-                ${expand ? 'grow' : ''}
-                ${down ?? state.pressed ?
-                    'border-b-0 translate-y-[2px]' :
-                    'border-b-2 translate-y-0'}`
-            }>
+            className={cn(
+                "relative inline-grid grid-cols-3 grid-rows-3 items-center",
+                "rounded-md leading-none font-medium",
+                "text-front/90 bg-front-alt/10 border-[rgb(0,0,0)]/20",
+                "transition-all duration-75 select-none",
+                expand ? 'grow' : '',
+                state.pressed ? 'border-b-0 translate-y-[2px] bg-front-alt/90 text-back/90' : 'border-b-2 translate-y-0'
+            )}>
             {!showOnShift ? <span className="row-start-1 col-start-2 text-center text-xs leading-none">{shiftJamo}</span> : <></>}
             {showJamo ? <span className="row-start-2 col-start-2 text-center">
                 {shiftJamo && showOnShift && shiftState.pressed ? shiftJamo : jamo}
