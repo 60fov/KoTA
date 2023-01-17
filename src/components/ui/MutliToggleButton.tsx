@@ -1,5 +1,6 @@
 import { createContext, CSSProperties, FormEventHandler, KeyboardEventHandler, MouseEventHandler, ReactElement, ReactNode } from "react"
 import { createCtx } from "../../util/context-helper"
+import { cn } from "../../util/css"
 
 interface MultiToggleContextInterface {
     name: string
@@ -56,7 +57,12 @@ export const Item = <T extends string>({ value, children = value, style }: ItemP
                 checked={toggleValue === value}
                 readOnly={true} />
             <label
-                className="text-sm flex px-3 items-center justify-center cursor-pointer rounded-md text-front/50 transition-[color] hover:text-front/80 peer-checked:text-front peer-checked:bg-back peer-checked:border-[0.5px] border-front/5 peer-checked:shadow-md peer-focus:outline outline-access outline-1"
+                className={cn(
+                    "flex px-3 items-center justify-center cursor-pointer rounded-md",
+                    "text-sm text-front/50 border-front/5 transition-[color]",
+                    "hover:text-front/80",
+                    "peer-checked:text-front peer-checked:bg-back peer-checked:border-[0.5px] peer-checked:shadow-md",
+                    "peer-focus:outline outline-access outline-1")}
                 htmlFor={value}
                 style={style}>
                 {children}

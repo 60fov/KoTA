@@ -1,23 +1,29 @@
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
+
+import useTheme from "./hooks/useTheme"
+import { useKeyboardSettingsStore } from "./util/stores"
+
 import Keyboard from "./components/Keyboard"
 import Display from "./components/Display"
 import SettingsBar from "./components/SettingsBar"
-import useTheme from "./hooks/useTheme"
-import { useKeyboardSettingsStore } from "./util/stores"
 import MobileWarning from "./components/MobileWarning"
-import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
 import AlphaDisclaimer from "./components/AlphaDisclaimer"
 
 // b4 release
 // TODO: animations (wip)
 // TODO: responsive
-// TODO: correct feedback
-// TODO: better toggle button indication (toast ?)
+// TODO: correct/incorrect feedback
+// TODO: louder typing feedback
+// TODO: toasts
+// TODO: user feedback
+// TODO: composing indicator
 // TODO: git + readme + assets
 
 // TODO: bugs
 // shift flicker (verify)
 
 // soon after
+// TODO: patch notes
 // TODO: timer + metrics
 // TODO: imporoved focus indications
 // TODO: sfx

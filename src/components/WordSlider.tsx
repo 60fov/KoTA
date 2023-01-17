@@ -96,7 +96,8 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
 
     return (
         <div className="flex flex-col" {...restProps}>
-            <div className="text-front/50 italic flex justify-center pb-6">{word.en}</div>
+            {/* TODO: move this to display (maybe) */}
+            <div className="text-front/60 italic flex justify-center text-xl pb-6">{word.en}</div>
             <div ref={containerRef} className="relative w-[700px] flex justify-center overflow-x-clip">
                 <div className={cn(
                     "absolute top-0 bottom-0 left-0 right-0 z-50",
