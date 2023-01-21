@@ -1,9 +1,12 @@
 import { motion, useInView, useSpring } from "framer-motion"
-import { forwardRef, RefObject, useEffect, useImperativeHandle, useRef, useState } from "react"
+import { forwardRef, RefObject, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from "react"
+import { decompose } from "../lib/hime/jamo"
 import { getRandomFrom, getRandomListFrom } from "../lib/hime/util"
 import { cn } from "../util/css"
 import hangul, { Word } from "../util/hangul"
 
+
+// TODO: audit
 // TODO: take word list as option before oting for random
 // TODO: make line slider component (or this multipurpose, but probably not)
 
@@ -11,17 +14,16 @@ interface Props {
     wordCount: number
     onWordChange?: (word: Word) => void
     className?: string
-    // direction?: 'row' | 'column'
 }
 
-export interface WordSliderHandle {
+export interface WordSliderRef {
     prev: () => void
     next: () => void
     submit: (word: string) => boolean
     word: () => Word
 }
 
-const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
+const WordSlider = forwardRef<WordSliderRef, Props>((props, ref) => {
     const { wordCount, onWordChange, ...restProps } = props
     const sliderRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
@@ -32,7 +34,7 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
     const word = wordList[wordIndex]
 
     const offset = useSpring(0, {
-        damping: 15,
+        damping: 20,
         mass: 0.5,
         stiffness: 180
     })
@@ -42,7 +44,7 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
         stiffness: 180
     })
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (sliderRef.current === null) return
         const element = sliderRef.current.children[wordIndex] as HTMLDivElement
         if (!element) return
@@ -51,7 +53,6 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
         const offsetNew = -element.offsetLeft
         if (offsetOld < offsetNew) {
             const offsetDiff = offsetOld - offsetNew
-            // console.log(offsetDiff)
             offset.jump(offset.get() - offsetDiff)
         }
 
@@ -66,11 +67,8 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
     }, [word])
 
     const removeWord = (index: number) => {
-        setWordList(wordList.filter((word, i) => i !== index))
+        setWordList(wordList.filter((_, i) => i !== index))
         setWordIndex(wordIndex - 1)
-
-        const element = sliderRef.current?.children[wordIndex] as HTMLDivElement
-        if (!element) return
     }
 
     useImperativeHandle(ref, () => {
@@ -91,13 +89,10 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
         }
     })
 
-    // const height = element?.clientHeight || 'unset'
-    // const offset = dir === 'row' ? element?.
-
     return (
-        <div className="flex flex-col" {...restProps}>
+        <div className="flex flex-col gap-6" {...restProps}>
             {/* TODO: move this to display (maybe) */}
-            <div className="text-front/60 italic flex justify-center text-xl pb-6">{word.en}</div>
+            
             <div ref={containerRef} className="relative w-[700px] flex justify-center overflow-x-clip">
                 <div className={cn(
                     "absolute top-0 bottom-0 left-0 right-0 z-50",
@@ -105,22 +100,12 @@ const WordSlider = forwardRef<WordSliderHandle, Props>((props, ref) => {
                     "bg-gradient-to-r from-back via-transparent to-back"
                 )} />
                 <motion.div
-                    className={cn('relative w-0')}
-                    style={{ width }}
-                >
-                    <motion.div
-                        style={{ width }}
-                        className={cn(
-                            "absolute -top-1 -bottom-1 -left-1 px-1 box-content",
-                            "border-[0.5px] border-front/25 rounded bg-front/5"
-                        )} />
+                    className={cn('relative p-1 box-content border-[0.5px] border-front/25 rounded bg-front/5')}
+                    style={{ width }}>
                     <motion.div
                         ref={sliderRef}
                         style={{ x: offset }}
-                        className={cn(
-                            'relative flex gap-3',
-                            // dir === 'column' ? 'flex-col' : 'flex-row'
-                        )}>
+                        className={'relative flex gap-3'}>
                         {
                             wordList.map((word, i) => (
                                 <Word
@@ -148,15 +133,14 @@ const Word = (props: WordProps) => {
     const { root, word, onViewLeave } = props
 
     const ref = useRef<HTMLDivElement>(null)
-    const isInView = useInView(ref, { root })
-    const [wasInView, setWasInView] = useState(false)
+    const isInView = useInView(ref, { root, margin: "0px 0px 0px 500px" })
 
     useEffect(() => {
-        // console.log('is in view?', isInView)
-        if (!wasInView) setWasInView(isInView)
-        else if (!isInView) onViewLeave()
+        if (!ref.current || !root.current) return
+        const wordRect = ref.current.getBoundingClientRect()
+        const rootRect = root.current.getBoundingClientRect()
+        if (wordRect.right < rootRect.left) onViewLeave()
     }, [isInView])
-
 
 
     return (

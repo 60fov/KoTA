@@ -27,9 +27,11 @@ interface DisplaySettingsStore {
     showRomanization: boolean
     showTranslation: boolean
     showSpaces: boolean
+    showDecomposed: boolean
     setShowRomanization: (show: boolean) => void
     setShowTranslation: (show: boolean) => void
     setShowSpaces: (show: boolean) => void
+    setShowDecomposed: (show: boolean) => void
 }
 
 // TODO: seperate via mode
@@ -37,9 +39,11 @@ export const useDisplaySettingsStore = create<DisplaySettingsStore>()((set) => (
     showRomanization: false,
     showTranslation: true,
     showSpaces: true,
+    showDecomposed: true,
     setShowRomanization: (showRomanization) => set(() => ({ showRomanization })),
     setShowTranslation: (showTranslation) => set(() => ({ showTranslation })),
-    setShowSpaces: (showTranslation) => set(() => ({ showTranslation }))
+    setShowSpaces: (showSpaces) => set(() => ({ showSpaces })),
+    setShowDecomposed: (showDecomposed) => set(() => ({ showDecomposed })),
 }))
 
 interface TTSSettingsStore {

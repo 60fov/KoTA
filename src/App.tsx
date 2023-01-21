@@ -8,15 +8,16 @@ import Display from "./components/Display"
 import SettingsBar from "./components/SettingsBar"
 import MobileWarning from "./components/MobileWarning"
 import AlphaDisclaimer from "./components/AlphaDisclaimer"
+import TestDisplay from "./components/TestDisplay"
 
 // b4 release
 // TODO: animations (wip)
 // TODO: responsive
-// TODO: correct/incorrect feedback
-// TODO: louder typing feedback
 // TODO: toasts
+// TODO: sfx
+// TODO: timer + metrics
+// TODO: block helper (togglable)
 // TODO: user feedback
-// TODO: composing indicator
 // TODO: git + readme + assets
 
 // TODO: bugs
@@ -24,11 +25,6 @@ import AlphaDisclaimer from "./components/AlphaDisclaimer"
 
 // soon after
 // TODO: patch notes
-// TODO: timer + metrics
-// TODO: imporoved focus indications
-// TODO: sfx
-// TODO: directions
-// TODO: settings layout (cmd k maybe custom)
 // TODO: theme menu
 // TODO: about
 // TODO: donate
@@ -41,8 +37,10 @@ import AlphaDisclaimer from "./components/AlphaDisclaimer"
 // TODO: tts format settings (e.g. speak word then definition)
 
 // big
+// TODO: directions / hints / help
+// TODO: settings layout (cmd k maybe custom)
 // TODO: mobile support
-// TODO: account
+// TODO: accounts
 // TODO: quality tts
 // TODO: hangul tut
 
@@ -61,7 +59,8 @@ function App() {
         <motion.div layout className="h-screen mx-auto w-[700px] flex flex-col justify-center gap-6 px-4 md:p-0 z-10">
 
           <motion.div layout className="flex items-end justify-center grow">
-              <Display />
+            <Display />
+            {/* <TestDisplay /> */}
           </motion.div>
 
           <motion.div layout className="flex flex-col grow">

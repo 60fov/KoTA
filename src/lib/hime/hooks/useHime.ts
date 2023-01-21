@@ -4,10 +4,16 @@ import { jamo, decomposeBlock, compose } from "../jamo"
 
 // TODO: clean up
 
+export interface HimeInput {
+    value: string
+    clear: () => void
+    setValue: (v: string) => void
+}
+
 const useHime = (
     // TODO: consider content editable elements
     inputRef: RefObject<HTMLInputElement>,
-    options?: AddEventListenerOptions) => {
+    options?: AddEventListenerOptions): { input: HimeInput, composing: boolean } => {
 
     const [composing, setComposing] = useState(false)
     const [value, setValue] = useState('')
@@ -116,7 +122,7 @@ const useHime = (
         input: {
             value,
             clear: () => setValue(''),
-            set: (value: string) => setValue(value)
+            setValue
         },
         composing
     }
