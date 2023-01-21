@@ -1,3 +1,4 @@
+import { motion } from "framer-motion"
 import { createContext, CSSProperties, FormEventHandler, KeyboardEventHandler, MouseEventHandler, ReactElement, ReactNode } from "react"
 import { createCtx } from "../../util/context-helper"
 import { cn } from "../../util/css"
@@ -24,7 +25,7 @@ const Base = <T extends string>({ name, prompt, value, setValue, children }: Pro
     }
 
     return (
-        <div className="flex p-[2px] bg-back-alt/60 border-[0.5px] border-front/5 rounded-md transition-all duration-75">
+        <div className="flex p-[2px] bg-back-alt/60 border-[0.5px] border-front/10 rounded-md transition-all duration-75">
             <fieldset onChange={handleChange} className="flex">
                 <legend className="absolute [clip:rect(0,0,0,0)]">{prompt}</legend>
                 <MultiToggleProvider value={{ name, value }}>
@@ -58,14 +59,26 @@ export const Item = <T extends string>({ value, children = value, style }: ItemP
                 readOnly={true} />
             <label
                 className={cn(
-                    "flex px-3 items-center justify-center cursor-pointer rounded-md",
+                    "relative flex px-3 items-center justify-center cursor-pointer rounded-md",
                     "text-sm text-front/50 border-front/5 transition-[color]",
                     "hover:text-front/80",
-                    "peer-checked:text-front peer-checked:bg-back peer-checked:border-[0.5px] peer-checked:shadow-md",
-                    "peer-focus:outline outline-access outline-1")}
+                    // "peer-checked:text-front peer-checked:bg-back peer-checked:border-[0.5px] peer-checked:shadow-md",
+                    "peer-focus-visible:outline outline-access outline-1 outline-offset-2"
+                )}
                 htmlFor={value}
                 style={style}>
+                {toggleValue === value &&
+                    <motion.div 
+                    layoutId={"f"}
+                    className={cn(
+                        "absolute w-full h-full",
+                        "text-front rounded bg-back border-front/5 border-[0.5px] shadow-md",
+                    )}
+                    />
+                }
+                <div className="relative z-10">
                 {children}
+                </div>
             </label>
         </div>
     )
