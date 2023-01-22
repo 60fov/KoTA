@@ -15,6 +15,7 @@ const Display = () => {
     const sliderRef = useRef<WordSliderRef>(null)
     const inputRef = useRef<InputRef>(null)
 
+    // const [focused, setFocused] = useState(false)
     const [word, setWord] = useState<Word>()
     const decomposedWord = decompose(word?.kr || "")
 
@@ -119,17 +120,26 @@ const Display = () => {
     }
 
     return (
-        <div className="group relative flex justify-center">
+        <div
+            onMouseDown={(e) => {
+                // don't like this but gives best focus experiences
+                e.preventDefault()
+                inputRef.current?.element()?.focus()
+            }}
+            className="group relative flex justify-center">
             <span className={cn(
                 "opacity-1 absolute top-1/2 bottom-1/2 text-front/75 text-3xl font-semibold z-10",
-                "group-focus-within:opacity-0 transition-opacity"
+                "transition-opacity",
+                "group-focus-within:opacity-0"
             )}>
-                type to focus
+                {/* TODO: mobile "touch to focus" */}
+                click or type to focus
             </span>
 
             <div className={cn(
                 "relative flex flex-col items-center gap-6",
-                "transition-all blur-xl group-focus-within:blur-0",
+                "transition-all blur-xl",
+                "group-focus-within:blur-0"
             )}>
                 {
                     displaySettings.showTranslation ?

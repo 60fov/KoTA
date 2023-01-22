@@ -6,16 +6,21 @@ import { cn } from "../util/css"
 import { Word } from "../util/hangul"
 
 interface Props {
+    // focused?: boolean
     errorTest?: (i: number, v: string, composing: boolean) => boolean
     onKeyDown?: (e: KeyboardEvent) => void
     onSubmit?: (value: string) => void
     onChange?: (value: string) => void
 }
 
-export type InputRef = HimeInput
+export interface InputRef extends HimeInput {
+    focused: boolean
+    element: () => HTMLInputElement | null
+}
 
 const Input = forwardRef<InputRef, Props>((props, ref) => {
     const {
+        // focused: focusedProp,
         onKeyDown: onKeyDownProp,
         onSubmit: onSubmitProp,
         onChange: onChangeProp,
@@ -24,7 +29,6 @@ const Input = forwardRef<InputRef, Props>((props, ref) => {
 
     const inputRef = useRef<HTMLInputElement>(null)
     const [focused, setFocused] = useState(false)
-
     const { input, composing } = useHime(inputRef)
     useFocusElementOnKey(inputRef)
 
@@ -36,8 +40,13 @@ const Input = forwardRef<InputRef, Props>((props, ref) => {
 
     // TODO: audit, remove effect
     useEffect(() => {
-        if (focused) ch.set(1)
-        else ch.set(0)
+        if (focused) {
+            inputRef.current?.focus()
+            ch.set(1)
+        } else {
+            inputRef.current?.blur()
+            ch.set(0)
+        }
     }, [focused])
 
     useEffect(() => {
@@ -52,7 +61,13 @@ const Input = forwardRef<InputRef, Props>((props, ref) => {
     }
 
     useImperativeHandle(ref, () => {
-        return input
+        return {
+            ...input,
+            focused,
+            element() {
+                return inputRef.current
+            }
+        }
     })
 
     const value = input.value.replaceAll(' ', '•')
@@ -63,7 +78,8 @@ const Input = forwardRef<InputRef, Props>((props, ref) => {
                 ref={inputRef}
                 onKeyDown={onKeyDown}
                 onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)} />
+                onBlur={() => setFocused(false)}
+            />
             <div className="relative flex">
                 <div className={cn(
                     "h-12 whitespace-nowrap",

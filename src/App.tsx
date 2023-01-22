@@ -16,7 +16,6 @@ import TestDisplay from "./components/TestDisplay"
 // TODO: toasts
 // TODO: sfx
 // TODO: timer + metrics
-// TODO: block helper (togglable)
 // TODO: user feedback
 // TODO: git + readme + assets
 

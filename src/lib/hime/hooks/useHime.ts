@@ -106,8 +106,11 @@ const useHime = (
         const inputElement = inputRef?.current
         if (!inputElement) return
 
+
+
+        // readonly makes virtual kb not show up
         // TODO: make readonly param
-        inputElement.readOnly = true
+        // inputElement.readOnly = true
 
         const internalKeyDownHandler = (e: KeyboardEvent) => keyDownHandlerRef.current(e)
         inputElement.addEventListener('keydown', internalKeyDownHandler)
