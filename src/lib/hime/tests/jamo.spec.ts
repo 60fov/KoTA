@@ -83,6 +83,7 @@ describe('hangul', () => {
         { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ'], result: ['궋'] },
         { jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ', 'ㅣ'], result: ['궉', '시'] },
         { jamo: ['ㄹ', 'ㅓ', 'ㄱ', 'ㅁ', 'ㅏ', 'ㅂ', 'ㅍ', ' ', 'ㅂ', 'ㅏ'], result: ['럭', '맙', 'ㅍ', ' ', '바'] },
+        { jamo: ['ㅎ', 'ㅗ', 'ㅏ', 'ㅇ'], result: ['황'] },
     ])('$jamo -> $result', ({ jamo, result }) => {
         expect(compose(jamo)).toStrictEqual(result)
     })
@@ -97,12 +98,13 @@ describe('hangul', () => {
         { block: '괘', jamo: ['ㄱ', 'ㅗ', 'ㅐ'] },
         { block: '궉', jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ'] },
         { block: '궋', jamo: ['ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ'] },
-
+        { block: '황', jamo: ['ㅎ', 'ㅗ', 'ㅏ', 'ㅇ'] }
     ])('$block -> $jamo', ({ block, jamo }) => {
         expect(decomposeBlock(block)).toStrictEqual(jamo)
     })
 
     test.each([
+        { blocks: '황', jamo: ['ㅎ', 'ㅗ', 'ㅏ', 'ㅇ'] },
         { blocks: '노 놀괘궉 궋', jamo: ['ㄴ', 'ㅗ', ' ', 'ㄴ', 'ㅗ', 'ㄹ', 'ㄱ', 'ㅗ', 'ㅐ', 'ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', ' ', 'ㄱ', 'ㅜ', 'ㅓ', 'ㄱ', 'ㅅ'] },
     ])('$blocks -> $jamo', ({ blocks, jamo }) => {
         expect(decompose(blocks)).toStrictEqual(jamo)

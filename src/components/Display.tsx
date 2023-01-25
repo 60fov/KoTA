@@ -126,19 +126,19 @@ const Display = () => {
                 e.preventDefault()
                 inputRef.current?.element()?.focus()
             }}
-            className="group relative flex justify-center">
-            <span className={cn(
+            className="group relative flex w-full">
+            {/* <span className={cn(
                 "opacity-1 absolute top-1/2 bottom-1/2 text-front/75 text-3xl font-semibold z-10",
                 "transition-opacity",
                 "group-focus-within:opacity-0"
-            )}>
+            )}> */}
                 {/* TODO: mobile "touch to focus" */}
-                click or type to focus
-            </span>
+                {/* click or type to focus */}
+            {/* </span> */}
 
             <div className={cn(
-                "relative flex flex-col items-center gap-6",
-                "transition-all blur-xl",
+                "relative flex flex-col gap-6 w-full items-center",
+                "transition-all blur-0",
                 "group-focus-within:blur-0"
             )}>
                 {

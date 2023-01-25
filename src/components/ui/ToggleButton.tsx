@@ -20,7 +20,6 @@ const ToggleButton = ({ pressed: pressedProp, onToggle = () => ({}), children, c
                 "focus-visible:outline outline-access outline-1",
                 "hover:text-front/90 hover:border-front/20 bg-back-alt/75",
                 "data-[state=on]:text-front/75",
-                // "data-[state=on]:text-front data-[state=on]:bg-back-alt/60 data-[state=on]:border-front/10",
                 className)}
             type="button"
             data-state={pressedProp === undefined || pressed ? 'on' : 'off'}

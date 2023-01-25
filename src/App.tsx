@@ -12,7 +12,6 @@ import TestDisplay from "./components/TestDisplay"
 
 // b4 release
 // TODO: animations (wip)
-// TODO: responsive
 // TODO: toasts
 // TODO: sfx
 // TODO: timer + metrics
@@ -55,9 +54,9 @@ function App() {
       <AlphaDisclaimer />
 
       <LayoutGroup>
-        <motion.div layout className="h-screen mx-auto w-[700px] flex flex-col justify-center gap-6 px-4 md:p-0 z-10">
+        <motion.div layout className="h-screen mx-auto flex flex-col justify-center gap-6 px-4 w-full md:p-0 md:w-fit md:min-w-[700px]">
 
-          <motion.div layout className="flex items-end justify-center grow">
+          <motion.div className="flex items-end justify-center grow basis-1/3 md:basis-auto">
             <Display />
             {/* <TestDisplay /> */}
           </motion.div>
@@ -73,6 +72,7 @@ function App() {
                   <></>
               }
             </AnimatePresence>
+
           </motion.div>
           <motion.div layout className="mb-6">
             <SettingsBar />

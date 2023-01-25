@@ -90,10 +90,10 @@ const WordSlider = forwardRef<WordSliderRef, Props>((props, ref) => {
     })
 
     return (
-        <div className="flex flex-col gap-6" {...restProps}>
+        <div className="flex flex-col gap-6 w-full" {...restProps}>
             {/* TODO: move this to display (maybe) */}
             
-            <div ref={containerRef} className="relative w-[700px] flex justify-center overflow-x-clip">
+            <div ref={containerRef} className="relative flex justify-center overflow-x-clip">
                 <div className={cn(
                     "absolute top-0 bottom-0 left-0 right-0 z-50",
                     "border-x border-front/25 opacity-90",

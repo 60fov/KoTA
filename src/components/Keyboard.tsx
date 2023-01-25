@@ -22,7 +22,7 @@ const Keyboard = ({ }: Props) => {
 
     return (
         <KeyboardProvider value={settings}>
-                <div className="flex flex-col gap-1 pointer-events-none">
+                <div className="flex flex-col gap-1 pointer-events-none w-[700px]">
                     <div className="flex gap-1">
                         <Key code={'\`'} />
                         <Key code={'1'} />
