@@ -14,12 +14,13 @@ const ToggleButton = ({ pressed: pressedProp, onToggle = () => ({}), children, c
     return (
         <button
             className={cn(
-                "p-3 transition-all duration-300 rounded-md text-front/30",
-                "border-[0.5px] border-front/5",
+                "group relative p-3 transition-all duration-150",
+                "text-front/50 bg-back-alt/60",
+                "border-[0.5px] border-front/10 rounded-md",
                 "focus-visible:outline outline-access outline-1",
-                "data-[state=on]:text-front data-[state=on]:bg-back-alt/60 data-[state=on]:border-front/10",
-                "hover:bg-back-alt/30 hover:text-front/50 hover:border-front/10",
-                "hover:data-[state=on]:border-front/10 hover:data-[state=on]:bg-back-alt/40",
+                "hover:text-front/90 hover:border-front/20 bg-back-alt/75",
+                "data-[state=on]:text-front/75",
+                // "data-[state=on]:text-front data-[state=on]:bg-back-alt/60 data-[state=on]:border-front/10",
                 className)}
             type="button"
             data-state={pressedProp === undefined || pressed ? 'on' : 'off'}
@@ -28,7 +29,16 @@ const ToggleButton = ({ pressed: pressedProp, onToggle = () => ({}), children, c
                 onToggle(!pressed) // TODO: do in use effect?
             }}
         >
-            {children}
+            <div className={cn(
+                "absolute top-[2px] left-[2px] right-[2px] bottom-[2px]",
+                "bg-back rounded border-front/5 border-[0.5px] shadow-md",
+                "transition-all ease-in-out duration-150",
+                "scale-0 group-data-[state=on]:scale-100",
+            )}>
+            </div>
+            <div className="relative z-10">
+                {children}
+            </div>
         </button>
     )
 }
