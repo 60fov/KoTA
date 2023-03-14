@@ -1,0 +1,3 @@
+[submodule "src/lib/Kime"]
+	path = src/lib/Kime
+	url = https://github.com/60fov/Kime.git
