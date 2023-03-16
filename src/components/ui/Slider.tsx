@@ -6,7 +6,7 @@ interface SliderProps {
   index: number
   open?: boolean
   defaultOpen?: boolean,
-  children: ReactElement<typeof Item>[]
+  children?: ReactElement<typeof Item>[]
 }
 
 // TODO: sequential animations for expanding / contract (h -> w)
@@ -56,9 +56,9 @@ function Base(props: SliderProps) {
     }
   }
 
-  const prevItems = children.slice(0, index)
-  const currentItem = children.at(index)
-  const nextItems = children.slice(index + 1)
+  const prevItems = children && children.slice(0, index)
+  const currentItem = children && children.at(index)
+  const nextItems = children && children.slice(index + 1)
 
   return (
     <motion.div
