@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { buffer } from '~/kime/util'
+import { buffer } from '../kime/util'
 describe('buffer', () => {
     test('buffer consume', () => {
         const data = ['a', 'b', 'c']

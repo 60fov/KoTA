@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { buffer } from "./util"
 
 // TODO: double type option for doubles (ㅃㅉㄸㄲㅆ)
@@ -228,7 +231,7 @@ const composeBlock = (input: string | string[]) => {
 
 // TODO: dunno how I feel about this, promise version?
 const compose = (blocks: string[], maxIterations = 1000) => {
-    let result: string[] = []
+    const result: string[] = []
     let b = blocks
     let i = 0
     while (b.length) {

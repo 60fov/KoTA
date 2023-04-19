@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { keyLookUp } from '~/kime/keylayout'
+import { keyLookUp } from '../kime/keylayout'
 
 describe('qwerty-sebeolsik', () => {
     test.each([

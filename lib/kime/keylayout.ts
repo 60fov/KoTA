@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 // TODO: types
 // type LayoutGroup = ... (qwerty)
 // type Layout = ... (sebeolsik)

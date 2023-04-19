@@ -9,7 +9,6 @@ export default defineConfig({
   test: {
     alias: [{ find: "~", replacement: "src" }],
     exclude: [
-      'src/lib',
       '**/node_modules/**',
       '**/dist/**',
       '**/cypress/**',
