@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-<<<<<<< HEAD
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -16,15 +15,6 @@ const config = {
       backgroundImage: {
         'dotted': 'radial-gradient(rgb(var(--color-back-alt)) 1px, rgb(var(--color-back)) 0)'
       },
-=======
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
->>>>>>> origin/main
       colors: {
         // primary: 'rgb(var(--color-primary) / <alpha-value>)',
         // secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
@@ -39,7 +29,6 @@ module.exports = {
         back: 'rgb(var(--color-back) / <alpha-value>)',
         "back-alt": 'rgb(var(--color-back-alt) / <alpha-value>)',
       },
-<<<<<<< HEAD
       transitionTimingFunction: {
         "out-cubic": "cubic-bezier(0.33, 1, 0.68, 1)",
         "out-quint": "cubic-bezier(0.22, 1, 0.36, 1)"
@@ -50,10 +39,3 @@ module.exports = {
 };
 
 module.exports = config;
-=======
-
-    },
-  },
-  plugins: [],
-}
->>>>>>> origin/main

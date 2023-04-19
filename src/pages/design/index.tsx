@@ -2,23 +2,29 @@ import type { NextPage } from "next";
 import { type ReactNode, useState } from "react";
 import Head from "next/head";
 
-import { HiComputerDesktop, HiMoon, HiOutlineFaceSmile, HiSun } from "react-icons/hi2"
+import { HiComputerDesktop, HiOutlineFaceSmile, HiSun, HiMagnifyingGlass, HiXMark } from "react-icons/hi2"
 
 // import type { CSSVariableProperties } from "~/utils/types";
 import Toggle from "~/components/ui/Toggle";
-import { cn, min, max, random } from "~/utils/fns";
 import MultiToggle from "~/components/ui/MultiToggle";
 import Key from "~/components/ui/Key";
 import Select from "~/components/ui/Select";
 import Button from "~/components/ui/Button";
-import { setTheme, type Theme } from "~/utils/theme";
 import Slider from "~/components/ui/Slider";
+import UserCard from "~/components/UserCard";
+
 import LeftArrow from "~/components/icons/LeftArrow";
 import RightArrow from "~/components/icons/RightArrow";
 import Plus from "~/components/icons/Plus";
 import Minus from "~/components/icons/Minus";
 import Menu from "~/components/ui/Menu";
 import Moon from "~/components/icons/Moon";
+
+import { cn, min, max, random } from "~/utils/fns";
+import { setTheme, type Theme } from "~/utils/theme";
+
+import alluraGlare from "~/../public/allura_glare.jpg"
+import Input from "~/components/ui/Input";
 
 
 const Home: NextPage = () => {
@@ -56,12 +62,24 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={cn(
-        "bg-front bg-dotted [background-size:40px_40px] min-h-screen h-content",
+        "bg-front bg-dotted [background-size:40px_40px] h-screen overflow-auto",
       )}>
         <div className={cn(
-          "max-w-4xl mx-auto py-16",
+          "max-w-4xl mx-auto py-8",
           "grid [grid-auto-flow:row dense] [grid-template-columns:repeat(4,1fr)] gap-4 auto-rows-[200px]",
         )}>
+          <Tile name="Input" className="col-span-2">
+            <Input
+              label={"label"}
+              prefix={<HiMagnifyingGlass />}
+              suffix={<HiXMark />}
+              defaultValue={"hello"}
+              placeholder="placeholder" />
+          </Tile>
+
+          <Tile name="User Card" className="row-span-3 col-span-2 col-start-3">
+            <UserCard username={"ily"} wpm={123} wordsTyped={152342} profilePic={alluraGlare.src} />
+          </Tile>
           <Tile name="Toggle">
             <Toggle>
               <HiOutlineFaceSmile />
@@ -76,9 +94,10 @@ const Home: NextPage = () => {
                 setTheme(newTheme)
                 setThemeState(newTheme)
               }}
-              prompt="this is just an example of a multi-toggle button" >
+              prompt="this is just an example of a multi-toggle button"
+            >
               <MultiToggle.Item value="light"><HiSun /></MultiToggle.Item>
-              <MultiToggle.Item value="dark"><HiMoon /></MultiToggle.Item>
+              <MultiToggle.Item value="dark"><Moon /></MultiToggle.Item>
               <MultiToggle.Item value="system"><HiComputerDesktop /></MultiToggle.Item>
             </MultiToggle.Base>
           </Tile>
@@ -86,6 +105,7 @@ const Home: NextPage = () => {
           <Tile name="Key">
             <Key label="ㄹ" code="f" />
           </Tile>
+
           <Tile name="Select">
             <Select.Base name="example">
               <Select.Option value="one">one</Select.Option>
@@ -95,19 +115,11 @@ const Home: NextPage = () => {
               <Select.Option value="d">d</Select.Option>
             </Select.Base>
           </Tile>
+
           <Tile name="Button">
             <Button>click me</Button>
           </Tile>
-          {/* <Tile className="col-span-2 row-span-2">
-            <Container
-              title="Title"
-              desc="this is a description of the contents of the container."
-            >
-             
-            </Container>
-          </Tile> */}
-          {/* <Tile></Tile> */}
-          {/* <Tile></Tile> */}
+
           <Tile name="Menu">
             <Menu.Base>
               <Menu.Button />
@@ -160,6 +172,7 @@ const Home: NextPage = () => {
               </div>
             </div>
           </Tile>
+
         </div>
       </main>
     </>

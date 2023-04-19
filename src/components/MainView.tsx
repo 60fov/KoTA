@@ -3,46 +3,24 @@ import Slider from "~/components/ui/Slider";
 import { WordList } from "~/utils/words";
 import useKime from "~/lib/hooks/useKime";
 import { animate, AnimatePresence, motion, useMotionValue } from "framer-motion";
-import { cn, createCtx, random } from "~/utils/fns";
+import { cn, random } from "~/utils/fns";
 import { decompose } from "~/lib/kime/jamo";
-import { Analytics } from "~/utils/analytics";
+import { useUserMetricAnalytics } from "~/utils/analytics";
 
 
 // TODO move this to another file (maybe)
 // TODO keyboard display
 // TODO TTS
+// TODO abstract analytics out of this
 
-
-interface AnalyticsContextInterface {
-  markWordStart: () => void
-  resetWordTimer: () => void
-  isWordTimerRunning: () => boolean
-}
-
-const [useAnalyticsContext, AnalyticsProvider] = createCtx<AnalyticsContextInterface>()
 
 export default function MainView() {
   const inputRef = useRef<InputFieldHandle>(null)
-  const wordStartTime = useRef<number>(0)
 
   const [wordList, setWordList] = useState<Word[]>()
   const [index, setIndex] = useState(0)
 
   const currentWord = wordList?.[index]
-
-  const analyticsContextValue: AnalyticsContextInterface = {
-    markWordStart() {
-      wordStartTime.current = Date.now()
-      console.log("word timer start: ", wordStartTime.current)
-    },
-    resetWordTimer() {
-      wordStartTime.current = 0
-      console.log("word timer reset ", wordStartTime.current)
-    },
-    isWordTimerRunning() {
-      return wordStartTime.current === 0
-    }
-  }
 
   useEffect(() => {
     setWordList(listOf(randomWord, 20))
@@ -68,12 +46,6 @@ export default function MainView() {
 
   function handleMatch() {
     if (!currentWord) return
-
-    const elapsed = Date.now() - wordStartTime.current
-    wordStartTime.current = 0
-    Analytics.submitRecord(currentWord.id, currentWord.kr, elapsed)
-    Analytics.flush()
-
     nextWord()
   }
 
@@ -84,7 +56,6 @@ export default function MainView() {
   }
 
   const handleClick: React.MouseEventHandler = () => {
-    console.log("click")
     inputRef.current?.focus()
   }
 
@@ -93,22 +64,20 @@ export default function MainView() {
   }
 
   return (
-    <AnalyticsProvider value={analyticsContextValue}>
-      <div
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        className="flex flex-col gap-8 items-center">
-        <span className="text-front-alt font-medium italic ">{currentWord?.en}</span>
-        <Slider.Base index={index}>
-          {
-            wordList && wordList.map((word) => (
-              <Slider.Item onViewLeave={handleViewLeave} id={word.id} key={word.id}>{word.kr}</Slider.Item>
-            ))
-          }
-        </Slider.Base>
-        <InputField ref={inputRef} goal={currentWord} onMatch={handleMatch} />
-      </div>
-    </AnalyticsProvider>
+    <div
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      className="flex flex-col gap-8 items-center">
+      <span className="text-front-alt font-medium italic">{currentWord?.en}</span>
+      <Slider.Base index={index}>
+        {
+          wordList && wordList.map((word) => (
+            <Slider.Item onViewLeave={handleViewLeave} id={word.id} key={word.id}>{word.kr}</Slider.Item>
+          ))
+        }
+      </Slider.Base>
+      <InputField ref={inputRef} goal={currentWord} onMatch={handleMatch} />
+    </div>
   )
 }
 
@@ -144,9 +113,8 @@ const InputField = forwardRef<InputFieldHandle, InputFieldProps>(function InputF
   const inputRef = useRef<HTMLInputElement>(null)
   const [focused, setFocused] = useState(false)
 
-  const { isWordTimerRunning, markWordStart } = useAnalyticsContext()
-
   const { input, composing } = useKime(inputRef)
+  const metrics = useUserMetricAnalytics(input.value, goal?.kr || "", {})
 
   const caretOpacityMotionValue = useMotionValue(1)
   void animate(caretOpacityMotionValue, [1, 0.05], {
@@ -154,7 +122,6 @@ const InputField = forwardRef<InputFieldHandle, InputFieldProps>(function InputF
     repeatType: "mirror",
     duration: 1
   })
-
 
   useImperativeHandle(ref, () => {
     return {
@@ -171,16 +138,13 @@ const InputField = forwardRef<InputFieldHandle, InputFieldProps>(function InputF
   })
 
   const handleKeyDown: React.KeyboardEventHandler = (e) => {
-    if (isWordTimerRunning() && input.value === "") {
-      markWordStart()
-    }
-
-    if (matchOnSpace && e.code === "Space") {
-      if (goal?.kr === input.value) onMatch()
-    }
-
-    if (matchOnEnter && e.code === "Enter") {
-      if (goal?.kr === input.value) onMatch()
+    const submitMatch =
+      matchOnSpace && e.code === "Space" ||
+      matchOnEnter && e.code === "Enter"
+    const matches = goal?.kr === input.value
+    if (submitMatch && matches) {
+      onMatch()
+      metrics.submit()
     }
   }
 

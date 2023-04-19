@@ -4,22 +4,13 @@ import { cn } from "~/utils/fns";
 
 import MainView from "~/components/MainView";
 import AppMenu from "~/components/AppMenu";
-import { Analytics } from "~/utils/analytics";
-import { useEffect } from "react";
-
 
 const Home: NextPage = () => {
-
-
-  useEffect(() => {
-    Analytics.init()
-    Analytics.wipe()
-  }, [])
 
   return (
     <>
       <Head>
-        <title>Kota</title>
+        <title>KoTA</title>
         <meta name="description" content="a Korean typing web app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

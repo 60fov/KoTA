@@ -5,7 +5,7 @@ import Portal from "./Portal";
 
 import Button, { type ButtonProps } from "./Button";
 import HBMenu from "../icons/HBMenu";
-import useOnClickOutside from "~/utils/hooks";
+import { useOnClickOutside } from "~/utils/hooks";
 
 /*
 TODO: 
@@ -37,7 +37,7 @@ function Base(props: Props) {
 
   return (
     <MenuContextProvider value={{ open: openProp ?? open, setOpen, baseRef }}>
-      <div ref={baseRef} className="relative">
+      <div ref={baseRef} className="relative flex">
         {children}
       </div>
     </MenuContextProvider>
@@ -70,11 +70,13 @@ function MenuButton(props: ButtonProps) {
 // PORTAL
 
 interface PortalProps {
+  offset?: number
   children: ReactNode
 }
 
 function MenuPortal(props: PortalProps) {
   const {
+    offset = 8,
     children
   } = props
 
@@ -88,26 +90,42 @@ function MenuPortal(props: PortalProps) {
     const menu = menuRef.current
     if (!base || !menu) return
     const baseRect = base.getBoundingClientRect()
-    const left = baseRect.left
-    const top = baseRect.bottom
+    const menuRect = menu.getBoundingClientRect()
+
+    const left =
+      baseRect.left + menuRect.width > window.innerWidth ? (
+        baseRect.left - menuRect.width
+      ) : (
+        baseRect.left
+      )
+
+    const top =
+      baseRect.bottom + menuRect.height > window.innerHeight ? (
+        baseRect.top - menuRect.height - offset
+      ) : (
+        baseRect.bottom + offset
+      )
+
     menu.style.left = `${left}px`
     menu.style.top = `${top}px`
-  }, [open, baseRef])
+  }, [open, baseRef, offset])
 
   useOnClickOutside([baseRef, menuRef], () => setOpen(false))
 
   return (
     <Portal>{
       open ?
-        <div
-          ref={menuRef}
-          className={cn(
-            "absolute",
-            "flex flex-col gap-2 top-full mt-1 p-1 w-64",
-            "bg-back border border-front/10 rounded-lg text-front",
-          )}
-        >
-          {children}
+        <div className="absolute inset-0">
+          <div
+            ref={menuRef}
+            className={cn(
+              "absolute",
+              "flex flex-col gap-2 top-full p-1 w-64",
+              "bg-back border border-front/10 rounded-lg text-front",
+            )}
+          >
+            {children}
+          </div>
         </div>
         :
         null
