@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { decompose } from "~/lib/kime/jamo"
+import { decompose } from "lib/kime/jamo"
 import { api } from "./api"
 
 export interface WordMetrics {

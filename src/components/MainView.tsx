@@ -1,10 +1,10 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Slider from "~/components/ui/Slider";
 import { WordList } from "~/utils/words";
-import useKime from "~/lib/hooks/useKime";
+import useKime from "lib/hooks/useKime";
 import { animate, AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { cn, random } from "~/utils/fns";
-import { decompose } from "~/lib/kime/jamo";
+import { decompose } from "lib/kime/jamo";
 import { useUserMetricAnalytics } from "~/utils/analytics";
 
 
