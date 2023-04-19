@@ -238,7 +238,7 @@ const compose = (blocks: string[], maxIterations = 1000) => {
         i++
         if (i > maxIterations) break
         const [block, ...rest] = composeBlock(b)
-        result.push(block)
+        result.push(block as string)
         b = rest
     }
     return result
@@ -259,11 +259,11 @@ const decomposeBlock = (block: string) => {
 
         const initial = jamo.initial[i]
 
-        const decomposedMedial = decomposeCompatibilityJamo(jamo.medial[m])
+        const decomposedMedial = decomposeCompatibilityJamo(jamo.medial[m] as string)
         const medial = decomposedMedial ?? [jamo.medial[m]]
 
         if (f !== undefined) {
-            const decomposedFinal = decomposeCompatibilityJamo(jamo.final[f])
+            const decomposedFinal = decomposeCompatibilityJamo(jamo.final[f] as string)
             const final = decomposedFinal ?? [jamo.final[f]]
 
             return [initial, ...medial, ...final]
@@ -276,10 +276,10 @@ const decomposeBlock = (block: string) => {
 }
 
 const decompose = (blocks: string) => {
-    let result: string[] = []
+    const result: string[] = []
     for (let i = 0; i < blocks.length; i++) {
         const block = blocks[i]
-        result.push(...decomposeBlock(block))
+        result.push(...decomposeBlock(block as string) as string[])
     }
     return result
 }
