@@ -67,7 +67,7 @@ const useKime = (
                     const dl = decomposeBlock(last)
                     dl.pop()
                     if (dl.length) {
-                        splitInput.push(compose(dl).join(''))
+                        splitInput.push(compose(dl as string[]).join(''))
                     } else {
                         setComposing(false)
                     }
