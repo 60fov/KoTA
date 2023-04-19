@@ -24,17 +24,16 @@ const ButtonVariantLUT: VariantLUT<ButtonVariantValue> = {
   )
 }
 
-interface Props extends React.HTMLAttributes<HTMLButtonElement> {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariantValue
   icon?: ReactNode
 }
-
-
 
 const Button = (props: Props) => {
   const {
     variant = "default",
     icon,
+    disabled,
     className,
     children,
     ...restProps
@@ -48,9 +47,10 @@ const Button = (props: Props) => {
         "transition-all duration-100",
         "rounded-md outline-access outline-1 outline-offset-2",
         "focus-visible:outline",
-        vstyles,
+        !disabled ? vstyles : "text-front-alt border border-front-alt/20 bg-back-alt",
         className
       )}
+      disabled={disabled}
       {...restProps}>
       {
         children && <div className="p-2 leading-none">{children}</div>
