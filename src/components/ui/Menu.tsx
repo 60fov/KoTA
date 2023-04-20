@@ -174,19 +174,20 @@ function Section(props: SectionProps) {
 
 
 // ITEM
+type ItemTag = React.ElementType
 
-type ItemOwnProps<T extends React.ElementType = React.ElementType> = {
+type ItemOwnProps<T extends ItemTag = ItemTag> = {
   as?: T
   icon?: ReactNode
   suffix?: ReactNode
   children: string
 }
 
-type ItemProps<T extends React.ElementType> =
+type ItemProps<T extends ItemTag> =
   ItemOwnProps &
   Omit<React.ComponentProps<T>, keyof ItemOwnProps>
 
-function Item<T extends React.ElementType>(props: ItemProps<T>) {
+function Item<T extends ItemTag>(props: ItemProps<T>) {
   const {
     as: TagName = "div",
     icon,
