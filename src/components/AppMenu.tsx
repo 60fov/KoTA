@@ -3,23 +3,22 @@ import Dashboard from "~/components/icons/Dashboard";
 import Person from "~/components/icons/Person";
 
 
-import { setTheme, themeList, type Theme } from "~/utils/theme";
-import Check from "~/components/icons/Check";
+import { themeList, type Theme } from "~/utils/theme";
 import Desktop from "~/components/icons/Desktop";
 import Sun from "~/components/icons/Sun";
 import Moon from "~/components/icons/Moon";
-import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Exit from "./icons/Exit";
-
+import useTheme from "~/utils/hooks";
+import Link from "next/link";
 
 export default function AppMenu() {
 
   const { data } = useSession()
-  const [themeState, setThemeState] = useState<Theme>("system")
+  const [theme, setTheme] = useTheme()
 
   const themeIcon = () => {
-    switch (themeState) {
+    switch (theme) {
       case "dark": return <Moon />
       case "light": return <Sun />
       case "system": return <Desktop />
@@ -27,9 +26,8 @@ export default function AppMenu() {
   }
 
   function handleThemeSwitch() {
-    const theme = themeList[(themeList.indexOf(themeState) + 1) % themeList.length] as Theme
-    setThemeState(theme)
-    setTheme(theme)
+    const newTheme = themeList[(themeList.indexOf(theme) + 1) % themeList.length] as Theme
+    setTheme(newTheme)
   }
 
   async function handleSignIn() {
@@ -57,7 +55,7 @@ export default function AppMenu() {
           icon={themeIcon()}
           onClick={handleThemeSwitch}
           className="capitalize"
-          suffix={themeState}
+          suffix={theme}
         >
           Change Theme
         </Menu.Item>
