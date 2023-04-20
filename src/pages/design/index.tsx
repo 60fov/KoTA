@@ -25,6 +25,7 @@ import { setTheme, type Theme } from "~/utils/theme";
 
 import alluraGlare from "~/../public/allura_glare.jpg"
 import Input from "~/components/ui/Input";
+import Container from "~/components/ui/Container";
 
 
 const Home: NextPage = () => {
@@ -32,7 +33,7 @@ const Home: NextPage = () => {
   const [themeState, setThemeState] = useState<Theme>("dark")
 
   const wordList =
-    "Be yourself as often as possible as you are all you have to offer."
+    "be yourself as often as possible as you are all you have to offer."
       // "슬라이더, 우리 다시 만나요. 이것은 흥미로울 것이다. 나는 누가 결국 승리를 거둘 것인지 궁금하다."
       .split(" ")
 
