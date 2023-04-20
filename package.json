@@ -28,7 +28,8 @@
     "react-icons": "^4.8.0",
     "superjson": "1.9.1",
     "tailwind-merge": "^1.10.0",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@types/eslint": "^8.21.2",
