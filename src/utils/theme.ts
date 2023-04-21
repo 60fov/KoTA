@@ -34,3 +34,7 @@ export function setTheme(theme: Theme) {
     document.documentElement.style.setProperty("--color-back", colors.back);
     document.documentElement.style.setProperty("--color-back-alt", colors.backAlt);
 }
+
+export function isTheme(theme: string): theme is Theme {
+    return theme in themeList
+}
