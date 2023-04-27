@@ -6,6 +6,7 @@ import z from 'zod';
 import Container from "~/components/ui/Container";
 import { useSession } from "next-auth/react";
 import zchema from "~/utils/zchema";
+import { useRouter } from "next/router";
 
 type Props = {
   slug?: string
@@ -17,12 +18,30 @@ const UserPage: NextPage<Props> = (props) => {
   } = props
 
   const { data: session } = useSession()
-  const id = session?.user.id
+  const router = useRouter()
+  const queryParams = parseSlug(slug || "me")
 
-  const handleParseResult = zchema.userHandle.safeParse(slug)
-  const handle = handleParseResult.success ? handleParseResult.data : undefined
-  const me = slug === 'me'
-  const queryParams = me ? { id } : { handle }
+  function parseSlug(slug: string) {
+    let id: string
+    let handle: string
+
+    if (slug === "me") {
+      return { id: session?.user.id }
+    }
+
+    const idParseResult = z.string().cuid().safeParse(slug)
+    if (idParseResult.success) {
+      id = idParseResult.data
+      return { id }
+    }
+
+    const handleParseResult = zchema.userHandle.safeParse(slug)
+    if (handleParseResult.success) {
+      handle = handleParseResult.data
+      return { handle }
+    }
+    return {}
+  }
 
   const { data: profile, status: profileStatus } = api.user.getPublicProfile.useQuery(queryParams, {
     refetchOnWindowFocus: false,
@@ -33,6 +52,11 @@ const UserPage: NextPage<Props> = (props) => {
     onError: (err) => {
       console.warn(err)
       // void router.push("404")
+    },
+    onSuccess: (data) => {
+      if (queryParams.id && data.handle) {
+        void router.push(`/user/${data.handle}`, undefined, { shallow: true })
+      }
     }
   })
 
