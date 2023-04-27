@@ -15,7 +15,9 @@ export const useThemeStore = create<ThemeStore>()(
       value: 'system',
       set: (value: Theme) => set(() => ({ value }))
     }),
-    { name: 'theme' }
+    {
+      name: 'theme',
+    }
   )
 )
 

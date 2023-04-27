@@ -18,7 +18,7 @@ const Home: NextPage = () => {
         "h-screen"
       )}>
 
-        <div className="h-1/2 w-9/12 mx-auto flex flex-col justify-end">
+        <div className="h-screen flex flex-col">
           <MainView />
         </div>
 

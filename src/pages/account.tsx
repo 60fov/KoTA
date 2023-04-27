@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { cn } from "~/utils/fns";
+import { cn, copyToClipboard } from "~/utils/fns";
 import { useSession } from "next-auth/react";
 import Container from "~/components/ui/Container";
 import Input from "~/components/ui/Input";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { HiArrowPath, HiXMark } from "react-icons/hi2";
 import zchema from "~/utils/zchema";
 import { useRouter } from "next/router";
+import Link from "~/components/icons/Link";
 
 const AcountPage: NextPage = () => {
   const router = useRouter()
@@ -112,6 +113,16 @@ const AcountPage: NextPage = () => {
     })
   }
 
+  const handleCopyProfileUrl = () => {
+    const id = user?.id
+    if (!id) {
+      console.warn('attempted to copy profile url, but no user id')
+      return
+    }
+    const profileUrl = new URL(`user/${id}`, window.location.origin)
+    void copyToClipboard(profileUrl.toString())
+  }
+
   const handle = handleStatus()
 
   return (
@@ -155,11 +166,18 @@ const AcountPage: NextPage = () => {
                   className="cursor-pointer"
                   onClick={() => void copyId()} />
               } />
-            <div className="flex justify-end">
+            <div className="flex justify-end gap-2">
+              <Button
+                icon={<Link />}
+                onClick={handleCopyProfileUrl}
+                variant="passive">
+              </Button>
               <Button
                 disabled={handle.status !== "success"}
                 onClick={handleAccountChange}
-                variant="cta">Save Changes</Button>
+                variant="cta">
+                Save Changes
+              </Button>
             </div>
           </Container>
         </div>

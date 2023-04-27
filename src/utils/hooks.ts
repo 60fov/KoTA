@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useThemeStore } from "./stores"
-import { setTheme } from "./theme"
+import { isTheme, setTheme } from "./theme"
 
 type Handler = (event: MouseEvent) => void
 
@@ -34,7 +34,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
 const useTheme = () => {
   const storeTheme = useThemeStore()
 
-  // handles system theme change
+  // handles system-theme changes
   useEffect(() => {
     const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
 

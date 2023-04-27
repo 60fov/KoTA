@@ -7,13 +7,6 @@ import { cn, random } from "~/utils/fns";
 import { decompose } from "lib/kime/jamo";
 import { useUserMetricAnalytics } from "~/utils/analytics";
 
-
-// TODO move this to another file (maybe)
-// TODO keyboard display
-// TODO TTS
-// TODO abstract analytics out of this
-
-
 export default function MainView() {
   const inputRef = useRef<InputFieldHandle>(null)
 
@@ -67,7 +60,7 @@ export default function MainView() {
     <div
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="flex flex-col gap-8 items-center">
+      className="h-full flex flex-col gap-8 items-center justify-center w-9/12 max-w-5xl mx-auto">
       <span className="text-front-alt font-medium italic">{currentWord?.en}</span>
       <Slider.Base index={index}>
         {
@@ -95,11 +88,8 @@ interface InputFieldHandle {
   blur: () => void
 }
 
-/*
-INPUT FIELD
-TODO
-  error display
-*/
+
+// INPUT FIELD
 
 const InputField = forwardRef<InputFieldHandle, InputFieldProps>(function InputField(props: InputFieldProps, ref) {
   const {
