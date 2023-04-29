@@ -1,25 +1,27 @@
-import { cn } from "~/utils/fns"
+import { cn, copyToClipboard, getProfileUrl } from "~/utils/fns"
 import { CSSVariableProperties } from "~/utils/types"
 
 interface Props {
+  profilePic: string
   username: string
   wpm: number
   wordsTyped: number
-  profilePic: string
+  accuracy: number
 }
 
 export default function UserCard(props: Props) {
   const {
+    profilePic,
     username,
     wpm,
     wordsTyped,
-    profilePic,
+    accuracy,
   } = props
 
   return (
     <div className={cn(
       "flex overflow-clip isolate",
-      "relative w-96 aspect-[9/13] p-1",
+      "relative w-96  p-1",
       "rounded-xl",
       "bg-back text-front",
       "border-front/10 border-[0.5px]",
@@ -47,11 +49,31 @@ export default function UserCard(props: Props) {
           <img className={cn("w-full h-full object-cover")} src={profilePic} alt="profile pic" />
         </div>
         <div className={cn(
-          "flex flex-col justify-between grow"
+          "flex flex-col gap-4 grow"
         )}>
-          <p className={cn(
-            "text-3xl font-bold"
-          )}>{username}</p>
+          <div>
+            <span onClick={() => {
+              const url = new URL('/user/ily', window.location.origin)
+              void copyToClipboard(url.toString())
+            }} className={cn(
+              "text-3xl font-bold cursor-pointer"
+            )}>@{username}</span>
+            {/* <span className="text-xs text-front/25 font-semibold">{name}</span> */}
+          </div>
+          <div className="flex gap-8">
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-front/25 font-semibold">WPM</span>
+              <span className="text-2xl font-semibold leading-none">{wpm}</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-front/25 font-semibold">Words Typed</span>
+              <span className="text-2xl font-semibold leading-none">{wordsTyped}</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-front/25 font-semibold">Accuracy</span>
+              <span className="text-2xl font-semibold leading-none">{(accuracy * 100).toFixed(0)}%</span>
+            </div>
+          </div>
           {/* <div>
             <div className={"flex text-sm"}>
               <div className={cn(

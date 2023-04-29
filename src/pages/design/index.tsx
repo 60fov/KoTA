@@ -79,7 +79,7 @@ const Home: NextPage = () => {
           </Tile>
 
           <Tile name="User Card" className="row-span-3 col-span-2 col-start-3">
-            <UserCard username={"ily"} wpm={123} wordsTyped={152342} profilePic={alluraGlare.src} />
+            <UserCard username={"ily"} wpm={123} wordsTyped={152342} accuracy={.93} profilePic={alluraGlare.src} />
           </Tile>
           <Tile name="Toggle">
             <Toggle>

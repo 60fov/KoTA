@@ -52,3 +52,7 @@ export async function copyToClipboard(text: string) {
         console.warn(`failed to copy ${text}`)
     }
 }
+
+export function getProfileUrl(id: string) {
+    return new URL(`user/${id}`, window.location.origin)
+}
