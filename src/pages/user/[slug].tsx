@@ -4,9 +4,10 @@ import { api } from "~/utils/api";
 import { cn } from "~/utils/fns";
 import z from 'zod';
 import Container from "~/components/ui/Container";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import zchema from "~/utils/zchema";
 import { useRouter } from "next/router";
+import Button from "~/components/ui/Button";
 
 type Props = {
   slug?: string
@@ -14,34 +15,14 @@ type Props = {
 
 const UserPage: NextPage<Props> = (props) => {
   const {
-    slug
+    slug: slugProp
   } = props
 
-  const { data: session } = useSession()
+  const { data: session, status: sessionStatus } = useSession()
   const router = useRouter()
-  const queryParams = parseSlug(slug || "me")
 
-  function parseSlug(slug: string) {
-    let id: string
-    let handle: string
-
-    if (slug === "me") {
-      return { id: session?.user.id }
-    }
-
-    const idParseResult = z.string().cuid().safeParse(slug)
-    if (idParseResult.success) {
-      id = idParseResult.data
-      return { id }
-    }
-
-    const handleParseResult = zchema.userHandle.safeParse(slug)
-    if (handleParseResult.success) {
-      handle = handleParseResult.data
-      return { handle }
-    }
-    return {}
-  }
+  const slug = slugProp || "me"
+  const queryParams = slug === "me" ? { id: session?.user.id } : parseSlug(slug)
 
   const { data: profile, status: profileStatus } = api.user.getPublicProfile.useQuery(queryParams, {
     refetchOnWindowFocus: false,
@@ -68,6 +49,31 @@ const UserPage: NextPage<Props> = (props) => {
       console.warn(err)
     }
   })
+
+  function handleSignIn() {
+    void signIn()
+  }
+
+
+  // RENDERS
+
+  if (sessionStatus === "unauthenticated" && slug === "me") {
+    return (
+      <>
+        <Head>
+          <title>{`KoTA ${profile?.name || ""} not found`}</title>
+          <meta name="description" content="a Korean typing web app" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main className="h-screen flex items-center justify-center">
+          <div className="text-front flex flex-col gap-2">
+            {/* <span className="text-front text-3xl font-medium">To View Your profile</span> */}
+            <Button onClick={handleSignIn}>sign-in</Button>
+          </div>
+        </main>
+      </>
+    )
+  }
 
 
   if (profileStatus === "error") {
@@ -170,3 +176,23 @@ UserPage.getInitialProps = (ctx) => {
 }
 
 export default UserPage;
+
+
+// helper functions
+function parseSlug(slug: string) {
+  let id: string
+  let handle: string
+
+  const idParseResult = z.string().cuid().safeParse(slug)
+  if (idParseResult.success) {
+    id = idParseResult.data
+    return { id }
+  }
+
+  const handleParseResult = zchema.userHandle.safeParse(slug)
+  if (handleParseResult.success) {
+    handle = handleParseResult.data
+    return { handle }
+  }
+  return {}
+}
