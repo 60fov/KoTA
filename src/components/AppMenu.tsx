@@ -11,6 +11,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Exit from "./icons/Exit";
 import useTheme from "~/utils/hooks";
 import Link from "next/link";
+import Avatar from "./ui/Avatar";
 
 export default function AppMenu() {
 
@@ -70,7 +71,7 @@ export default function AppMenu() {
           {
             data?.user ?
               <>
-                <Menu.Item as={Link} icon={<ProfilePic />} href={`/account`}>{data.user.name || "???"}</Menu.Item>
+                <Menu.Item as={Link} icon={<Avatar />} href={`/account`}>{data.user.name || "???"}</Menu.Item>
                 <Menu.Item as={Link} icon={<Dashboard />} href={`/user/me`}>dashboard</Menu.Item>
                 <Menu.Item as="button" icon={<Exit />} onClick={handleSignOut}>sign-out</Menu.Item>
               </>
