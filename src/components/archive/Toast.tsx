@@ -40,8 +40,8 @@ function Manager() {
 
   const toastRenderer = () => {
     return (
-      toastList.map((toast) => (
-        <Default {...toast} />
+      toastList.map((toast, i) => (
+        <Default {...toast} key={i} />
       ))
     )
   }
