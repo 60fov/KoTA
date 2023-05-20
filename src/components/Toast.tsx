@@ -26,7 +26,7 @@ function Default(props: Props) {
       "shadow-md"
     )}>
       <p className="text-base font-medium">{title}</p>
-      <p className="text-sm font-normal text-front-alt">{desc}</p>
+      {desc && <p className="text-sm font-normal text-front-alt">{desc}</p>}
     </div>
   )
 }
