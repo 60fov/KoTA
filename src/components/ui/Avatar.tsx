@@ -6,13 +6,13 @@ import { cn } from "~/utils/fns";
 // import Image from 'next/image';
 
 
-interface Props {
-}
+// interface Props {  
+// }
 
-const Avatar = (props: Props) => {
-  const {
-    ...restProps
-  } = props;
+const Avatar = (/*props: Prop*/) => {
+  // const {
+  //   ...restProps
+  // } = props;
 
   const session = useSession()
 
@@ -31,4 +31,4 @@ const Avatar = (props: Props) => {
 }
 
 export default Avatar
-export type AvatarProps = Props
+// export type AvatarProps = Props
