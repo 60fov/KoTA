@@ -13,6 +13,7 @@ import { HiArrowPath, HiXMark } from "react-icons/hi2";
 import zchema from "~/utils/zchema";
 import { useRouter } from "next/router";
 import Link from "~/components/icons/Link";
+import toast from "~/components/Toast";
 
 const AcountPage: NextPage = () => {
   const router = useRouter()
@@ -108,7 +109,8 @@ const AcountPage: NextPage = () => {
       handle: handleState
     }, {
       onSuccess() {
-        router.reload()
+        void session.update()
+        toast.pop("Account Changes Successful!")
       }
     })
   }

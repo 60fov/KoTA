@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { nanoid } from "nanoid";
+import toast from "~/components/Toast";
 
 // yoink'd from shadecn, ty!
 // https://github.com/shadcn/taxonomy/blob/0bace50fcac775e7214eab01c96f7fea90d48e8c/lib/utils.ts
@@ -48,6 +49,7 @@ export const random = {
 export async function copyToClipboard(text: string) {
     try {
         await navigator.clipboard.writeText(text)
+        toast.pop("📋 Copied Successfully!")
     } catch (err) {
         console.warn(`failed to copy ${text}`)
     }

@@ -25,7 +25,7 @@ import { setTheme, type Theme } from "~/utils/theme";
 
 import alluraGlare from "~/../public/allura_glare.jpg"
 import Input from "~/components/ui/Input";
-import Container from "~/components/ui/Container";
+import toast from "~/components/Toast";
 
 
 const Home: NextPage = () => {
@@ -86,6 +86,11 @@ const Home: NextPage = () => {
               <HiOutlineFaceSmile />
             </Toggle>
           </Tile>
+
+          <Tile name="Toast">
+            <Button onClick={() => {toast.pop("Congrats on your Toast!", "you successfully pop'd a toast, time to celebrate! 🎉")}}>Pop Toast</Button>
+          </Tile>
+
 
           <Tile name="Multi-Toggle">
             <MultiToggle.Base

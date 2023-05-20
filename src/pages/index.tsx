@@ -1,9 +1,13 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { cn } from "~/utils/fns";
+import dynamic from "next/dynamic";
 
-import MainView from "~/components/MainView";
 import AppMenu from "~/components/AppMenu";
+
+const MainView = dynamic(() => import("~/components/MainView"), {
+  ssr: false
+})
 
 const Home: NextPage = () => {
 
