@@ -88,7 +88,7 @@ const Home: NextPage = () => {
           </Tile>
 
           <Tile name="Toast">
-            <Button onClick={() => {toast.pop("this is a toast", "and this is it's description")}}>Pop Toast</Button>
+            <Button onClick={() => {toast.pop("Congrats on your Toast!", "you successfully pop'd a toast, time to celebrate! 🎉")}}>Pop Toast</Button>
           </Tile>
 
 
