@@ -109,7 +109,7 @@ const AcountPage: NextPage = () => {
       handle: handleState
     }, {
       onSuccess() {
-        router.reload()
+        session.update()
         toast.pop("Account Changes Successful!")
       }
     })
