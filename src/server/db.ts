@@ -30,17 +30,20 @@ const prisma =
         wordEntry: {
           async createMany({ args, query }) {
             const result = await query(args)
-            await deleteExtraWordEntries()
+            const userId = (args.data as unknown as { userId: string }[])[0]?.userId!
+            await deleteExtraWordEntries(userId)
             return result
           },
           async create({ args, query }) {
             const result = await query(args)
-            await deleteExtraWordEntries()
+            const userId = args.data.userId!
+            await deleteExtraWordEntries(userId)
             return result
           },
           async upsert({ args, query }) {
             const result = await query(args)
-            await deleteExtraWordEntries()
+            const userId = args.create.userId!
+            await deleteExtraWordEntries(userId)
             return result
           }
         }
@@ -51,8 +54,9 @@ if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 
 // TODO convert to raw query to reduce server db trips (?)
-async function deleteExtraWordEntries() {
+async function deleteExtraWordEntries(userId: string) {
   const extraEntries = await prisma.wordEntry.findMany({
+    where: { userId },
     orderBy: { createdAt: 'desc' },
     skip: 100,
     select: { id: true },
