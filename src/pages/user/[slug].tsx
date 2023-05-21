@@ -159,6 +159,14 @@ const UserPage: NextPage<Props> = (props) => {
                 Accuracy
               </div>
             </Container>
+            <Container className={"aspect-square flex flex-col gap-4 items-center justify-center"}>
+              <div className="text-base text-front">
+                {JSON.stringify(stats?.wordEntries)}
+              </div>
+              <div className="text-2xl text-front-alt">
+                word data
+              </div>
+            </Container>
           </div>
         </main>
       </>
