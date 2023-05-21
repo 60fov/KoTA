@@ -113,34 +113,6 @@ export function useUserMetricAnalytics(input: string, goal: string, options?: Us
     refWordBuffer.current = []
   }
 
-  // const end = () => {
-  //   console.log("metrics: end")
-  //   if (refTimer.current !== 0) {
-  //     const period = performance.now() - refTimer.current
-  //     const strokes = refStrokes.current
-  //     const length = decompose(goal).length
-  //     const metrics = { period, strokes, length }
-  //     console.log("metrics: pushing\n", JSON.stringify(metrics))
-  //     wordMetricsBufferRef.current.push(metrics)
-
-  //     if (wordMetricsBufferRef.current.length >= maxBufferSize) {
-  //       flush()
-  //     }
-
-  //     reset()
-  //   } else {
-  //     console.warn("metrics already stopped")
-  //   }
-  // }
-
-  // const stroke = () => {
-  //   if (input.length === 0) {
-  //     start()
-  //   }
-
-  //   refStrokes.current += 1
-  // }
-
   return {
     start,
     submit,

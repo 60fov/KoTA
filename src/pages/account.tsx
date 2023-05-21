@@ -1,23 +1,23 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { HiArrowPath, HiXMark } from "react-icons/hi2";
+
 import { api } from "~/utils/api";
 import { cn, copyToClipboard } from "~/utils/fns";
-import { useSession } from "next-auth/react";
+import zchema from "~/utils/zchema";
+
 import Container from "~/components/ui/Container";
 import Input from "~/components/ui/Input";
 import Copy from "~/components/icons/Copy";
 import Button from "~/components/ui/Button";
 import Check from "~/components/icons/Check";
-import { useEffect, useState } from "react";
-import { HiArrowPath, HiXMark } from "react-icons/hi2";
-import zchema from "~/utils/zchema";
-import { useRouter } from "next/router";
 import Link from "~/components/icons/Link";
 import toast from "~/components/Toast";
 
-const AcountPage: NextPage = () => {
-  const router = useRouter()
 
+const AcountPage: NextPage = () => {
   const session = useSession({
     required: true,
   })
