@@ -8,21 +8,32 @@ import { signIn, useSession } from "next-auth/react";
 import zchema from "~/utils/zchema";
 import { useRouter } from "next/router";
 import Button from "~/components/ui/Button";
+import Avatar from "~/components/ui/Avatar";
+import { useMemo } from "react";
+import dynamic from "next/dynamic";
+import useTheme from "~/utils/hooks";
 
 type Props = {
   slug?: string
 }
+
+const LineChart = dynamic(() => import('~/components/dataviz/LineChart'), {
+  ssr: false
+})
 
 const UserPage: NextPage<Props> = (props) => {
   const {
     slug: slugProp
   } = props
 
+  useTheme()
+
   const { data: session, status: sessionStatus } = useSession()
   const router = useRouter()
 
   const slug = slugProp || "me"
   const queryParams = slug === "me" ? { id: session?.user.id } : parseSlug(slug)
+  console.log(queryParams)
 
   const { data: profile, status: profileStatus } = api.user.getPublicProfile.useQuery(queryParams, {
     refetchOnWindowFocus: false,
@@ -54,6 +65,56 @@ const UserPage: NextPage<Props> = (props) => {
     void signIn()
   }
 
+  const chartData = useMemo(() => {
+    const entries = stats?.wordEntries
+    if (!entries) return
+    const lengthData = []
+    const periodData = []
+    const strokesData = []
+    const accData = []
+
+    for (let i = 0; i < entries.length; i++) {
+      const entry = entries[i]
+      if (!entry) continue
+
+      accData.push({
+        x: entry.createdAt,
+        y: entry.length / entry.strokes,
+      })
+
+      lengthData.push({
+        x: entry.createdAt,
+        y: entry.length
+      })
+      periodData.push({
+        x: entry.createdAt,
+        y: entry.period / 1000
+      })
+      strokesData.push({
+        x: entry.createdAt,
+        y: entry.strokes
+      })
+    }
+
+    return [
+      {
+        id: "accuracy",
+        data: accData
+      },
+      // {
+      //   id: "length",
+      //   data: lengthData
+      // },
+      // {
+      //   id: "period",
+      //   data: periodData
+      // },
+      // {
+      //   id: "strokes",
+      //   data: strokesData
+      // },
+    ]
+  }, [stats])
 
   // RENDERS
 
@@ -125,17 +186,16 @@ const UserPage: NextPage<Props> = (props) => {
             "grid [grid-auto-flow:row dense] [grid-template-columns:repeat(4,1fr)] gap-4 auto-rows-[200px]",
           )}>
             <Container className={cn(
-              "aspect-square",
               "flex flex-col items-center justify-center gap-4"
             )}>
               <div className="w-16 rounded-full overflow-clip">
-                <img className="object-cover" src={profile?.image || ""} alt="profile pic" />
+                <Avatar src={profile.image} />
               </div>
               <div className="text-3xl">
                 {profile?.name}
               </div>
             </Container>
-            <Container className={"aspect-square flex flex-col gap-4 items-center justify-center"}>
+            <Container className={" flex flex-col gap-4 items-center justify-center"}>
               <div className="text-5xl text-front font-bold">
                 {stats?.wordCount}
               </div>
@@ -143,7 +203,7 @@ const UserPage: NextPage<Props> = (props) => {
                 Words Typed
               </div>
             </Container>
-            <Container className={"aspect-square flex flex-col gap-4 items-center justify-center"}>
+            <Container className={" flex flex-col gap-4 items-center justify-center"}>
               <div className="text-5xl text-front font-bold">
                 {Math.trunc(stats?.wpm || 0).toLocaleString(undefined, {})}
               </div>
@@ -151,7 +211,7 @@ const UserPage: NextPage<Props> = (props) => {
                 WPM
               </div>
             </Container>
-            <Container className={"aspect-square flex flex-col gap-4 items-center justify-center"}>
+            <Container className={" flex flex-col gap-4 items-center justify-center"}>
               <div className="text-5xl text-front font-bold">
                 {`${((stats?.acc || 0) * 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}%`}
               </div>
@@ -177,7 +237,6 @@ UserPage.getInitialProps = (ctx) => {
 
 export default UserPage;
 
-
 // helper functions
 function parseSlug(slug: string) {
   let id: string
@@ -186,6 +245,7 @@ function parseSlug(slug: string) {
   const idParseResult = z.string().cuid().safeParse(slug)
   if (idParseResult.success) {
     id = idParseResult.data
+    console.log("parsed id", id)
     return { id }
   }
 

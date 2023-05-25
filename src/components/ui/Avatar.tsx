@@ -1,29 +1,32 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { useSession } from "next-auth/react";
-import { type ReactNode } from "react";
+// import { type ReactNode } from "react";
 import { cn } from "~/utils/fns";
 
 // TODO: use next js image
 // import Image from 'next/image';
 
 
-// interface Props {  
-// }
+interface Props {  
+  src?: string | null
+}
 
-const Avatar = (/*props: Prop*/) => {
-  // const {
-  //   ...restProps
-  // } = props;
+const Avatar = (props: Props) => {
+  const {
+    src
+  } = props;
 
   const session = useSession()
 
-  const path = session.data?.user.image || "/mesh-gradient.png"
+  const path = (src ?? session.data?.user.image) || "/mesh-gradient.png"
 
   return (
     <div className={cn(
       "rounded-full overflow-clip"
     )}>
       <img
-        src={path}
+        src={src ?? path}
         alt={"user avatar"}
         className={cn()} />
     </div>
