@@ -82,10 +82,16 @@ export const userRouter = createTRPCRouter({
       const acc = accum.length / accum.strokes
       const wpm = 60 * 1000 * data.wordEntries.length / accum.period
 
+      const wordEntries = data.wordEntries.map((entry) => {
+        const { userId, ...result } = entry
+        return result
+      })
+
       return {
         acc,
         wpm,
-        wordCount: data.wordCount
+        wordEntries,
+        wordCount: data.wordCount,
       }
     }),
   updateProfile: protectedProcedure
@@ -99,7 +105,7 @@ export const userRouter = createTRPCRouter({
         name,
         handle
       } = input
-      
+
       await ctx.prisma.user.update({
         where: { id },
         data: {
