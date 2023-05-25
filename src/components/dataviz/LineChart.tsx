@@ -21,7 +21,7 @@ export default function LineChart(props: Props) {
       useMesh={true}
       enableSlices={'x'}
       yScale={{type: "linear", min: 0, max: 1}}
-      margin={{ top: 4, right: 4, bottom: 24, left: 24 }}
+      margin={{ top: 4, right: 4, bottom: 4, left: 28 }}
       axisBottom={null}
       colors={{scheme: 'accent'}}
       theme={{
