@@ -46,6 +46,23 @@ export const random = {
     nano: () => nanoid()
 }
 
+type Accumulator<T> = Record<string, T[]>;
+
+export const byGroup = <T>(fn: (item: T) => string) => [
+  (acc: Accumulator<T>, item: T) => {
+    (acc[fn(item)] ??= []).push(item)
+    return acc
+  },
+  {} as Accumulator<T>
+] as const;
+
+
+export const groupBy = <T, K extends string | number | symbol>(arr: T[], key: (i: T) => K) =>
+    arr.reduce((groups, item) => {
+        (groups[key(item)] ||= []).push(item);
+        return groups;
+    }, {} as Record<K, T[]>);
+
 export async function copyToClipboard(text: string) {
     try {
         await navigator.clipboard.writeText(text)

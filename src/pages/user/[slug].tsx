@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { cn } from "~/utils/fns";
+import { cn, groupBy } from "~/utils/fns";
 import z from 'zod';
 import Container from "~/components/ui/Container";
 import { signIn, useSession } from "next-auth/react";
@@ -54,6 +54,78 @@ const UserPage: NextPage<Props> = (props) => {
     void signIn()
   }
 
+  const chartData = useMemo(() => {
+    const entries = stats?.wordEntries
+    if (!entries) return
+    
+    const ndata = Object.values(groupBy(entries, entry => entry.createdAt.toISOString()))
+      .map(group => {
+        const avg = group.reduce((accum, entry) => {
+          const accuracy = entry.length / entry.strokes
+          console.log(accuracy)
+          accum.acc += accuracy
+          accum.createdAt = entry.createdAt
+          return accum
+        }, {acc: 0} as { acc: number, size: number, createdAt: Date })
+        avg.acc /= group.length
+        avg.size = group.length
+        return avg
+      })
+
+    const accData: Array<{ x: Date, y: number }> = []
+    const sizeData: Array<{ x: Date, y: number }> = []
+
+    for (let i = 0; i < ndata.length; i++) {
+      const dp = ndata[i]
+      if (!dp) continue
+      accData.push({ x: dp.createdAt, y: dp.acc })
+      sizeData.push({ x: dp.createdAt, y: dp.size })
+    }
+
+    console.log("ndata", ndata)
+    console.log("acc", accData)
+    console.log("size", sizeData)
+    
+
+    //   .reduce((accum, group) => {
+    //     accum['accuracy'] ??= { id: 'accuracy', data: [] }
+    //     accum['accuracy'].data.push({
+    //       x: group.createdAt,
+    //       y: group.acc
+    //     })
+    //     return accum
+    //   }, {} as Record<string, { id: string, data: Array<{ x: string, y: number }> }>)
+
+    // return Object.values(ndata)
+
+    // const avgAccData = Object.values(accData.reduce((accum, point) => {
+    //   const groupKey = point.x.toISOString()
+    //   const group = accum[groupKey] ??= []
+    //   group.push(point)
+    //   return accum
+    // }, {} as Record<string, Array<typeof accData[number]>>)
+    // ).map((group) => {
+    //   const point = group.reduce((accum, point) => {
+    //     accum.y += point.y
+    //     return accum
+    //   })
+    //   point.y /= group.length
+    //   return point
+    // })
+
+
+    return [
+      {
+        id: "accuracy",
+        data: accData
+      },
+      {
+        id: "entries",
+        data: sizeData
+      },
+      
+    ]
+  }, [stats])
 
   // RENDERS
 
@@ -85,7 +157,7 @@ const UserPage: NextPage<Props> = (props) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main className="h-screen flex items-center justify-center">
-          <div className="text-front p-4  rounded-xl border border-front/10 bg-back-alt flex gap-1">
+          <div className="text-front p-4 rounded-xl border border-front/10 bg-back-alt flex gap-1">
             <span className="">user not found</span>
           </div>
         </main>
@@ -102,7 +174,7 @@ const UserPage: NextPage<Props> = (props) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main className="h-screen flex items-center justify-center">
-          <div className="text-front p-4  rounded-xl border border-front/10 bg-back-alt flex gap-1">
+          <div className="text-front p-4 rounded-xl border border-front/10 bg-back-alt flex gap-1">
             <span className="">loading</span>
           </div>
         </main>
@@ -159,13 +231,11 @@ const UserPage: NextPage<Props> = (props) => {
                 Accuracy
               </div>
             </Container>
-            <Container className={"aspect-square flex flex-col gap-4 items-center justify-center"}>
-              <div className="text-base text-front">
-                {JSON.stringify(stats?.wordEntries)}
-              </div>
-              <div className="text-2xl text-front-alt">
-                word data
-              </div>
+            <Container className={" flex flex-col gap-4 items-center justify-center col-span-2 p-4"}>
+              {/* <div className=""> */}
+              {chartData && <LineChart data={chartData} />}
+              {/* </div> */}
+
             </Container>
           </div>
         </main>

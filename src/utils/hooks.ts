@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useThemeStore } from "./stores"
 import { isTheme, setTheme } from "./theme"
+import { api } from "./api"
 
 type Handler = (event: MouseEvent) => void
 
@@ -30,6 +31,8 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
     }
   }, [mouseEvent, handler, ref])
 }
+
+
 
 const useTheme = () => {
   const storeTheme = useThemeStore()
