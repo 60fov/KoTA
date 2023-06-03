@@ -68,7 +68,7 @@ const UserPage: NextPage<Props> = (props) => {
   const chartData = useMemo(() => {
     const entries = stats?.wordEntries
     if (!entries) return
-    
+
     const ndata = Object.values(groupBy(entries, entry => entry.createdAt.toISOString()))
       .map(group => {
         const avg = group.reduce((accum, entry) => {
@@ -77,7 +77,7 @@ const UserPage: NextPage<Props> = (props) => {
           accum.acc += accuracy
           accum.createdAt = entry.createdAt
           return accum
-        }, {acc: 0} as { acc: number, size: number, createdAt: Date })
+        }, { acc: 0 } as { acc: number, size: number, createdAt: Date })
         avg.acc /= group.length
         avg.size = group.length
         return avg
@@ -96,7 +96,7 @@ const UserPage: NextPage<Props> = (props) => {
     console.log("ndata", ndata)
     console.log("acc", accData)
     console.log("size", sizeData)
-    
+
 
     //   .reduce((accum, group) => {
     //     accum['accuracy'] ??= { id: 'accuracy', data: [] }
@@ -134,7 +134,7 @@ const UserPage: NextPage<Props> = (props) => {
         id: "entries",
         data: sizeData
       },
-      
+
     ]
   }, [stats])
 
@@ -211,7 +211,7 @@ const UserPage: NextPage<Props> = (props) => {
               "flex flex-col items-center justify-center gap-4"
             )}>
               <div className="w-16 rounded-full overflow-clip">
-                <Avatar src={profile.image} />
+                <Avatar />
               </div>
               <div className="text-3xl">
                 {profile?.name}
