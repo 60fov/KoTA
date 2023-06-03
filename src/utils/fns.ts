@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { nanoid } from "nanoid";
-import toast from "~/components/Toast";
+// import toast from "~/components/Toast";
 
 // yoink'd from shadecn, ty!
 // https://github.com/shadcn/taxonomy/blob/0bace50fcac775e7214eab01c96f7fea90d48e8c/lib/utils.ts
@@ -31,7 +31,10 @@ export const max = Math.max
 export const min = Math.min
 
 export const random = {
-    fromArray: <T>(array: T[], defaultValue: T): T => {
+    fromArray: <T>(array: T[]): T | undefined => {
+        return array[Math.floor(Math.random() * array.length)]
+    },
+    fromArrayOrDefault: <T>(array: T[], defaultValue: T): T => {
         return array[Math.floor(Math.random() * array.length)] ?? defaultValue
     },
     listFromArray: <T>(array: T[], length: number): T[] => {
@@ -43,7 +46,9 @@ export const random = {
     },
     uuid: () => crypto.randomUUID(),
     tsid: () => `${performance.now()}`,
-    nano: () => nanoid()
+    nano: () => nanoid(),
+    int: (min: number, max: number) => Math.floor(Math.random() * (max - min)) + min,
+    float: (min: number, max: number) => Math.random() * (max - min) + min,
 }
 
 type Accumulator<T> = Record<string, T[]>;
@@ -66,7 +71,7 @@ export const groupBy = <T, K extends string | number | symbol>(arr: T[], key: (i
 export async function copyToClipboard(text: string) {
     try {
         await navigator.clipboard.writeText(text)
-        toast.pop("📋 Copied Successfully!")
+        // toast.pop("📋 Copied Successfully!")
     } catch (err) {
         console.warn(`failed to copy ${text}`)
     }
