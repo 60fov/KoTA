@@ -38,3 +38,7 @@ export function setTheme(theme: Theme) {
 export function isTheme(theme: string): theme is Theme {
     return theme in themeList
 }
+
+export function nextTheme(theme: Theme): Theme {
+    return themeList[(themeList.indexOf(theme) + 1) % themeList.length] as Theme
+}
