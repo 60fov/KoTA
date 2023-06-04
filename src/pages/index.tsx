@@ -4,6 +4,8 @@ import { cn } from "~/utils/fns";
 import dynamic from "next/dynamic";
 
 import AppMenu from "~/components/AppMenu";
+import CmdKMenu from "~/components/CmdK";
+import KeyboardDisplay from "~/components/KeyboardDisplay";
 
 const MainView = dynamic(() => import("~/components/MainView"), {
   ssr: false
@@ -22,11 +24,18 @@ const Home: NextPage = () => {
         "h-screen"
       )}>
 
-        <div className="h-screen flex flex-col">
-          <MainView />
+        <CmdKMenu />
+
+        <div className="h-screen flex flex-col items-center gap-16">
+          <div className="h-1/2 w-[90%] max-w-6xl flex flex-col items-stretch justify-end">
+            <MainView />
+          </div>
+          <div className="h-1/2">
+            <KeyboardDisplay />
+          </div>
         </div>
 
-        <div className="absolute left-6 top-6">
+        <div className="absolute top-6 left-6">
           <AppMenu />
         </div>
 

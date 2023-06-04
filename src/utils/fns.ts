@@ -12,11 +12,18 @@ export function cn(...inputs: ClassValue[]) {
 
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export function createCtx<A extends {} | null>() {
+export function createCtx<A extends {} | null>(options?: {
+    allowUndefined?: boolean
+}) {
+
+    const {
+        allowUndefined = false
+    } = options || {}
+
     const ctx = createContext<A | undefined>(undefined);
     function useCtx() {
         const c = useContext(ctx);
-        if (c === undefined)
+        if (!allowUndefined && c === undefined)
             throw new Error("useCtx must be inside a Provider with a value");
         return c;
     }

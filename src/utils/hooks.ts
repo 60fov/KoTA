@@ -35,6 +35,7 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
 
 
 const useTheme = () => {
+export const useTheme = () => {
   const storeTheme = useThemeStore()
 
   // handles system-theme changes
@@ -61,4 +62,3 @@ const useTheme = () => {
   return [storeTheme.value, storeTheme.set] as const
 }
 
-export default useTheme

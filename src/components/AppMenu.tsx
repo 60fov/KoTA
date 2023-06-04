@@ -9,9 +9,10 @@ import Sun from "~/components/icons/Sun";
 import Moon from "~/components/icons/Moon";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Exit from "./icons/Exit";
-import useTheme from "~/utils/hooks";
+
 import Link from "next/link";
 import Avatar from "./ui/Avatar";
+import { useTheme } from "~/utils/hooks";
 
 export default function AppMenu() {
 

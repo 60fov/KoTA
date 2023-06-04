@@ -18,6 +18,16 @@ export default function MainView() {
   useEffect(() => {
     setWordList(listOf(randomWord, 20))
     inputRef.current?.focus()
+
+    const kh = () => {
+      if (document.activeElement === document.body) inputRef.current?.focus()
+    }
+    
+    window.addEventListener("keydown", kh)
+
+    return () => {
+      window.removeEventListener("keydown", kh)
+    }
   }, [])
 
   function listOf<T>(fn: () => T, length: number): T[] {
@@ -60,7 +70,7 @@ export default function MainView() {
     <div
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="h-full flex flex-col gap-8 items-center justify-center w-9/12 max-w-5xl mx-auto">
+      className="flex flex-col gap-8 items-center justify-center">
       <span className="text-front-alt font-medium italic">{currentWord?.en}</span>
       <Slider.Base index={index}>
         {
@@ -222,7 +232,7 @@ type Word = ReturnType<typeof randomWord>
 
 function randomWord() {
   return {
-    ...random.fromArray(WordList, { kr: "??", roman: "??", en: "??", }),
+    ...random.fromArray(WordList),
     id: random.nano()
   }
 }

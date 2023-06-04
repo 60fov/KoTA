@@ -1,6 +1,6 @@
 type Props = React.HTMLAttributes<SVGSVGElement>
 
-const Desktop = (props: Props) => (
+const Link = (props: Props) => (
   <svg
     width={15}
     height={15}
@@ -16,4 +16,4 @@ const Desktop = (props: Props) => (
   </svg>
 )
 
-export default Desktop
+export default Link
