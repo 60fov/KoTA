@@ -1,0 +1,163 @@
+[cmdk-dialog] {
+  position: fixed;
+  width: 90vw;
+  max-width: 640px;
+  max-height: 640px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 12px;
+  border: 0.5px solid rgb(var(--color-front) / .2);
+  outline: none;
+  overflow: hidden;
+}
+
+[cmdk-root] {
+  padding: 1rem;
+  background-color: rgb(var(--color-back) / 0.9);
+  backdrop-filter: blur(12px);
+  color: theme('colors.front-alt');
+}
+
+[cmdk-input] {
+  color: theme('colors.front-alt');
+  padding: 0.5rem;
+  background: transparent;
+  outline: none;
+  font-size: larger;
+  width: 100%;
+
+  &::placeholder {}
+}
+
+
+[cmdk-list] {
+  padding: 0 0.5rem;
+  overflow: auto;
+  height: min(360px, var(--cmdk-list-height));
+}
+
+[cmdk-group] {
+  margin: 0.5rem 0;
+}
+
+[cmdk-group-heading] {
+  padding: 8px 0;
+  margin: 0 0 8px 0;
+  font-size: small;
+  line-height: 100%;
+  padding: 0.25rem;
+}
+
+[cmdk-group-items] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: large;
+}
+
+[cmdk-item] {
+  cursor: pointer;
+  padding: 12px;
+  border-radius: theme('borderRadius.lg');
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  will-change: background, color;
+
+  &[data-selected='true'] {
+    background: rgb(var(--color-back-alt) / 0.5);
+    color: rgb(var(--color-front));
+
+    [cmdk-framer-item-subtitle] {}
+  }
+
+  &[data-disabled='true'] {}
+
+  &+[cmdk-item] {}
+
+  .icon-wrapper {
+    // padding: 16px;
+  }
+
+  p {
+    flex-grow: 1;
+  }
+}
+
+[cmdk-item-label] {
+
+}
+
+[cmdk-item-state-display] {
+  padding: 4px;
+  border-radius: 4px;
+  background: rgb(var(--color-back-alt));
+  font-size: smaller;
+  line-height: 100%;
+}
+
+[cmdk-separator] {
+  margin: 0.5rem;
+  height: 0.5px;
+  background: rgb(var(--color-front-alt)/.2);
+  // background: linear-gradient(90deg,
+  //     transparent 0%,
+  //     rgb(var(--color-front-alt)/.4) 10%,
+  //     rgb(var(--color-front-alt)/.5) 50%,
+  //     rgb(var(--color-front-alt)/.4) 90%,
+  //     transparent 100%);
+}
+
+[cmdk-empty] {}
+
+
+[cmdk-framer-icon-wrapper] {}
+
+[cmdk-framer-item-meta] {}
+
+[cmdk-framer-item-subtitle] {}
+
+[cmdk-framer-items] {}
+
+[cmdk-framer-left] {}
+
+[cmdk-framer-separator] {}
+
+[cmdk-framer-right] {
+  button {}
+
+  input[type='text'] {
+    &::placeholder {}
+
+    @media (prefers-color-scheme: dark) {}
+  }
+
+  [cmdk-framer-radio] {
+    input {}
+  }
+
+  img {}
+
+  [cmdk-framer-container] {}
+
+  [cmdk-framer-badge] {}
+
+  [cmdk-framer-slider] {
+    div {}
+  }
+}
+
+[cmdk-framer-header] {
+  svg {}
+}
+
+@media (max-width: 640px) {
+  .framer {
+    [cmdk-framer-icon-wrapper] {}
+
+    [cmdk-framer-item-subtitle] {}
+  }
+}
