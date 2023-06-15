@@ -11,21 +11,22 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function createCtx<A extends {} | null>(options?: {
-    allowUndefined?: boolean
-}) {
-
-    const {
-        allowUndefined = false
-    } = options || {}
-
-    const ctx = createContext<A | undefined>(undefined);
+export function createSafeCtx<A>(defaultValue?: A) {
+    const ctx = createContext<A | undefined>(defaultValue);
     function useCtx() {
         const c = useContext(ctx);
-        if (!allowUndefined && c === undefined)
+        if (c === undefined) {
             throw new Error("useCtx must be inside a Provider with a value");
+        }
         return c;
+    }
+    return [useCtx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
+}
+
+export function createCtx<A>(defaultValue?: A) {
+    const ctx = createContext<A | undefined>(defaultValue);
+    function useCtx() {
+        return useContext(ctx);
     }
     return [useCtx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
 }
@@ -61,11 +62,11 @@ export const random = {
 type Accumulator<T> = Record<string, T[]>;
 
 export const byGroup = <T>(fn: (item: T) => string) => [
-  (acc: Accumulator<T>, item: T) => {
-    (acc[fn(item)] ??= []).push(item)
-    return acc
-  },
-  {} as Accumulator<T>
+    (acc: Accumulator<T>, item: T) => {
+        (acc[fn(item)] ??= []).push(item)
+        return acc
+    },
+    {} as Accumulator<T>
 ] as const;
 
 

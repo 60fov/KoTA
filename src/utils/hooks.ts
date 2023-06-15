@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import {useEffect, useState } from "react"
 import { useThemeStore } from "./stores"
 import { isTheme, setTheme } from "./theme"
 import { api } from "./api"
@@ -67,7 +67,7 @@ import { type KeyboardInputObservable, KeyboardInputObserver } from "~/utils/kio
 
 type KioContextInterface = KeyboardInputObservable
 
-const [useKioContext, KioContextProvider] = createCtx<KioContextInterface>({ allowUndefined: true })
+const [useKioContext, KioContextProvider] = createCtx<KioContextInterface>()
 
 export const useKio = (key: string) => {
   const kio = useKioContext()
@@ -82,14 +82,12 @@ export const useKio = (key: string) => {
         const onlyShift = !e.metaKey && !e.altKey && !e.ctrlKey
         if (e.key === key && onlyShift) {
           setDown(true)
-          console.log(key, true)
         }
       },
       up: (e: KeyboardEvent) => {
         const onlyShift = !e.metaKey && !e.altKey && !e.ctrlKey
         if (e.key === key && onlyShift) {
           setDown(false)
-          console.log(key, false)
         }
       }
     })

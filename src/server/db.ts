@@ -30,6 +30,7 @@ const prisma =
         wordEntry: {
           async createMany({ args, query }) {
             const result = await query(args)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
             const userId = (args.data as unknown as { userId: string }[])[0]?.userId!
             await deleteExtraWordEntries(userId)
             return result

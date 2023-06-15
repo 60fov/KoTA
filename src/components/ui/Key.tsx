@@ -1,8 +1,10 @@
+import dynamic from "next/dynamic"
 import { useState } from "react"
 import { cn } from "~/utils/fns"
 import { useKio } from "~/utils/hooks"
 
 type Props = {
+  size?: number
   label?: string
   code: string
   down?: boolean
@@ -14,6 +16,7 @@ type Props = {
 // TODO: switch to position centric pacement of key symbols
 const Key = (props: Props) => {
   const {
+    size = 44,
     label,
     code,
     down: downProp,
@@ -26,9 +29,10 @@ const Key = (props: Props) => {
 
   return (
     <div
+      style={{width: size, height: size}}
       className={cn(
         "relative",
-        "w-10 h-10 flex items-center justify-center",
+        "flex items-center justify-center",
         "rounded-md text-front/90 bg-front-alt/10 border-[rgb(0,0,0)]/20",
         "transition-all duration-[25ms] select-none",
         expand ? 'grow' : '',

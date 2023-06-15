@@ -22,10 +22,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
   useEffect(() => {
     const kioInstance = new KeyboardInputObservable()
     setKio(kioInstance)
-    console.log("new kio inst", kioInstance)
-
+    
     return () => {
-      console.log("de mount kio", kio)
       kioInstance.destroy()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

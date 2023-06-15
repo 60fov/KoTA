@@ -4,14 +4,14 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 
 import { type CSSVariableProperties } from "~/utils/types"
-import { cn, createCtx } from "~/utils/fns"
+import { cn, createSafeCtx } from "~/utils/fns"
 
 interface MultiToggleContextInterface {
   name: string
   value: unknown
 }
 
-const [useMultiToggleContext, MultiToggleProvider] = createCtx<MultiToggleContextInterface>()
+const [useMultiToggleContext, MultiToggleProvider] = createSafeCtx<MultiToggleContextInterface>()
 
 interface Props<T extends string> {
   name: string
@@ -78,6 +78,7 @@ export const Item = <T extends string>({ value, children = value, style }: ItemP
       <input
         className="peer appearance-none absolute"
         type="radio"
+        // @typescript-eslint/no-unsafe-assignment
         name={toggleName}
         id={value}
         value={value}
@@ -102,6 +103,7 @@ export const Item = <T extends string>({ value, children = value, style }: ItemP
           </span>
           {toggleValue === value &&
             <motion.div
+              // @typescript-eslint/restrict-template-expressions
               layoutId={`${toggleName}-value-bg`}
               transition={{
                 stiffness: 120

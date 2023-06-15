@@ -13,11 +13,14 @@ import Exit from "./icons/Exit";
 import Link from "next/link";
 import Avatar from "./ui/Avatar";
 import { useTheme } from "~/utils/hooks";
+import Check from "./icons/Check";
+import { useKeyboardSettingsStore } from "~/utils/stores";
 
 export default function AppMenu() {
 
   const { data } = useSession()
   const [theme, setTheme] = useTheme()
+  const [keyboardEnabled, setKeyboardEnabled] = useKeyboardSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
 
   const themeIcon = () => {
     switch (theme) {
@@ -61,12 +64,18 @@ export default function AppMenu() {
         >
           Change Theme
         </Menu.Item>
-        {/* <Menu.Divider /> */}
-        {/* <Menu.Section>
-          <Menu.Item.Toggle icon={<Check />}>Show Keyboard</Menu.Item.Toggle>
-          <Menu.Item.Toggle icon={<Check />}>Enable TTS</Menu.Item.Toggle>
-          <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle>
-        </Menu.Section> */}
+        <Menu.Divider />
+        <Menu.Section>
+          <Menu.Item.Toggle
+            icon={<Check />}
+            toggle={keyboardEnabled}
+            onToggleChange={setKeyboardEnabled}
+          >
+            Show Keyboard
+          </Menu.Item.Toggle>
+          {/* <Menu.Item.Toggle icon={<Check />}>Enable TTS</Menu.Item.Toggle> */}
+          {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
+        </Menu.Section>
         <Menu.Divider />
         <Menu.Section title="account">
           {

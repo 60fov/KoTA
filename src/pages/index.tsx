@@ -1,15 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { cn } from "~/utils/fns";
-import dynamic from "next/dynamic";
 
 import AppMenu from "~/components/AppMenu";
 import CmdKMenu from "~/components/CmdK";
 import KeyboardDisplay from "~/components/KeyboardDisplay";
-
-const MainView = dynamic(() => import("~/components/MainView"), {
-  ssr: false
-})
+import Dynamic from "~/components/Dynamic";
+import MainView from "~/components/MainView";
 
 const Home: NextPage = () => {
 
@@ -28,10 +25,14 @@ const Home: NextPage = () => {
 
         <div className="h-screen flex flex-col items-center gap-16">
           <div className="h-1/2 w-[90%] max-w-6xl flex flex-col items-stretch justify-end">
-            <MainView />
+            <Dynamic>
+              <MainView />
+            </Dynamic>
           </div>
           <div className="h-1/2">
-            <KeyboardDisplay />
+            <Dynamic>
+              <KeyboardDisplay />
+            </Dynamic>
           </div>
         </div>
 

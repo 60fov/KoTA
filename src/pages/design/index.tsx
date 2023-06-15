@@ -26,6 +26,7 @@ import { setTheme, type Theme } from "~/utils/theme";
 import alluraGlare from "~/../public/allura_glare.jpg"
 import Input from "~/components/ui/Input";
 import toast from "~/components/Toast";
+import Dynamic from "~/components/Dynamic";
 
 
 const Home: NextPage = () => {
@@ -43,7 +44,7 @@ const Home: NextPage = () => {
   const [sliderOpen, setSliderOpen] = useState(true)
 
   function randomWord() {
-    const word = random.fromArray(wordList, "???")
+    const word = random.fromArrayOrDefault(wordList, "???")
     const id = random.nano()
     return { word, id }
   }
@@ -88,7 +89,7 @@ const Home: NextPage = () => {
           </Tile>
 
           <Tile name="Toast">
-            <Button onClick={() => {toast.pop("Congrats on your Toast!", "you successfully pop'd a toast, time to celebrate! 🎉")}}>Pop Toast</Button>
+            <Button onClick={() => { toast.pop("Congrats on your Toast!", "you successfully pop'd a toast, time to celebrate! 🎉") }}>Pop Toast</Button>
           </Tile>
 
 
@@ -109,7 +110,9 @@ const Home: NextPage = () => {
           </Tile>
 
           <Tile name="Key">
-            <Key label="ㄹ" code="f" />
+            <Dynamic>
+              <Key label="ㄹ" code="f" />
+            </Dynamic>
           </Tile>
 
           <Tile name="Select">

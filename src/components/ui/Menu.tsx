@@ -1,5 +1,5 @@
 import React, { type ReactNode, type ReactElement, useState, useRef, useEffect } from "react";
-import { cn, createCtx } from "~/utils/fns";
+import { cn, createSafeCtx } from "~/utils/fns";
 import Check from "../icons/Check";
 import Portal from "./Portal";
 
@@ -19,7 +19,7 @@ interface MenuContextInterface {
   baseRef: React.RefObject<HTMLDivElement>
 }
 
-const [useMenuContext, MenuContextProvider] = createCtx<MenuContextInterface>()
+const [useMenuContext, MenuContextProvider] = createSafeCtx<MenuContextInterface>()
 
 interface Props {
   open?: boolean
@@ -241,7 +241,7 @@ Item.Toggle = function ItemToggle(props: ToggleProps) {
     ...restProps
   } = props
 
-  const [toggle, setToggle] = useState(initialToggle)
+  const [toggle, setToggle] = useState(toggleProp ?? initialToggle)
 
   const handleChange: React.MouseEventHandler = () => {
     const newToggle = !toggle
