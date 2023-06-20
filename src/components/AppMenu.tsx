@@ -82,7 +82,7 @@ export default function AppMenu() {
             data?.user ?
               <>
                 <Menu.Item as={Link} icon={<Avatar />} href={`/account`}>{data.user.name || "???"}</Menu.Item>
-                <Menu.Item as={Link} icon={<Dashboard />} href={`/user/me`}>dashboard</Menu.Item>
+                <Menu.Item as={Link} icon={<Dashboard />} href={`/dashboard`}>dashboard</Menu.Item>
                 <Menu.Item as="button" icon={<Exit />} onClick={handleSignOut}>sign-out</Menu.Item>
               </>
               :

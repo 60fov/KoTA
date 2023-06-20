@@ -26,6 +26,11 @@ const config = {
         source: '/user',
         destination: '/user/me',
         permanent: true
+      },
+      {
+        source: '/dashboard',
+        destination: '/dashboard/stats',
+        permanent: true
       }
     ]
   }

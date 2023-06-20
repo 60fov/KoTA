@@ -1,0 +1,56 @@
+.wordlist {
+  height: 100%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.word {
+  display: flex;
+  align-items: center;
+
+  border-radius: 6px;
+  padding: 12px;
+
+  outline: none;
+  outline-offset: 2px;
+
+  color: rgb(var(--color-front));
+  // background: rgb(var(--color-back-alt) / 0.75);
+  // border: 0.5px solid rgb(var(--color-front) / 0.10);
+
+  &:focus-visible {
+    outline: rgb(var(--color-access)) solid 1px;
+  }
+
+  &:hover {
+    background: rgb(var(--color-back-alt));
+  }
+
+  // [data-toggle] {
+  //   align-self: center;
+  //   width: 32px;
+  //   height: 32px;
+  // }
+
+  [data-word-label] {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  [data-kr] {
+    line-height: 1;
+    font-size: 24px;
+  }
+
+  [data-en] {
+    line-height: 1;
+    color: rgb(var(--color-front-alt));
+  }
+
+  [data-spacer] {
+    flex: 1;
+  }
+}

@@ -1,0 +1,57 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  max-width: 768px;
+  height: 100%;
+  margin: 0 auto;
+  gap: 32px;
+}
+
+.dashboardNav {
+  align-self: flex-start;
+  display: flex;
+  gap: 2px;
+
+  transition: all 50ms;
+  border-radius: 6px;
+  padding: 2px;
+
+  outline: none;
+  outline-offset: 2px;
+
+  color: rgb(var(--color-front));
+  background: rgb(var(--color-back-alt) / 0.75);
+  border: 0.5px solid rgb(var(--color-front) / 0.10);
+
+  &:focus-visible {
+    outline: rgb(var(--color-access)) solid 1px;
+  }
+
+  &:hover {
+    background: rgb(var(--color-back-alt));
+  }
+
+  &:active {
+    // background: rgb(var(--color-back-alt) / 0.50);
+  }
+
+  &:disabled {
+    color: rgb(var(--color-front-alt));
+    border-color: rgb(var(--color-front-alt) / 0.20);
+    background: rgb(var(--color-back-alt));
+  }
+
+  [data-item] {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 8px;
+    line-height: 1;
+    display: flex;
+    gap: 6px;
+
+    &[data-selected=true] {
+      box-shadow: var(--shadow-md);
+      background: rgb(var(--color-back));
+    }
+  }
+}
