@@ -114,7 +114,4 @@ describe('hangul', () => {
     ])('$blocks -> $jamo', ({ blocks, jamo }) => {
         expect(decompose(blocks)).toStrictEqual(jamo)
     })
-
-
-
 })
