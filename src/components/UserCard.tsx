@@ -1,5 +1,5 @@
 import { cn, copyToClipboard, getProfileUrl } from "~/utils/fns"
-import { CSSVariableProperties } from "~/utils/types"
+import { type CSSVariableProperties } from "~/utils/types"
 
 interface Props {
   profilePic: string

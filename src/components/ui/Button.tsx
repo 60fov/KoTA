@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { cn } from "~/utils/fns";
-import type { VariantLUT, VariantValue } from "~/utils/types";
+import type { CSSVariableProperties, VariantLUT, VariantValue } from "~/utils/types";
 
 
 const ButtonVariantList = ["default", "cta", "passive"] as const
@@ -10,7 +10,7 @@ const ButtonVariantLUT: VariantLUT<ButtonVariantValue> = {
   default: cn(
     "bg-back-alt/25 text-front",
     "border-[0.5px] border-front/10",
-    "hover:bg-back-alt active:bg-back-alt/25",
+    "hover:bg-back-alt active:bg-back-alt/75",
   ),
   cta: cn(
     "bg-front/90 text-back border-[0.5px] border-front/50",
@@ -44,20 +44,29 @@ const Button = (props: Props) => {
   return (
     <button
       className={cn(
-        "transition-all duration-100",
-        "rounded-md outline-access outline-1 outline-offset-2",
+        "relative group transition-all duration-100",
+        "rounded-md p-v outline-access outline-1 outline-offset-2",
         "focus-visible:outline",
         !disabled ? vstyles : "text-front-alt border border-front-alt/20 bg-back-alt",
         className
       )}
+      style={{ "--spacing": "2px" } as CSSVariableProperties}
       disabled={disabled}
       {...restProps}>
-      {
-        children && <div className="p-2 leading-none">{children}</div>
-      }
-      {
-        icon && <div className="p-2">{icon}</div>
-      }
+      <div
+        className={cn(
+          "bg-back rounded transition-all",
+          "group-active:scale-y-[.95] group-active:scale-x-[.975]",
+          "border-front/5 border-[0.5px]",
+          "shadow-md group-hover:shadow-md group-active:shadow-sm"
+        )}>
+        {
+          children && <div className="p-2 leading-none">{children}</div>
+        }
+        {
+          icon && <div className="p-2">{icon}</div>
+        }
+      </div>
     </button>
   )
 }

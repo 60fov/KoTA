@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode, InputHTMLAttributes } from "react"
+import React, { useState, type ReactNode, type InputHTMLAttributes } from "react"
 import { cn } from "~/utils/fns"
 
 interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, "prefix"> {
