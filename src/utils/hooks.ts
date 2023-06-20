@@ -1,7 +1,6 @@
-import {useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useThemeStore } from "./stores"
-import { isTheme, setTheme } from "./theme"
-import { api } from "./api"
+import { setTheme } from "./theme"
 
 type Handler = (event: MouseEvent) => void
 
@@ -60,46 +59,3 @@ export const useTheme = () => {
 
   return [storeTheme.value, storeTheme.set] as const
 }
-
-
-import { createCtx } from "~/utils/fns";
-import { type KeyboardInputObservable, KeyboardInputObserver } from "~/utils/kio";
-
-type KioContextInterface = KeyboardInputObservable
-
-const [useKioContext, KioContextProvider] = createCtx<KioContextInterface>()
-
-export const useKio = (key: string) => {
-  const kio = useKioContext()
-
-  const [down, setDown] = useState(false)
-
-  useEffect(() => {
-    if (!kio) return
-
-    const observer = new KeyboardInputObserver({
-      down: (e: KeyboardEvent) => {
-        const onlyShift = !e.metaKey && !e.altKey && !e.ctrlKey
-        if (e.key === key && onlyShift) {
-          setDown(true)
-        }
-      },
-      up: (e: KeyboardEvent) => {
-        const onlyShift = !e.metaKey && !e.altKey && !e.ctrlKey
-        if (e.key === key && onlyShift) {
-          setDown(false)
-        }
-      }
-    })
-
-    kio.observe(key, observer)
-
-    return () => {
-      kio.unobserve(key, observer)
-    }
-  }, [kio, key])
-
-  return down
-}
-
-export { KioContextProvider }

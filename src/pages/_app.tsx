@@ -10,8 +10,6 @@ import { Toaster } from "sonner";
 
 import "~/styles/globals.css";
 import "~/styles/CmdK.scss";
-import { KioContextProvider } from "~/utils/hooks";
-import { KeyboardInputObservable } from "~/utils/kio";
 
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
@@ -27,17 +25,8 @@ const MyApp = ({
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {
 
-  const [kio, setKio] = useState<KeyboardInputObservable>()
+  const kio = useKio()
 
-  useEffect(() => {
-    const kioInstance = new KeyboardInputObservable()
-    setKio(kioInstance)
-    
-    return () => {
-      kioInstance.destroy()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
   const getLayout = Component.getLayout ?? ((page) => page)
 
   return (

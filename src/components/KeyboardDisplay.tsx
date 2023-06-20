@@ -1,7 +1,8 @@
 import { cn } from "~/utils/fns";
 import Key from "./ui/Key";
-import { useKio } from "~/utils/hooks";
+
 import { useKeyboardSettingsStore } from "~/utils/stores";
+import { useKioKey } from "~/utils/hooks/kio";
 
 export default function KeyboardDisplay(props: {
   keySize?: number,
@@ -17,7 +18,7 @@ export default function KeyboardDisplay(props: {
 
   const keyboardEnabled = useKeyboardSettingsStore(({ enabled }) => enabled)
 
-  const shift = useKio("Shift")
+  const shift = useKioKey("Shift")
 
   if (!keyboardEnabled) {
     return null

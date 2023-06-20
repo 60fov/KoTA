@@ -1,7 +1,8 @@
 import dynamic from "next/dynamic"
 import { useState } from "react"
 import { cn } from "~/utils/fns"
-import { useKio } from "~/utils/hooks"
+import { useKioKey } from "~/utils/hooks/kio"
+
 
 type Props = {
   size?: number
@@ -23,7 +24,7 @@ const Key = (props: Props) => {
     expand = false,
   } = props
 
-  const isDown = useKio(code)
+  const isDown = useKioKey(code)
 
   const down = downProp ?? isDown
 
