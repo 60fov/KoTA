@@ -83,7 +83,7 @@ const Home: NextPage = () => {
             <UserCard username={"ily"} wpm={123} wordsTyped={152342} accuracy={.93} profilePic={alluraGlare.src} />
           </Tile>
           <Tile name="Toggle">
-            <Toggle>
+            <Toggle defaultValue={true}>
               <HiOutlineFaceSmile />
             </Toggle>
           </Tile>

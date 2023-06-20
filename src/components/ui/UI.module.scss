@@ -1,0 +1,35 @@
+.toggle {
+  position: relative;
+  padding: var(--spacing-2);
+  background: rgb(var(--color-back-alt) / .5);
+  color: rgb(var(--color-front));
+
+  transition: all 75ms;
+
+  border: var(--border);
+  border-radius: var(--radius-6);
+
+  outline-offset: var(--spacing-2);
+
+  &:hover {
+    background: rgb(var(--color-back-alt));
+  }
+
+  &:focus-visible {
+    outline: var(--outline);
+  }
+  
+  [data-toggle-content] {
+    padding: var(--spacing-6);
+    background: rgb(var(--color-back));
+    border-radius: var(--radius-4);
+    transform: scale(0);
+    transition: all 150ms;
+  }
+
+  &[data-state=on] {
+    [data-toggle-content] {
+      transform: scale(1);
+    }
+  }
+}

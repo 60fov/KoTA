@@ -18,6 +18,22 @@
     --color-error: 242 88 88;
     --color-access: 50 50 255;
 
+    --spacing-2: 2px;
+    --spacing-4: 4px;
+    --spacing-6: 6px;
+    --spacing-8: 6px;
+    --spacing-v: var(--spacing);
+
+    --radius-4: 4px;
+    --radius-6: 6px;
+    --radius-8: 8px;
+    --radius-v: var(--radius);
+    
+    --border: 0.5px solid rgb(var(--color-front) / 0.1);
+    --outline: rgb(var(--color-access)) solid 1px;
+    
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
 
     font-synthesis: none;
