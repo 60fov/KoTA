@@ -12,6 +12,7 @@ import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 
 import fuzzysort from 'fuzzysort';
 import { decompose } from "lib/kime/jamo";
+import Spacer from "~/components/ui/Spacer";
 
 
 const Words: NextPageWithLayout = () => {
@@ -77,7 +78,7 @@ function Word(props: { word: typeof WordList[number] }) {
         <span data-kr>{word.kr}</span>
         <span data-en>{word.en}</span>
       </div>
-      <span data-spacer />
+      <Spacer.Flex flex="1" />
       <Toggle><Check /></Toggle>
     </div>
   )
