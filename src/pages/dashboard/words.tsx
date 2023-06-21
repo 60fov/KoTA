@@ -12,7 +12,10 @@ import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 
 import fuzzysort from 'fuzzysort';
 import { decompose } from "lib/kime/jamo";
+import { RadixIconsSpeakerLoud } from "~/components/icons/Speaker";
+import { tts } from "~/utils/tts";
 import Spacer from "~/components/ui/Spacer";
+import { useTTSSettingsStore } from "~/utils/stores";
 
 
 const Words: NextPageWithLayout = () => {
@@ -37,8 +40,6 @@ const Words: NextPageWithLayout = () => {
       keys: ["en", "decomposedKr"],
       all: true
     }).map(({ obj: { decomposedKr, ...word } }) => word)
-
-    console.log(filteredWords)
 
     setWordList(filteredWords)
 
@@ -72,11 +73,32 @@ function Word(props: { word: typeof WordList[number] }) {
     word
   } = props
 
+  const [speaking, setSpeaking] = useState(false)
+  const { pitch, rate, voice, volume } = useTTSSettingsStore()
+
+  const handleClick: React.MouseEventHandler = () => {
+    tts(word.kr, {
+      lang: 'ko',
+      force: true,
+      pitch,
+      rate,
+      volume,
+      voice,
+      onstart: () => setSpeaking(true),
+      onend: () => setSpeaking(false),
+      onerror: () => setSpeaking(false),
+    })
+  }
+
   return (
-    <div className={styles.word}>
-      <div data-word-label>
+    <div className={styles.word} onClick={handleClick}>
+      <div data-label>
         <span data-kr>{word.kr}</span>
         <span data-en>{word.en}</span>
+      </div>
+      <Spacer.Flex flex="0 1 16px" />
+      <div data-speaking-icon data-visible={speaking}>
+        <RadixIconsSpeakerLoud />
       </div>
       <Spacer.Flex flex="1" />
       <Toggle><Check /></Toggle>

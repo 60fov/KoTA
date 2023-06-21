@@ -26,13 +26,14 @@ interface TTSSettingsStore {
   volume: number // 0-1
   pitch: number // 0-2
   rate: number // 0.1-10
-  // voice: string
+  voice?: SpeechSynthesisVoice
   enable: () => void
   disable: () => void
   setEnabled: (enabled: boolean) => void
   setVolume: (volume: number) => void
   setPitch: (pitch: number) => void
   setRate: (rate: number) => void
+  setVoice: (voice: SpeechSynthesisVoice) => void
 }
 
 export const useTTSSettingsStore = create<TTSSettingsStore>()(
@@ -48,6 +49,7 @@ export const useTTSSettingsStore = create<TTSSettingsStore>()(
       setVolume: (volume) => set(() => ({ volume })),
       setPitch: (pitch) => set(() => ({ pitch })),
       setRate: (rate) => set(() => ({ rate })),
+      setVoice: (voice) => set(() => ({ voice }))
     }),
     { name: 'tts' }
   )
