@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import styles from "./UI.module.scss";
-import { type Controllable } from "./types";
+import { type Propagatable, type Controllable } from "./types";
 
-interface Props extends Controllable<boolean> {
+interface Props extends Controllable<boolean>, Propagatable {
   className?: string
   children?: React.ReactNode
 }
@@ -12,11 +12,13 @@ const Toggle = ({
   defaultValue,
   value: valueProp,
   onValueChange,
+  propagate = false,
   children
 }: Props) => {
   const [value, setValue] = useState(valueProp ?? defaultValue)
 
-  const handleClick: React.MouseEventHandler = () => {
+  const handleClick: React.MouseEventHandler = (e) => {
+    if (!propagate) e.stopPropagation()
     const newValue = !value
     setValue(newValue)
     if (onValueChange) onValueChange(newValue)
