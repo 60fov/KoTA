@@ -1,10 +1,10 @@
 import { decompose } from "lib/kime/jamo"
 import { bench, describe } from "vitest"
-import { WordList } from "~/utils/words"
+import { wordList } from "~/utils/words"
 
 describe('decompose', () => {
   bench('decompose', () => {
-    WordList.forEach(({ kr }) => decompose(kr))
+    wordList.forEach(({ kr }) => decompose(kr))
   },)
 })
 

@@ -5,9 +5,23 @@ const singleJamo = [
     'ㅜ', 'ㅠ', 'ㅡ', 'ㅣ'
 ]
 
-export type Word = typeof WordList[number]
+export type WordType = WordData & {
+    enabled: boolean
+    key: string
+}
 
-export const WordList = [
+export type WordData = typeof wordList[number]
+
+export function wordCompare(a: WordType, b: WordType) {
+    return a.en === b.en
+        && a.kr === b.kr
+}
+
+export function wordKey(word: { kr: string, en: string }) {
+    return word.kr + word.en
+}
+
+export const wordList = [
     { "kr": "책", "roman": "chaek", "en": "book" },
     { "kr": "몇", "roman": "myeot", "en": "how many" },
     { "kr": "없다", "roman": "eopda", "en": "to not exist" },
@@ -356,7 +370,15 @@ export const WordList = [
     { "kr": "친구", "roman": "chin'gu", "en": "friend" },
     { "kr": "은행", "roman": "eunhaeng", "en": "bank" },
     { "kr": "팔다", "roman": "palda", "en": "to sell" },
-    { "kr": "그런데", "roman": "geureonde", "en": "but, however, by the way" }
+    { "kr": "그런데", "roman": "geureonde", "en": "but, however, by the way" },
 ]
+
+const Word = {
+    list: wordList,
+    key: wordKey,
+    compare: wordCompare,
+}
+
+export default Word
 
 // export default { singleJamo, words }

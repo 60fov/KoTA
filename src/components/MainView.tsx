@@ -1,28 +1,39 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import Slider from "~/components/ui/Slider";
-import { WordList } from "~/utils/words";
 import useKime from "lib/hooks/useKime";
 import { animate, AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { cn, random } from "~/utils/fns";
 import { decompose } from "lib/kime/jamo";
 import { useUserMetricAnalytics } from "~/utils/analytics";
+import { useWordTableStore } from "~/utils/stores";
+import { type WordType } from "~/utils/words";
+import useClientStore from "~/utils/hooks/useClientStore";
 
 export default function MainView() {
   const inputRef = useRef<InputFieldHandle>(null)
 
-  const [wordList, setWordList] = useState<Word[]>()
+  const { wordTable, hydrated: wordTableHydrated } = useClientStore(useWordTableStore, (state) => state)
+  const [wordList, setWordList] = useState<WordType[]>()
   const [index, setIndex] = useState(0)
-
+  
   const currentWord = wordList?.[index]
 
+  const enabledWords = useMemo(() => {
+    return Object
+      .values(wordTable)
+      .filter((word) => word.enabled)
+  }, [wordTable])
+
+
   useEffect(() => {
-    setWordList(listOf(randomWord, 20))
+    void useWordTableStore.persist.rehydrate()
+
     inputRef.current?.focus()
 
     const kh = () => {
       if (document.activeElement === document.body) inputRef.current?.focus()
     }
-    
+
     window.addEventListener("keydown", kh)
 
     return () => {
@@ -30,20 +41,16 @@ export default function MainView() {
     }
   }, [])
 
-  function listOf<T>(fn: () => T, length: number): T[] {
-    const result: T[] = []
-    for (let i = 0; i < length; i++) {
-      result.push(fn())
-    }
-    return result
-  }
-
+  useEffect(() => {
+    const initialWords = random.shuffle(enabledWords.slice(0, 20))
+    setWordList(initialWords)
+  }, [enabledWords])
 
   function nextWord() {
     if (!wordList) return
 
     setIndex(index + 1)
-    setWordList([...wordList, randomWord()])
+    setWordList([...wordList, random.fromArrayOrDefault(enabledWords, {} as WordType)])
     inputRef.current?.clear()
   }
 
@@ -75,7 +82,7 @@ export default function MainView() {
       <Slider.Base index={index}>
         {
           wordList && wordList.map((word) => (
-            <Slider.Item onViewLeave={handleViewLeave} id={word.id} key={word.id}>{word.kr}</Slider.Item>
+            <Slider.Item onViewLeave={handleViewLeave} id={word.key} key={word.key}>{word.kr}</Slider.Item>
           ))
         }
       </Slider.Base>
@@ -85,7 +92,7 @@ export default function MainView() {
 }
 
 interface InputFieldProps {
-  goal?: Word,
+  goal?: WordType,
   spaceChar?: string
   onMatch: () => void
   matchOnSpace?: boolean
@@ -226,13 +233,4 @@ function samePrefix(a: string[], b: string[]) {
   }
 
   return i === a.length || i === b.length;
-}
-
-type Word = ReturnType<typeof randomWord>
-
-function randomWord() {
-  return {
-    ...random.fromArray(WordList),
-    id: random.nano()
-  }
 }

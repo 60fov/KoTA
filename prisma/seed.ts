@@ -4,11 +4,11 @@ import { createId as cuid } from "@paralleldrive/cuid2";
 import { prisma } from "../src/server/db";
 import { decompose } from "../lib/kime/jamo";
 import { random } from "../src/utils/fns";
-import { WordList } from "../src/utils/words";
+import { wordList } from "../src/utils/words";
 import { type WordEntry } from "@prisma/client";
 
 
-const CPW = WordList.reduce((accum, { kr }) => accum + decompose(kr).length, 0) / WordList.length
+const CPW = wordList.reduce((accum, { kr }) => accum + decompose(kr).length, 0) / wordList.length
 console.log("CPW", CPW)
 
 type WE = Omit<WordEntry, "id">
@@ -21,7 +21,7 @@ const users = Array.from({ length: 20 }).map((_, i) => {
   const id = cuid()
 
   const entries = Array.from({ length: random.int(0, 100) }).map(() => {
-    const word = random.fromArray(WordList)
+    const word = random.fromArray(wordList)
     if (!word) throw Error()
     const length = decompose(word.kr).length
     const strokes = Math.floor(length * (1 + (1 - acc * con)))

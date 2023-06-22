@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { type Theme } from './theme'
+import Word, { type WordType } from './words'
 
 
 interface ThemeStore {
@@ -71,5 +72,94 @@ export const useKeyboardSettingsStore = create<KeyboardSettingsStore>()(
       setEnabled: (enabled) => set(() => ({ enabled })),
     }),
     { name: 'keyboard' }
+  )
+)
+
+
+interface WordTableStore {
+  wordTable: Record<string, WordType>
+  // setWordMap: (words: Word[]) => void
+  setWord: (key: string, word: WordType) => void
+  toggleWord: (key: string) => void
+  enableWord: (key: string) => void
+  disableWord: (key: string) => void
+  addWord: (word: WordType) => void
+  removeWord: (word: WordType) => void
+  addWords: (...word: WordType[]) => void
+  removeWords: (...word: WordType[]) => void
+}
+
+export const useWordTableStore = create<WordTableStore>()(
+  persist(
+    (set) => ({
+      wordTable: {},
+      setWord: (key: string, word: WordType) => set(({ wordTable }) => {
+        wordTable[key] = word
+        return {
+          ...wordTable,
+          [key]: word
+        }
+      }),
+      toggleWord: (key: string) => set(({ wordTable }) => {
+        const word = wordTable[key]
+        if (!word) throw new Error("word not in table")
+        word.enabled = !word.enabled
+        return {
+          ...wordTable,
+          [key]: word
+        }
+      }),
+      enableWord: (key: string) => set(({ wordTable }) => {
+        const word = wordTable[key]
+        if (!word) throw new Error("word not in table")
+        word.enabled = true
+        return {
+          ...wordTable,
+          [key]: word
+        }
+      }),
+      disableWord: (key: string) => set(({ wordTable }) => {
+        const word = wordTable[key]
+        if (!word) throw new Error("word not in table")
+        word.enabled = false
+        return {
+          ...wordTable,
+          [key]: word
+        }
+      }),
+      addWord: (word: WordType) => set(({ wordTable }) => {
+        const key = Word.key(word)
+        if (wordTable[key]) throw new Error("Word Error: word already in table, fn: addWord()")
+        return {
+          ...wordTable,
+          [key]: word
+        }
+      }),
+      removeWord: (word: WordType) => set(({ wordTable }) => {
+        const key = Word.key(word)
+        delete wordTable[key]
+        return wordTable
+      }),
+      addWords: (...words: WordType[]) => set(({ wordTable }) => {
+        words.forEach(word => {
+          const key = Word.key(word)
+          if (wordTable[key]) throw new Error("Word Error: word already in table, fn: addWord()")
+          wordTable[key] = word
+        })
+        return wordTable
+      }),
+      removeWords: (...words: WordType[]) => set(({ wordTable }) => {
+        words.forEach(word => {
+          const key = Word.key(word)
+          if (wordTable[key]) throw new Error("Word Error: word already in table, fn: addWord()")
+          delete wordTable[key]
+        })
+        return wordTable
+      }),
+    }),
+    {
+      name: 'wordlist',
+      skipHydration: true
+    }
   )
 )
