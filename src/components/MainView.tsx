@@ -8,14 +8,19 @@ import { useUserMetricAnalytics } from "~/utils/analytics";
 import { useWordTableStore } from "~/utils/stores";
 import { type WordType } from "~/utils/words";
 import useClientStore from "~/utils/hooks/useClientStore";
+import useTTS from "~/utils/hooks/useTTS";
 
 export default function MainView() {
   const inputRef = useRef<InputFieldHandle>(null)
 
-  const { wordTable, hydrated: wordTableHydrated } = useClientStore(useWordTableStore, (state) => state)
+  const { wordTable } = useClientStore(useWordTableStore, (state) => state)
   const [wordList, setWordList] = useState<WordType[]>()
   const [index, setIndex] = useState(0)
-  
+
+  const speak = useTTS({ force: true, lang: 'ko' })
+
+  const [viewOpen, setViewOpen] = useState(false)
+
   const currentWord = wordList?.[index]
 
   const enabledWords = useMemo(() => {
@@ -28,7 +33,7 @@ export default function MainView() {
   useEffect(() => {
     void useWordTableStore.persist.rehydrate()
 
-    inputRef.current?.focus()
+    // inputRef.current?.focus()
 
     const kh = () => {
       if (document.activeElement === document.body) inputRef.current?.focus()
@@ -45,6 +50,10 @@ export default function MainView() {
     const initialWords = random.shuffle(enabledWords.slice(0, 20))
     setWordList(initialWords)
   }, [enabledWords])
+
+  useEffect(() => {
+    if (currentWord) speak(currentWord.kr)
+  }, [currentWord, speak])
 
   function nextWord() {
     if (!wordList) return
@@ -67,22 +76,41 @@ export default function MainView() {
 
   const handleClick: React.MouseEventHandler = () => {
     inputRef.current?.focus()
+    setViewOpen(true)
   }
 
   const handleKeyDown: React.KeyboardEventHandler = (e) => {
     if (e.code === "Enter" && e.ctrlKey) handleMatch()
   }
 
+  const handleFocus: React.FocusEventHandler = () => {
+    setViewOpen(true)
+    if (currentWord) speak(currentWord.kr)
+  }
+
+  const handleBlur: React.FocusEventHandler = () => {
+    setViewOpen(false)
+  }
+
   return (
     <div
+      tabIndex={1}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       className="flex flex-col gap-8 items-center justify-center">
       <span className="text-front-alt font-medium italic">{currentWord?.en}</span>
-      <Slider.Base index={index}>
+      <Slider.Base index={index} open={viewOpen}>
         {
           wordList && wordList.map((word) => (
-            <Slider.Item onViewLeave={handleViewLeave} id={word.key} key={word.key}>{word.kr}</Slider.Item>
+            <Slider.Item
+              onViewLeave={handleViewLeave}
+              id={word.key}
+              key={word.key}
+            >
+              {word.kr}
+            </Slider.Item>
           ))
         }
       </Slider.Base>

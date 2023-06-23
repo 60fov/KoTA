@@ -14,13 +14,14 @@ import Link from "next/link";
 import Avatar from "./ui/Avatar";
 import { useTheme } from "~/utils/hooks";
 import Check from "./icons/Check";
-import { useKeyboardSettingsStore } from "~/utils/stores";
+import { useKeyboardSettingsStore, useTTSSettingsStore } from "~/utils/stores";
 
 export default function AppMenu() {
 
   const { data } = useSession()
   const [theme, setTheme] = useTheme()
   const [keyboardEnabled, setKeyboardEnabled] = useKeyboardSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
+  const [ttsEnabled, setTTSEnabled] = useTTSSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
 
   const themeIcon = () => {
     switch (theme) {
@@ -72,6 +73,13 @@ export default function AppMenu() {
             onToggleChange={setKeyboardEnabled}
           >
             Show Keyboard
+          </Menu.Item.Toggle>
+          <Menu.Item.Toggle
+            icon={<Check />}
+            toggle={ttsEnabled}
+            onToggleChange={setTTSEnabled}
+          >
+            Enabled TTS
           </Menu.Item.Toggle>
           {/* <Menu.Item.Toggle icon={<Check />}>Enable TTS</Menu.Item.Toggle> */}
           {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}

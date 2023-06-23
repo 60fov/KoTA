@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 
 import { type Theme } from './theme'
 import Word, { type WordType } from './words'
+import { TTSLang } from './tts'
 
 
 interface ThemeStore {

@@ -1,6 +1,6 @@
 export type TTSLang = "en" | "ko"
 
-interface TTSOptions {
+export interface SpeakOptions {
   force?: boolean
   pitch?: number
   rate?: number
@@ -15,7 +15,7 @@ interface TTSOptions {
   onboundary?: (e: Event) => void
 }
 
-export function tts(text: string, options?: TTSOptions) {
+export function speak(text: string, options?: SpeakOptions) {
   const {
     force,
     pitch = 1,
@@ -42,3 +42,9 @@ export function tts(text: string, options?: TTSOptions) {
   if (force) window.speechSynthesis.cancel()
   window.speechSynthesis.speak(utterance)
 }
+
+const tts = {
+  speak
+}
+
+export default tts
