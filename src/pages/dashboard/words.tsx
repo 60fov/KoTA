@@ -1,7 +1,6 @@
 import DashboardLayout from "~/components/layouts/DashboardLayout";
 import { type NextPageWithLayout } from "../_app";
 import { useSession } from "next-auth/react";
-import { WordList } from "~/utils/words";
 
 import styles from "./Words.module.scss"
 import Toggle from "~/components/ui/Toggle";
@@ -13,21 +12,29 @@ import { HiMagnifyingGlass, HiXMark } from "react-icons/hi2";
 import fuzzysort from 'fuzzysort';
 import { decompose } from "lib/kime/jamo";
 import { RadixIconsSpeakerLoud } from "~/components/icons/Speaker";
-import { tts } from "~/utils/tts";
 import Spacer from "~/components/ui/Spacer";
-import { useTTSSettingsStore } from "~/utils/stores";
-
+import { useTTSSettingsStore, useWordTableStore } from "~/utils/stores";
+import { type WordType } from "~/utils/words";
+import { type Controllable } from "~/components/ui/types";
+import useClientStore from "~/utils/hooks/useClientStore";
+import { AnimatePresence, motion } from "framer-motion";
+import tts from "~/utils/tts";
 
 const Words: NextPageWithLayout = () => {
   const session = useSession({
     required: true,
   })
 
-  const [wordList, setWordList] = useState(WordList)
+  const { wordTable, setWord, hydrated: wordTableHydrated } = useClientStore(useWordTableStore, (state) => state)
+  const [wordList, setWordList] = useState(Object.values(wordTable))
   const [search, setSearch] = useState("")
 
   useEffect(() => {
-    const wl = WordList.map((word) => {
+    void useWordTableStore.persist.rehydrate()
+  }, [])
+
+  useEffect(() => {
+    const wl = Object.values(wordTable).map((word) => {
       return {
         decomposedKr: decompose(word.kr).join(""),
         ...word
@@ -43,7 +50,7 @@ const Words: NextPageWithLayout = () => {
 
     setWordList(filteredWords)
 
-  }, [search])
+  }, [search, wordTable])
 
   const handleSearchValueChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearch(e.currentTarget.value)
@@ -59,25 +66,47 @@ const Words: NextPageWithLayout = () => {
         onChange={handleSearchValueChange}
       />
       <div className={styles.wordlist}>
-        {wordList.map(word => (
-          <Word word={word} key={word.kr + word.en} />
-        ))}
-        <div style={{ height: 64 }} />
+        <AnimatePresence>
+          {wordTableHydrated ? (
+            wordList.map(word => (
+              <Word
+                key={word.key}
+                word={word}
+                value={word.enabled}
+                onValueChange={value => setWord(word.key, { ...word, enabled: value })} />
+            ))
+          ) : (
+            <>
+              <Word.Skeleton />
+              <Word.Skeleton />
+              <Word.Skeleton />
+              <Word.Skeleton />
+              <Word.Skeleton />
+            </>
+          )}
+        </AnimatePresence>
+        < div style={{ height: 64 }} />
       </div>
     </>
   )
 }
 
-function Word(props: { word: typeof WordList[number] }) {
+interface WordProps extends Controllable<boolean> {
+  word: WordType
+}
+
+function Word(props: WordProps) {
   const {
-    word
+    word,
+    onValueChange,
+    value,
   } = props
 
   const [speaking, setSpeaking] = useState(false)
   const { pitch, rate, voice, volume } = useTTSSettingsStore()
 
   const handleClick: React.MouseEventHandler = () => {
-    tts(word.kr, {
+    tts.speak(word.kr, {
       lang: 'ko',
       force: true,
       pitch,
@@ -101,7 +130,20 @@ function Word(props: { word: typeof WordList[number] }) {
         <RadixIconsSpeakerLoud />
       </div>
       <Spacer.Flex flex="1" />
-      <Toggle><Check /></Toggle>
+      <Toggle value={value} onValueChange={onValueChange}><Check /></Toggle>
+    </div>
+  )
+}
+
+Word.Skeleton = function Skeleton() {
+  return (
+    <div data-skeleton>
+      <div data-label>
+        <div data-kr />
+        <div data-en />
+      </div>
+      <Spacer.Flex flex="1" />
+      <div data-toggle />
     </div>
   )
 }
