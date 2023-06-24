@@ -1,21 +1,20 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-import { type Theme } from './theme'
+import { type ThemeOption } from './theme'
 import Word, { type WordType } from './words'
-import { TTSLang } from './tts'
 
 
 interface ThemeStore {
-  value: Theme
-  set: (value: Theme) => void
+  value: ThemeOption
+  set: (value: ThemeOption) => void
 }
 
 export const useThemeStore = create<ThemeStore>()(
   persist(
     (set) => ({
       value: 'system',
-      set: (value: Theme) => set(() => ({ value }))
+      set: (value: ThemeOption) => set(() => ({ value }))
     }),
     {
       name: 'theme',

@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import { } from "react";
 import { cn } from "~/utils/fns";
-import { type CSSVariableProperties } from "~/utils/types";
+
+import styles from "./Container.module.scss"
 
 interface Props {
   title?: string
@@ -17,14 +18,7 @@ export default function Container(props: Props) {
   } = props
 
   return (
-    <div
-      className={cn(
-        "relative",
-        "border border-front/10 bg-back rounded-v",
-        className
-      )}
-      style={{ "--radius": "12px" } as CSSVariableProperties}
-    >
+    <div className={cn(styles.base, className)}>
       {children}
     </div>
   )

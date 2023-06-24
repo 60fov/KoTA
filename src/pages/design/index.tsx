@@ -21,17 +21,18 @@ import Menu from "~/components/ui/Menu";
 import Moon from "~/components/icons/Moon";
 
 import { cn, min, max, random } from "~/utils/fns";
-import { setTheme, type Theme } from "~/utils/theme";
 
 import alluraGlare from "~/../public/allura_glare.jpg"
 import Input from "~/components/ui/Input";
 import toast from "~/components/Toast";
 import Dynamic from "~/components/Dynamic";
+import { useTheme } from "~/utils/hooks";
 
 
 const Home: NextPage = () => {
 
-  const [themeState, setThemeState] = useState<Theme>("dark")
+  
+  const [theme, setTheme] = useTheme()
 
   const wordList =
     "be yourself as often as possible as you are all you have to offer."
@@ -96,10 +97,9 @@ const Home: NextPage = () => {
           <Tile name="Multi-Toggle">
             <MultiToggle.Base
               name="mutlitoggle example"
-              value={themeState}
+              value={theme}
               onValueChange={(newTheme) => {
                 setTheme(newTheme)
-                setThemeState(newTheme)
               }}
               prompt="this is just an example of a multi-toggle button"
             >

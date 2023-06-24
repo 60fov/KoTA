@@ -4,19 +4,14 @@
 
 @layer base {
   :root {
-    /* --color-front: 5 5 5;
-      --color-front-alt: 125 125 125;
-      --color-back: 250 250 250;
-      --color-back-alt: 220 220 220; */
-    /* TODO: border color */
+    --color-front: 5 5 5;
+    --color-front-alt: 125 125 125;
+    --color-back: 245 245 245;
+    --color-back-alt: 220 220 220;
 
-    --color-front: 250 250 250;
-    --color-back: 10 10 10;
-    --color-front-alt: 180 180 180;
-    --color-back-alt: 30 30 30;
     --color-error: 242 88 88;
     --color-access: 50 50 255;
-    
+
     --color-front-100: rgb(var(--color-front) / 1);
     --color-front-90: rgb(var(--color-front) / 0.9);
     --color-front-75: rgb(var(--color-front) / 0.75);
@@ -75,13 +70,13 @@
     --radius-sm: 3px;
     --radius-md: 6px;
     --radius-lg: 12px;
-    
+
     --border: 0.5px solid rgb(var(--color-front) / 0.1);
     --outline: rgb(var(--color-access)) solid 1px;
-    
+
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    
+
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
 
     font-synthesis: none;
@@ -97,10 +92,12 @@
     overflow: hidden;
   }
 
-  /* * {
-    @apply transition-[background-color];
-    @apply duration-300;
-  } */
+  html[data-theme='dark'] {
+    --color-front: 250 250 250;
+    --color-front-alt: 180 180 180;
+    --color-back: 10 10 10;
+    --color-back-alt: 30 30 30;
+  }
 }
 
 @layer utilities {
