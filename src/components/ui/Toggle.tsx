@@ -1,7 +1,10 @@
+import styles from "./Toggle.module.scss";
+import ui from "./UI.module.scss";
+
 import { useState } from "react";
 
-import styles from "./UI.module.scss";
 import { type Propagatable, type Controllable } from "./types";
+import { cn } from "~/utils/fns";
 
 interface Props extends Controllable<boolean>, Propagatable {
   className?: string
@@ -27,7 +30,7 @@ const Toggle = ({
   return (
     <button
       type="button"
-      className={styles.toggle}
+      className={cn(ui.outline, styles.base)}
       data-state={value ? 'on' : 'off'}
       onClick={handleClick}
     >

@@ -48,7 +48,7 @@ function Base(props: Props) {
 
 function MenuButton(props: ButtonProps) {
   const {
-    icon = <HBMenu />,
+    children = <HBMenu />,
     ...restProps
   } = props
 
@@ -57,11 +57,12 @@ function MenuButton(props: ButtonProps) {
   return (
     <Button
       {...restProps}
-      icon={icon}
       onClick={() => {
         setOpen(!open)
-      }}
-    />
+      }}>
+      {children}
+    </Button>
+
   )
 }
 

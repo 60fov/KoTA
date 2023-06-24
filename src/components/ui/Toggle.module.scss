@@ -1,0 +1,31 @@
+.base {
+  position: relative;
+  padding: var(--spacing-sm);
+  background: var(--color-back-alt-50);
+  color: var(--color-front-100);
+
+  transition: all 100ms;
+
+  border: var(--border);
+  border-radius: var(--radius-md);
+
+  &:hover {
+    background: var(--color-back-alt-100);
+  }
+
+  [data-toggle-content] {
+    padding: var(--spacing-md);
+    background: var(--color-back-100);
+    border-radius: var(--radius-sm);
+    transform: scale(0);
+    transition: all 150ms;
+    box-shadow: var(--shadow-sm);
+  }
+
+  &[data-state=on] {
+    [data-toggle-content] {
+      transform: scale(1);
+      box-shadow: var(--shadow-md);
+    }
+  }
+}

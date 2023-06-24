@@ -166,17 +166,17 @@ const Home: NextPage = () => {
               <div className="flex gap-2">
                 <Button
                   onClick={() => setSliderIndex(max(sliderIndex - 1, 0))}
-                  icon={<LeftArrow />}
+                  prefix={<LeftArrow />}
                 />
                 <Button onClick={removeWord}
-                  icon={<Minus />} />
+                  prefix={<Minus />} />
                 <Button onClick={() => setSliderOpen(!sliderOpen)}>{sliderOpen ? "close" : "open"}</Button>
                 <Button
                   onClick={() => { setWords([...words, randomWord()]) }}
-                  icon={<Plus />} />
+                  prefix={<Plus />} />
                 <Button
                   onClick={() => setSliderIndex(min(sliderIndex + 1, words.length - 1))}
-                  icon={<RightArrow />}
+                  prefix={<RightArrow />}
                 />
               </div>
             </div>

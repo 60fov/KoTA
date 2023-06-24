@@ -170,7 +170,7 @@ const AcountPage: NextPage = () => {
               } />
             <div className="flex justify-end gap-2">
               <Button
-                icon={<Link />}
+                prefix={<Link />}
                 onClick={handleCopyProfileUrl}
                 variant="passive">
               </Button>
