@@ -12,9 +12,10 @@ import Exit from "./icons/Exit";
 
 import Link from "next/link";
 import Avatar from "./ui/Avatar";
-import { useTheme } from "~/utils/hooks";
+
 import Check from "./icons/Check";
 import { useKeyboardSettingsStore, useTTSSettingsStore } from "~/utils/stores";
+import { useTheme } from "~/hooks/useTheme";
 
 export default function AppMenu() {
 

@@ -11,7 +11,7 @@ import Button from "~/components/ui/Button";
 import Avatar from "~/components/ui/Avatar";
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
-import { useTheme } from "~/utils/hooks";
+import { useTheme } from "~/hooks/useTheme";
 
 type Props = {
   slug?: string

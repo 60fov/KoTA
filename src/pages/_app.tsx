@@ -4,7 +4,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 
 import { api } from "~/utils/api";
-import { KioContextProvider, useKio } from "~/utils/hooks/kio";
+import { KioContextProvider, useKio } from "~/hooks/kio";
 
 import { Toaster } from "sonner";
 

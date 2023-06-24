@@ -26,12 +26,10 @@ import alluraGlare from "~/../public/allura_glare.jpg"
 import Input from "~/components/ui/Input";
 import toast from "~/components/Toast";
 import Dynamic from "~/components/Dynamic";
-import { useTheme } from "~/utils/hooks";
+import { useTheme } from "~/hooks/useTheme";
 
 
 const Home: NextPage = () => {
-
-  
   const [theme, setTheme] = useTheme()
 
   const wordList =

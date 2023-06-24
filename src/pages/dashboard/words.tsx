@@ -16,9 +16,9 @@ import Spacer from "~/components/ui/Spacer";
 import { useTTSSettingsStore, useWordTableStore } from "~/utils/stores";
 import { type WordType } from "~/utils/words";
 import { type Controllable } from "~/components/ui/types";
-import useClientStore from "~/utils/hooks/useClientStore";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import tts from "~/utils/tts";
+import useClientStore from "~/hooks/zustand";
 
 const Words: NextPageWithLayout = () => {
   const session = useSession({

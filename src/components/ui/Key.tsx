@@ -1,7 +1,5 @@
-import dynamic from "next/dynamic"
-import { useState } from "react"
 import { cn } from "~/utils/fns"
-import { useKioKey } from "~/utils/hooks/kio"
+import { useKioKey } from "~/hooks/kio"
 
 
 type Props = {

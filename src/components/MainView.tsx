@@ -7,8 +7,8 @@ import { decompose } from "lib/kime/jamo";
 import { useUserMetricAnalytics } from "~/utils/analytics";
 import { useWordTableStore } from "~/utils/stores";
 import { type WordType } from "~/utils/words";
-import useClientStore from "~/utils/hooks/useClientStore";
-import useTTS from "~/utils/hooks/useTTS";
+import useClientStore from "~/hooks/zustand";
+import useTTS from "~/hooks/useTTS";
 
 export default function MainView() {
   const inputRef = useRef<InputFieldHandle>(null)

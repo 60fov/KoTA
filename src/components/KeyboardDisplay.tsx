@@ -2,7 +2,7 @@ import { cn } from "~/utils/fns";
 import Key from "./ui/Key";
 
 import { useKeyboardSettingsStore } from "~/utils/stores";
-import { useKioKey } from "~/utils/hooks/kio";
+import { useKioKey } from "~/hooks/kio";
 
 export default function KeyboardDisplay(props: {
   keySize?: number,
