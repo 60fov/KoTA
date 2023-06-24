@@ -3,7 +3,7 @@ import Dashboard from "~/components/icons/Dashboard";
 import Person from "~/components/icons/Person";
 
 
-import { themeList, type Theme } from "~/utils/theme";
+import { nextThemeOption } from "~/utils/theme";
 import Desktop from "~/components/icons/Desktop";
 import Sun from "~/components/icons/Sun";
 import Moon from "~/components/icons/Moon";
@@ -33,7 +33,7 @@ export default function AppMenu() {
   }
 
   function handleThemeSwitch() {
-    const newTheme = themeList[(themeList.indexOf(theme) + 1) % themeList.length] as Theme
+    const newTheme = nextThemeOption(theme)
     setTheme(newTheme)
   }
 

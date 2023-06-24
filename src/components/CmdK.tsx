@@ -3,7 +3,9 @@ import { useEffect, useRef, useState } from 'react'
 import Keyboard from './icons/Keyboard'
 import Desktop from './icons/Desktop'
 import { useKeyboardSettingsStore, useThemeStore } from '~/utils/stores'
-import { nextTheme } from '~/utils/theme'
+import { nextThemeOption } from '~/utils/theme'
+
+
 
 // import styles from './CmdK.module.scss'
 
@@ -13,7 +15,7 @@ const CmdKMenu = () => {
   const [search, setSearch] = useState("")
 
   const refCmdKDiag = useRef(null)
-  
+
   const [keyboardEnabled, setKeyboardEnabled] = useKeyboardSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
   const [theme, setTheme] = useThemeStore(({ value, set }) => [value, set])
 
@@ -40,7 +42,7 @@ const CmdKMenu = () => {
         value={value}
         onValueChange={setValue}
       >
-        <Command.Input placeholder="what's up?" value={search} onValueChange={setSearch}/>
+        <Command.Input placeholder="what's up?" value={search} onValueChange={setSearch} />
 
         <Command.Separator alwaysRender />
         {/* <div className={"bg-gradient-to-r from-transparent via-front-alt to-transparent h-[0.5px]"} /> */}
@@ -59,9 +61,9 @@ const CmdKMenu = () => {
               </div>
             </Command.Item>
             <Command.Item>
-            Text-To-Speech
+              Text-To-Speech
             </Command.Item>
-            <Command.Item value={theme} onSelect={() => setTheme(nextTheme(theme))}>
+            <Command.Item value={theme} onSelect={() => setTheme(nextThemeOption(theme))}>
               <div className="icon-wrapper">
                 <Desktop />
               </div>

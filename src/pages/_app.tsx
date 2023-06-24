@@ -34,6 +34,29 @@ const MyApp = ({
       <KioContextProvider value={kio}>
         <Toaster />
         {getLayout(<Component {...pageProps} />)}
+        <script dangerouslySetInnerHTML={{
+          __html: `(function () {
+  const html = document.documentElement
+  function setTheme(theme) {
+    html.setAttribute("data-theme", theme)
+    localStorage.setItem("theme", JSON.stringify({ state: { value: theme }, version: 0 }))
+  }
+  let localTheme;
+  try {
+    const lsTheme = JSON.parse(localStorage.getItem("theme"))
+    localTheme = lsTheme?.state?.value
+  } catch (err) { }
+
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  const preferredTheme = media.matches ? 'dark' : 'light'
+  html.style.colorScheme = preferredTheme
+
+  if (localTheme === undefined || localTheme === "system") {
+    setTheme(preferredTheme)
+  } else {
+    setTheme(localTheme)
+  }
+})()`}}></script>
       </KioContextProvider>
     </SessionProvider>
   );
