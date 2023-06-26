@@ -1,7 +1,8 @@
 .outline {
   outline-offset: var(--spacing-sm);
 
-  &:focus-visible {
+  &:focus-visible,
+  &:has(:focus-visible) {
     outline: var(--outline);
   }
 }
