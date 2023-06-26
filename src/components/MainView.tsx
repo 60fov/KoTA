@@ -7,7 +7,7 @@ import { decompose } from "lib/kime/jamo";
 import { useUserMetricAnalytics } from "~/utils/analytics";
 import { useWordTableStore } from "~/utils/stores";
 import { type WordType } from "~/utils/words";
-import useClientStore from "~/hooks/zustand";
+import { useClientStore } from "~/hooks/zustand";
 import useTTS from "~/hooks/useTTS";
 
 export default function MainView() {

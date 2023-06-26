@@ -18,10 +18,9 @@ export const useClientStore = <T, F>(
 export const useStore = <State, Result>(
   store: (callback: (state: State) => unknown) => unknown,
   callback: (state: State) => Result,
-  def: Result
 ) => {
   const result = store(callback) as Result
-  const [data, setData] = useState<Result>(def)
+  const [data, setData] = useState<Result>()
 
   useEffect(() => {
     setData(result)

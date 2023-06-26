@@ -18,7 +18,7 @@ import { type WordType } from "~/utils/words";
 import { type Controllable } from "~/components/ui/types";
 import { AnimatePresence } from "framer-motion";
 import tts from "~/utils/tts";
-import useClientStore from "~/hooks/zustand";
+import { useClientStore } from "~/hooks/zustand";
 
 const Words: NextPageWithLayout = () => {
   const session = useSession({
