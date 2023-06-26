@@ -1,5 +1,5 @@
-import { useTTSSettingsStore } from "../stores";
-import tts, { type SpeakOptions } from "../tts";
+import { useTTSSettingsStore } from "~/utils/stores";
+import tts, { type SpeakOptions } from "~/utils/tts";
 
 export default function useTTS(options?: SpeakOptions) {
   const settings = useTTSSettingsStore(({
@@ -8,13 +8,7 @@ export default function useTTS(options?: SpeakOptions) {
     volume,
     enabled,
     voice,
-  }) => ({
-    pitch,
-    rate,
-    volume,
-    enabled,
-    voice,
-  }))
+  }) => ({ pitch, rate, volume, enabled, voice }))
 
   const opts = { ...settings, ...options }
 
