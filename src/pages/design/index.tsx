@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { type ReactNode, useState } from "react";
 import Head from "next/head";
 
-import { HiComputerDesktop, HiOutlineFaceSmile, HiSun, HiMagnifyingGlass, HiXMark } from "react-icons/hi2"
+import { HiOutlineFaceSmile, HiMagnifyingGlass, HiXMark } from "react-icons/hi2"
 
 // import type { CSSVariableProperties } from "~/utils/types";
 import Toggle from "~/components/ui/Toggle";
@@ -18,7 +18,7 @@ import RightArrow from "~/components/icons/RightArrow";
 import Plus from "~/components/icons/Plus";
 import Minus from "~/components/icons/Minus";
 import Menu from "~/components/ui/Menu";
-import Moon from "~/components/icons/Moon";
+import { RadixIconsMoon } from "~/components/icons/Moon";
 
 import { cn, min, max, random } from "~/utils/fns";
 
@@ -27,6 +27,8 @@ import Input from "~/components/ui/Input";
 import toast from "~/components/Toast";
 import Dynamic from "~/components/Dynamic";
 import { useTheme } from "~/hooks/useTheme";
+import { RadixIconsSun } from "~/components/icons/Sun";
+import { RadixIconsDesktop } from "~/components/icons/Desktop";
 
 
 const Home: NextPage = () => {
@@ -95,15 +97,16 @@ const Home: NextPage = () => {
           <Tile name="Multi-Toggle">
             <MultiToggle.Base
               name="mutlitoggle example"
+              defaultValue="system"
               value={theme}
               onValueChange={(newTheme) => {
                 setTheme(newTheme)
               }}
               prompt="this is just an example of a multi-toggle button"
             >
-              <MultiToggle.Item value="light"><HiSun /></MultiToggle.Item>
-              <MultiToggle.Item value="dark"><Moon /></MultiToggle.Item>
-              <MultiToggle.Item value="system"><HiComputerDesktop /></MultiToggle.Item>
+              <MultiToggle.Item value="light"><RadixIconsSun /></MultiToggle.Item>
+              <MultiToggle.Item value="dark"><RadixIconsMoon /></MultiToggle.Item>
+              <MultiToggle.Item value="system"><RadixIconsDesktop /></MultiToggle.Item>
             </MultiToggle.Base>
           </Tile>
 
@@ -137,7 +140,7 @@ const Home: NextPage = () => {
                   <Menu.Item.Toggle icon={<Plus />}>Toggle Option 3</Menu.Item.Toggle>
                 </Menu.Section>
                 <Menu.Divider />
-                <Menu.Item as="button" icon={<Moon />}>Button With Icon</Menu.Item>
+                <Menu.Item as="button" icon={<RadixIconsMoon />}>Button With Icon</Menu.Item>
                 <Menu.Item as="button">Button without Icon</Menu.Item>
                 <Menu.Section title="section title">
                   <Menu.Item as="button" disabled>Disabled Button</Menu.Item>

@@ -1,9 +1,10 @@
 import { Command } from 'cmdk'
 import { useEffect, useRef, useState } from 'react'
 import Keyboard from './icons/Keyboard'
-import Desktop from './icons/Desktop'
+
 import { useKeyboardSettingsStore, useThemeStore } from '~/utils/stores'
 import { nextThemeOption } from '~/utils/theme'
+import { RadixIconsDesktop } from './icons/Desktop'
 
 
 
@@ -65,7 +66,7 @@ const CmdKMenu = () => {
             </Command.Item>
             <Command.Item value={theme} onSelect={() => setTheme(nextThemeOption(theme))}>
               <div className="icon-wrapper">
-                <Desktop />
+                <RadixIconsDesktop />
               </div>
               <p>
                 Theme

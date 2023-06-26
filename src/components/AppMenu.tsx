@@ -4,9 +4,6 @@ import Person from "~/components/icons/Person";
 
 
 import { nextThemeOption } from "~/utils/theme";
-import Desktop from "~/components/icons/Desktop";
-import Sun from "~/components/icons/Sun";
-import Moon from "~/components/icons/Moon";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Exit from "./icons/Exit";
 
@@ -16,6 +13,9 @@ import Avatar from "./ui/Avatar";
 import Check from "./icons/Check";
 import { useKeyboardSettingsStore, useTTSSettingsStore } from "~/utils/stores";
 import { useTheme } from "~/hooks/useTheme";
+import { RadixIconsMoon } from "./icons/Moon";
+import { RadixIconsSun } from "./icons/Sun";
+import { RadixIconsDesktop } from "./icons/Desktop";
 
 export default function AppMenu() {
 
@@ -26,15 +26,14 @@ export default function AppMenu() {
 
   const themeIcon = () => {
     switch (theme) {
-      case "dark": return <Moon />
-      case "light": return <Sun />
-      case "system": return <Desktop />
+      case "dark": return <RadixIconsMoon />
+      case "light": return <RadixIconsSun />
+      case "system": return <RadixIconsDesktop />
     }
   }
 
   function handleThemeSwitch() {
-    const newTheme = nextThemeOption(theme)
-    setTheme(newTheme)
+    if (theme) setTheme(nextThemeOption(theme))
   }
 
   async function handleSignIn() {
