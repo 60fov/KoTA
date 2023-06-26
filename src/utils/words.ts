@@ -12,6 +12,8 @@ export type WordType = WordData & {
 
 export type WordData = typeof wordList[number]
 
+export type WordTable = Record<string, WordType>
+
 export function wordCompare(a: WordType, b: WordType) {
     return a.en === b.en
         && a.kr === b.kr

@@ -100,7 +100,7 @@ const Home: NextPage = () => {
               defaultValue="system"
               value={theme}
               onValueChange={(newTheme) => {
-                setTheme(newTheme)
+                if (newTheme) setTheme(newTheme)
               }}
               prompt="this is just an example of a multi-toggle button"
             >

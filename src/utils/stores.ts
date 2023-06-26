@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { type ThemeOption } from './theme'
-import Word, { type WordType } from './words'
+import Word, { type WordTable, type WordType } from './words'
 
 
 interface ThemeStore {
@@ -76,8 +76,8 @@ export const useKeyboardSettingsStore = create<KeyboardSettingsStore>()(
 )
 
 
-interface WordTableStore {
-  wordTable: Record<string, WordType>
+export interface WordTableStore {
+  wordTable: WordTable
   // setWordMap: (words: Word[]) => void
   setWord: (key: string, word: WordType) => void
   toggleWord: (key: string) => void
@@ -92,7 +92,15 @@ interface WordTableStore {
 export const useWordTableStore = create<WordTableStore>()(
   persist(
     (set) => ({
-      wordTable: {},
+      wordTable: Word.list.reduce((accum, word) => {
+        const key = Word.key(word)
+        accum[key] = {
+          ...word,
+          enabled: true,
+          key
+        }
+        return accum
+      }, {} as WordTable),
       setWord: (key: string, word: WordType) => set(({ wordTable }) => {
         wordTable[key] = word
         return {
