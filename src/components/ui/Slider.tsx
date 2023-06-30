@@ -1,4 +1,4 @@
-import { LayoutGroup, motion, useInView, useSpring } from "framer-motion"
+import { AnimationDefinition, LayoutGroup, MotionAdvancedProps, motion, useInView, useSpring } from "framer-motion"
 import { type ReactElement, type ReactNode, useCallback, useRef, useEffect } from "react"
 import { cn } from "~/utils/fns"
 
@@ -7,6 +7,8 @@ interface SliderProps {
   open?: boolean
   defaultOpen?: boolean,
   children?: ReactElement<typeof Item>[]
+  onAnimationStart?: (anim: AnimationDefinition) => void
+  onAnimationComplete?: (anim: AnimationDefinition) => void
 }
 
 // TODO: sequential animations for expanding / contract (h -> w)
@@ -16,6 +18,8 @@ function Base(props: SliderProps) {
     index,
     open = true,
     defaultOpen = false,
+    onAnimationStart,
+    onAnimationComplete,
     children
   } = props;
 
@@ -69,6 +73,8 @@ function Base(props: SliderProps) {
       )}
       initial={defaultOpen ? "open" : "close"}
       animate={open ? "open" : "close"}
+      onAnimationComplete={onAnimationStart}
+      onAnimationStart={onAnimationComplete}
       variants={sliderFramerVariants}
     >
       {/* gradient */}
@@ -110,8 +116,8 @@ function Base(props: SliderProps) {
 
 interface ItemProps {
   id: string
-  onViewLeave?: () => void
-  onViewEnter?: () => void
+  onViewEnter?: (el: HTMLDivElement | null) => void
+  onViewLeave?: (el: HTMLDivElement | null) => void
   children?: ReactNode
 }
 
@@ -120,7 +126,8 @@ function Item(props: ItemProps) {
     id,
     onViewLeave,
     onViewEnter,
-    children
+    children,
+    ...restProps
   } = props;
 
   const ref = useRef<HTMLDivElement>(null)
@@ -130,8 +137,8 @@ function Item(props: ItemProps) {
 
   useEffect(() => {
     const wasInView = wasInViewRef.current
-    if (onViewEnter && isInView && !wasInView) onViewEnter()
-    if (onViewLeave && !isInView && wasInView) onViewLeave()
+    if (onViewEnter && isInView && !wasInView) onViewEnter(ref.current)
+    if (onViewLeave && !isInView && wasInView) onViewLeave(ref.current)
     wasInViewRef.current = isInView
   }, [isInView, onViewLeave, onViewEnter])
 
@@ -141,6 +148,7 @@ function Item(props: ItemProps) {
       layoutId={id}
       layout="position"
       className="font-semibold text-4xl text-front whitespace-nowrap"
+      {...restProps}
     >
       {children}
     </motion.div>

@@ -68,10 +68,16 @@ export default function MainView() {
     nextWord()
   }
 
-  function handleViewLeave() {
-    if (!wordList) return
-    setWordList(wordList.slice(1))
-    setIndex(index - 1)
+  function handleViewLeave(el: HTMLDivElement | null) {
+    if (!wordList || !el || !viewOpen) return
+    // check if word el is on left side
+    const indexAttrib = el.getAttribute('data-index')
+    if (indexAttrib == null) return
+    const i = parseInt(indexAttrib)
+    if (i < index) {
+      setWordList(wordList.slice(1))
+      setIndex(index - 1)
+    }
   }
 
   const handleClick: React.MouseEventHandler = () => {
@@ -80,7 +86,14 @@ export default function MainView() {
   }
 
   const handleKeyDown: React.KeyboardEventHandler = (e) => {
-    if (e.code === "Enter" && e.ctrlKey) handleMatch()
+    if (e.code === "Enter" && (e.ctrlKey || e.metaKey)) {
+      if (e.shiftKey) {
+        if (index > 0) setIndex(index - 1)
+      } else {
+        handleMatch()
+      }
+
+    }
   }
 
   const handleFocus: React.FocusEventHandler = () => {
@@ -103,11 +116,13 @@ export default function MainView() {
       <span className="text-front-alt font-medium italic">{currentWord?.en}</span>
       <Slider.Base index={index} open={viewOpen}>
         {
-          wordList && wordList.map((word) => (
+          wordList && wordList.map((word, i) => (
             <Slider.Item
               onViewLeave={handleViewLeave}
-              id={word.key}
-              key={word.key}
+              id={word.key + String(i)}
+              key={word.key + String(i)}
+              data-id={word.key + String(i)}
+              data-index={i}
             >
               {word.kr}
             </Slider.Item>
