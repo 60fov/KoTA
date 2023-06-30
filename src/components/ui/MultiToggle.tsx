@@ -34,6 +34,7 @@ const Base = <T extends string>(props: Props<T>) => {
 
   const [value, setValue] = useState(valueProp ?? defaultValue)
 
+  // NOTE: feel like theres a better way
   useEffect(() => {
     if (valueProp) setValue(valueProp)
   }, [valueProp])

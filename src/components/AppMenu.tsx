@@ -16,6 +16,7 @@ import { useTheme } from "~/hooks/useTheme";
 import { RadixIconsMoon } from "./icons/Moon";
 import { RadixIconsSun } from "./icons/Sun";
 import { RadixIconsDesktop } from "./icons/Desktop";
+import { RadixIconsGear } from "./icons/Gear";
 
 export default function AppMenu() {
 
@@ -35,6 +36,10 @@ export default function AppMenu() {
   function handleThemeSwitch() {
     if (theme) setTheme(nextThemeOption(theme))
   }
+
+  // function handleSettingsButton() {
+    
+  // }
 
   async function handleSignIn() {
     await signIn()
@@ -56,16 +61,6 @@ export default function AppMenu() {
     <Menu.Base>
       <Menu.Button />
       <Menu.Portal>
-        <Menu.Item
-          as="button"
-          icon={themeIcon()}
-          onClick={handleThemeSwitch}
-          className="capitalize"
-          suffix={theme}
-        >
-          Change Theme
-        </Menu.Item>
-        <Menu.Divider />
         <Menu.Section>
           <Menu.Item.Toggle
             icon={<Check />}
@@ -84,6 +79,22 @@ export default function AppMenu() {
           {/* <Menu.Item.Toggle icon={<Check />}>Enable TTS</Menu.Item.Toggle> */}
           {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
         </Menu.Section>
+        <Menu.Divider />
+        <Menu.Item
+          as="button"
+          icon={themeIcon()}
+          onClick={handleThemeSwitch}
+          suffix={theme}
+        >
+          Change Theme
+        </Menu.Item>
+        <Menu.Item
+          as="button"
+          icon={<RadixIconsGear />}
+          // onClick={handleSettingsButton}
+        >
+          Settings
+        </Menu.Item>
         <Menu.Divider />
         <Menu.Section title="account">
           {
