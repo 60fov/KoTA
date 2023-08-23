@@ -22,6 +22,33 @@ export const useThemeStore = create<ThemeStore>()(
   )
 )
 
+export interface AudioSettingsStore {
+  enabled: boolean
+  volume: number
+  getLevel: () => string
+  setEnabled: (enabled: boolean) => void
+  setVolume: (volume: number) => void
+}
+
+export const useAudioSettingsStore = create<AudioSettingsStore>()(
+  persist(
+    (set, get) => ({
+      enabled: true,
+      volume: 1,
+      getLevel: () => {
+        const {volume, enabled} = get()
+        if (volume === 0 || !enabled) return "mute"
+        if (volume < 0.34) return "quiet"
+        if (volume < 0.67) return "moderate"
+        return "loud"
+      },
+      setEnabled: (enabled) => set(() => ({ enabled })),
+      setVolume: (volume) => set(() => ({ volume })),
+    }),
+    { name: 'audio' }
+  )
+)
+
 interface TTSSettingsStore {
   enabled: boolean
   volume: number // 0-1
@@ -44,6 +71,7 @@ export const useTTSSettingsStore = create<TTSSettingsStore>()(
       volume: 0.6,
       pitch: 1,
       rate: 0.7,
+      voice: undefined,
       enable: () => set(() => ({ enabled: true })),
       disable: () => set(() => ({ enabled: false })),
       setEnabled: (enabled) => set(() => ({ enabled })),
@@ -74,7 +102,6 @@ export const useKeyboardSettingsStore = create<KeyboardSettingsStore>()(
     { name: 'keyboard' }
   )
 )
-
 
 export interface WordTableStore {
   wordTable: WordTable

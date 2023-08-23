@@ -1,6 +1,4 @@
-import DashboardLayout from "~/components/layouts/DashboardLayout";
-import { type NextPageWithLayout } from "../_app";
-import { useSession } from "next-auth/react";
+import { type NextPageWithLayout } from "./_app";
 
 import styles from "./Words.module.scss"
 import Toggle from "~/components/ui/Toggle";
@@ -19,12 +17,9 @@ import { type Controllable } from "~/components/ui/types";
 import { AnimatePresence } from "framer-motion";
 import tts from "~/utils/tts";
 import { useClientStore } from "~/hooks/zustand";
+import RootLayout from "~/components/layouts/RootLayout";
 
 const Words: NextPageWithLayout = () => {
-  const session = useSession({
-    required: true,
-  })
-
   const { wordTable, setWord, hydrated: wordTableHydrated } = useClientStore(useWordTableStore, (state) => state)
   const [wordList, setWordList] = useState(Object.values(wordTable))
   const [search, setSearch] = useState("")
@@ -148,6 +143,6 @@ Word.Skeleton = function Skeleton() {
   )
 }
 
-Words.getLayout = DashboardLayout;
+Words.getLayout = RootLayout;
 
 export default Words;

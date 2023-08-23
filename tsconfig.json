@@ -22,6 +22,8 @@
       "@/components/*": ["./src/components/*"],
       "@/ui/*": ["./src/components/ui/*"],
       "@/utils/*": ["./src/utils/*"],
+      "@/audio/*": ["./data/audio/*"],
+      "@/images/*": ["./data/images/*"],
     }
   },
   "include": [

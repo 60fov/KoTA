@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createCtx } from "~/utils/fns";
+import { createCtxUnsafe } from "~/utils/fns";
 import { KeyboardInputObservable, KeyboardInputObserver } from "~/utils/kio";
 
 
@@ -20,7 +20,7 @@ export const useKio = () => {
 
 
 type KioContextInterface = KeyboardInputObservable
-const [useKioContext, KioContextProvider] = createCtx<KioContextInterface>()
+const [useKioContext, KioContextProvider] = createCtxUnsafe<KioContextInterface>()
 
 export const useKioKey = (key: string) => {
   const kio = useKioContext()

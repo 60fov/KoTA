@@ -7,13 +7,13 @@ import { decompose } from "lib/kime/jamo";
 import { useUserMetricAnalytics } from "~/utils/analytics";
 import { useWordTableStore } from "~/utils/stores";
 import { type WordType } from "~/utils/words";
-import { useClientStore } from "~/hooks/zustand";
 import useTTS from "~/hooks/useTTS";
 
 export default function MainView() {
   const inputRef = useRef<InputFieldHandle>(null)
+  const refSfx1 = useRef<HTMLAudioElement>(null)
 
-  const { wordTable } = useClientStore(useWordTableStore, (state) => state)
+  const { wordTable } = useWordTableStore((state) => state)
   const [wordList, setWordList] = useState<WordType[]>()
   const [index, setIndex] = useState(0)
 
@@ -31,8 +31,6 @@ export default function MainView() {
 
 
   useEffect(() => {
-    void useWordTableStore.persist.rehydrate()
-
     // inputRef.current?.focus()
 
     const kh = () => {
@@ -86,6 +84,11 @@ export default function MainView() {
   }
 
   const handleKeyDown: React.KeyboardEventHandler = (e) => {
+    if (refSfx1.current) {
+      refSfx1.current.pause()
+      refSfx1.current.currentTime = 0
+      void refSfx1.current?.play()
+    }
     if (e.code === "Enter" && (e.ctrlKey || e.metaKey)) {
       if (e.shiftKey) {
         if (index > 0) setIndex(index - 1)
@@ -112,8 +115,8 @@ export default function MainView() {
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      className="flex flex-col gap-8 items-center justify-center">
-      <span className="text-front-alt font-medium italic">{currentWord?.en}</span>
+      className="flex flex-col gap-8 items-center justify-center relative">
+      <span className="text-front-alt text-xl font-medium italic">{currentWord?.en}</span>
       <Slider.Base index={index} open={viewOpen}>
         {
           wordList && wordList.map((word, i) => (
@@ -130,6 +133,8 @@ export default function MainView() {
         }
       </Slider.Base>
       <InputField ref={inputRef} goal={currentWord} onMatch={handleMatch} />
+      <audio src="/Tab 1.m4a" ref={refSfx1} />
+      {/* {!viewOpen && <span className="absolute bottom-0 text-2xl text-front-alt/50 font-semibold pointer-events-none">type or tap to focus</span>} */}
     </div>
   )
 }

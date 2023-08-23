@@ -11,7 +11,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export function createSafeCtx<A>(defaultValue?: A) {
+export function createCtx<A>(defaultValue?: A) {
     const ctx = createContext<A | undefined>(defaultValue);
     function useCtx() {
         const c = useContext(ctx);
@@ -23,7 +23,7 @@ export function createSafeCtx<A>(defaultValue?: A) {
     return [useCtx, ctx.Provider] as const; // 'as const' makes TypeScript infer a tuple
 }
 
-export function createCtx<A>(defaultValue?: A) {
+export function createCtxUnsafe<A>(defaultValue?: A) {
     const ctx = createContext<A | undefined>(defaultValue);
     function useCtx() {
         return useContext(ctx);

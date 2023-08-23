@@ -8,15 +8,18 @@ export interface KimeInput {
     value: string
     clear: () => void
     setValue: (v: string) => void
+    isComposing: boolean
+    hasFocus: boolean
 }
 
 const useKime = (
     // TODO: consider content editable elements
     inputRef: RefObject<HTMLInputElement>,
     // options?: AddEventListenerOptions
-    ): { input: KimeInput, composing: boolean } => {
+): KimeInput => {
 
-    const [composing, setComposing] = useState(false)
+    const [isComposing, setIsComposing] = useState(false)
+    const [hasFocus, setHasFocus] = useState(false)
     const [value, setValue] = useState('')
 
 
@@ -33,7 +36,7 @@ const useKime = (
             if (e.altKey || e.metaKey || e.ctrlKey) return
             e.preventDefault()
             const splitInput = value.split('')
-            if (composing) {
+            if (isComposing) {
                 // note: block should not be able to be undefined here since composing
                 const block = splitInput.pop() ?? ''
                 const ending = kime.compose([...kime.decompose(block), typedJamo])
@@ -42,7 +45,7 @@ const useKime = (
                 dispatchKimeInputEvent(newValue)
             } else {
                 dispatchKimeInputEvent(value + typedJamo)
-                setComposing(true)
+                setIsComposing(true)
             }
 
         } else if (e.key.length === 1) {
@@ -50,7 +53,7 @@ const useKime = (
             // TODO: audit e.key.length === 1
             // is there a non typabled key with a length of 1?
             e.preventDefault()
-            setComposing(false)
+            setIsComposing(false)
             dispatchKimeInputEvent(value + e.key)
 
         } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -63,13 +66,13 @@ const useKime = (
             } else {
                 const splitInput = value.split('')
                 const last = splitInput.pop()
-                if (composing && last) {
+                if (isComposing && last) {
                     const dl = decomposeBlock(last)
                     dl.pop()
                     if (dl.length) {
                         splitInput.push(compose(dl as string[]).join(''))
                     } else {
-                        setComposing(false)
+                        setIsComposing(false)
                     }
                 }
                 const newValue = splitInput.join('')
@@ -82,15 +85,22 @@ const useKime = (
             // inputRef.current.dispatchEvent(event)
 
         } else if (e.key === 'Escape') {
-            setComposing(false)
+            setIsComposing(false)
         }
         else {
             // ???
             // console.log('key???', e.key)
             // TODO: leave console user feedback note if someone checks this
         }
-    }, [composing, value])
+    }, [isComposing, value])
 
+    const onFocus = () => {
+        setHasFocus(true)
+    }
+
+    const onBlur = () => {
+        setHasFocus(false)
+    }
 
     const onKimeInput = (e: Event) => {
         const event = e as CustomEvent<{ value: string }>
@@ -107,8 +117,6 @@ const useKime = (
         const inputElement = inputRef?.current
         if (!inputElement) return
 
-
-
         // readonly makes virtual kb not show up
         // TODO: make readonly param
         // inputElement.readOnly = true
@@ -116,19 +124,22 @@ const useKime = (
         const internalKeyDownHandler = (e: KeyboardEvent) => keyDownHandlerRef.current(e)
         inputElement.addEventListener('keydown', internalKeyDownHandler)
         inputElement.addEventListener('kimeinput', onKimeInput)
+        inputElement.addEventListener('focus', onFocus)
+        inputElement.addEventListener('blur', onBlur)
         return () => {
             inputElement.removeEventListener('keydown', internalKeyDownHandler)
             inputElement.removeEventListener('kimeinput', onKimeInput)
+            inputElement.removeEventListener('focus', onFocus)
+            inputElement.removeEventListener('blur', onBlur)
         }
     }, [])
 
     return {
-        input: {
-            value,
-            clear: () => setValue(''),
-            setValue
-        },
-        composing
+        value,
+        setValue,
+        clear: () => setValue(''),
+        isComposing,
+        hasFocus,
     }
 
 }

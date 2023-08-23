@@ -1,0 +1,69 @@
+.base {
+  display: flex;
+  gap: 32px;
+
+  [data-nav-item] {
+    position: relative;
+    padding: 0 var(--spacing-md);
+
+  }
+
+  [data-nav-item-text] {
+    transition: color ease-out 100ms;
+
+    color: var(--color-front-alt-25);
+    font-size: 24px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
+
+    position: relative;
+
+    &:hover {
+      color: var(--color-front-alt-100);
+    }
+
+    &[data-active=true] {
+      color: var(--color-front-100);
+    }
+
+    &[data-soon=true] {
+      text-decoration: line-through;
+      color: var(--color-back-alt-100);
+      cursor: not-allowed;
+
+      &:hover {
+        
+
+        &::after {
+          color: var(--color-front-alt-100);
+        }
+      }
+
+      &::after {
+        transition: color ease 100ms;
+        content: 'soon™';
+        color: var(--color-front-alt-5);
+        left: calc(100% + var(--spacing-sm));
+        position: absolute;
+        text-transform: none;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  [data-nav-indicator] {
+    position: absolute;
+    inset: calc(-1 * var(--spacing-sm));
+    padding: var(--spacing-md);
+    box-sizing: content-box;
+    border: var(--border);
+    // border-front/25
+    border-radius: var(--radius-md);
+    background: var(--color-front-alt-5);
+  }
+}

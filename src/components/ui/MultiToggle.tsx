@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 
 import { motion } from "framer-motion"
 
-import { cn, createSafeCtx } from "~/utils/fns"
+import { cn, createCtx } from "~/utils/fns"
 import { type Controllable } from "./types"
 
 import ui from "./UI.module.scss"
@@ -14,7 +14,7 @@ interface MultiToggleContextInterface {
   value: unknown
 }
 
-const [useMultiToggleContext, MultiToggleProvider] = createSafeCtx<MultiToggleContextInterface>()
+const [useMultiToggleContext, MultiToggleProvider] = createCtx<MultiToggleContextInterface>()
 
 interface Props<T extends string> extends Controllable<T> {
   name: string

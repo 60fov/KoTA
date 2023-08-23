@@ -1,29 +1,28 @@
 import Menu from "~/components/ui/Menu";
-import Dashboard from "~/components/icons/Dashboard";
 import Person from "~/components/icons/Person";
 
 
 import { nextThemeOption } from "~/utils/theme";
-import { signIn, signOut, useSession } from "next-auth/react";
 import Exit from "./icons/Exit";
 
 import Link from "next/link";
-import Avatar from "./ui/Avatar";
 
 import Check from "./icons/Check";
-import { useKeyboardSettingsStore, useTTSSettingsStore } from "~/utils/stores";
+import { useAudioSettingsStore, useKeyboardSettingsStore } from "~/utils/stores";
 import { useTheme } from "~/hooks/useTheme";
 import { RadixIconsMoon } from "./icons/Moon";
 import { RadixIconsSun } from "./icons/Sun";
 import { RadixIconsDesktop } from "./icons/Desktop";
-import { RadixIconsGear } from "./icons/Gear";
+import { HiHome } from "react-icons/hi2";
+import { RadixIconsSpeakerLoud, RadixIconsSpeakerModerate, RadixIconsSpeakerOff, RadixIconsSpeakerQuiet } from "./icons/Speaker";
 
 export default function AppMenu() {
 
-  const { data } = useSession()
   const [theme, setTheme] = useTheme()
   const [keyboardEnabled, setKeyboardEnabled] = useKeyboardSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
-  const [ttsEnabled, setTTSEnabled] = useTTSSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
+  // const [ttsEnabled, setTTSEnabled] = useTTSSettingsStore(({ enabled, setEnabled }) => [enabled, setEnabled])
+  const audio = useAudioSettingsStore()
+
 
   const themeIcon = () => {
     switch (theme) {
@@ -33,35 +32,58 @@ export default function AppMenu() {
     }
   }
 
+  const audioIcon = () => {
+    if (!audio.enabled || audio.volume === 0) return <RadixIconsSpeakerOff />
+    if (audio.volume < 0.34) return <RadixIconsSpeakerQuiet />
+    if (audio.volume < 0.67) return <RadixIconsSpeakerModerate />
+    return <RadixIconsSpeakerLoud />
+  }
+
+  function handleAudioClick() {
+    if (!audio.enabled || audio.volume === 0) audio.setVolume(1)
+    else if (audio.volume < 0.34) audio.setVolume(0)
+    else if (audio.volume < 0.67) audio.setVolume(0.33)
+    else audio.setVolume(0.66)
+  }
+
   function handleThemeSwitch() {
     if (theme) setTheme(nextThemeOption(theme))
   }
 
   // function handleSettingsButton() {
-    
+
   // }
-
-  async function handleSignIn() {
-    await signIn()
-  }
-
-  async function handleSignOut() {
-    await signOut()
-  }
-
-
-  const ProfilePic = () => {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={data?.user.image || ""} alt="profile pic" className={"rounded-full"} />
-    )
-  }
 
   return (
     <Menu.Base>
       <Menu.Button />
       <Menu.Portal>
         <Menu.Section>
+          <Menu.Item
+            as={Link}
+            href="/"
+            icon={<HiHome />}
+          >
+            Home
+          </Menu.Item>
+          <Menu.Divider />
+          <Menu.Item
+            as="button"
+            icon={themeIcon()}
+            onClick={handleThemeSwitch}
+            suffix={theme}
+          >
+            Change Theme
+          </Menu.Item>
+          <Menu.Item
+            as="button"
+            icon={audioIcon()}
+            toggle={audio.enabled}
+            onClick={handleAudioClick}
+            suffix={audio.getLevel()}
+          >
+            Sound Effects
+          </Menu.Item>
           <Menu.Item.Toggle
             icon={<Check />}
             toggle={keyboardEnabled}
@@ -69,47 +91,22 @@ export default function AppMenu() {
           >
             Show Keyboard
           </Menu.Item.Toggle>
-          <Menu.Item.Toggle
+          {/* <Menu.Item.Toggle
             icon={<Check />}
             toggle={ttsEnabled}
             onToggleChange={setTTSEnabled}
           >
             Enabled TTS
-          </Menu.Item.Toggle>
-          {/* <Menu.Item.Toggle icon={<Check />}>Enable TTS</Menu.Item.Toggle> */}
+          </Menu.Item.Toggle> */}
           {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
         </Menu.Section>
-        <Menu.Divider />
-        <Menu.Item
-          as="button"
-          icon={themeIcon()}
-          onClick={handleThemeSwitch}
-          suffix={theme}
-        >
-          Change Theme
-        </Menu.Item>
-        <Menu.Item
+        {/* <Menu.Item
           as="button"
           icon={<RadixIconsGear />}
           // onClick={handleSettingsButton}
         >
           Settings
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Section title="account">
-          {
-            data?.user ?
-              <>
-                <Menu.Item as={Link} icon={<Avatar />} href={`/account`}>{data.user.name || "???"}</Menu.Item>
-                <Menu.Item as={Link} icon={<Dashboard />} href={`/dashboard`}>dashboard</Menu.Item>
-                <Menu.Item as="button" icon={<Exit />} onClick={handleSignOut}>sign-out</Menu.Item>
-              </>
-              :
-              <>
-                <Menu.Item as="button" icon={<Person />} onClick={handleSignIn}>sign-in</Menu.Item>
-              </>
-          }
-        </Menu.Section>
+        </Menu.Item> */}
       </Menu.Portal>
     </Menu.Base>
   )

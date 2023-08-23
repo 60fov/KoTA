@@ -1,11 +1,11 @@
 import React, { type ReactNode, type ReactElement, useState, useRef, useEffect } from "react";
-import { cn, createSafeCtx } from "~/utils/fns";
+import { cn, createCtx } from "~/utils/fns";
 import Check from "../icons/Check";
 import Portal from "./Portal";
 
 import Button, { type ButtonProps } from "./Button";
 import HBMenu from "../icons/HBMenu";
-import { useOnClickOutside } from "~/utils/hooks";
+import { useOnClickOutsideMany } from "~/utils/hooks";
 
 /*
 TODO: 
@@ -19,7 +19,7 @@ interface MenuContextInterface {
   baseRef: React.RefObject<HTMLDivElement>
 }
 
-const [useMenuContext, MenuContextProvider] = createSafeCtx<MenuContextInterface>()
+const [useMenuContext, MenuContextProvider] = createCtx<MenuContextInterface>()
 
 interface Props {
   open?: boolean
@@ -111,7 +111,7 @@ function MenuPortal(props: PortalProps) {
     menu.style.top = `${top}px`
   }, [open, baseRef, offset])
 
-  useOnClickOutside([baseRef, menuRef], () => setOpen(false))
+  useOnClickOutsideMany([menuRef, baseRef], () => setOpen(false))
 
   return (
     <Portal>{

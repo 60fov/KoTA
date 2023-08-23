@@ -1,4 +1,4 @@
-import { AnimationDefinition, LayoutGroup, MotionAdvancedProps, motion, useInView, useSpring } from "framer-motion"
+import { AnimationDefinition, LayoutGroup, motion, useInView, useSpring } from "framer-motion"
 import { type ReactElement, type ReactNode, useCallback, useRef, useEffect } from "react"
 import { cn } from "~/utils/fns"
 
@@ -69,7 +69,7 @@ function Base(props: SliderProps) {
       className={cn(
         "relative isolate",
         "overflow-x-clip w-full flex items-center justify-center py-1",
-        "border-x-[1px] border-front-alt/50",
+        "border-x-[1px] border-front-alt/50 ",
       )}
       initial={defaultOpen ? "open" : "close"}
       animate={open ? "open" : "close"}

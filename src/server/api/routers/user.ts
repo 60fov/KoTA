@@ -18,6 +18,57 @@ export const userRouter = createTRPCRouter({
 
       return !!user
     }),
+  getUserCardInfo: publicProcedure
+    .input(z.object({
+      id: z.string().optional(),
+      handle: z.string().optional(),
+    })).query(async ({ input, ctx }) => {
+      const { handle, id } = input
+
+      if (!handle && !id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "missing user identifier. requestion should send either the user handle or id",
+        })
+      }
+
+      const data = await ctx.prisma.user.findUniqueOrThrow({
+        where: handle ? { handle } : { id },
+        select: {
+          wordCount: true,
+          wordEntries: true
+        }
+      })
+
+      // sum values
+      const accum = data.wordEntries
+        .reduce((accum, entry) => {
+          accum.length += entry.length
+          accum.period += entry.period
+          accum.strokes += entry.strokes
+          return accum
+        }, {
+          length: 0,
+          strokes: 0,
+          period: 0
+        })
+
+      // calc stats
+      const acc = accum.length / accum.strokes
+      const wpm = 60 * 1000 * data.wordEntries.length / accum.period
+
+      const wordEntries = data.wordEntries.map((entry) => {
+        const { userId, ...result } = entry
+        return result
+      })
+
+      return {
+        acc,
+        wpm,
+        wordEntries,
+        wordCount: data.wordCount,
+      }
+    }),
   getPublicProfile: publicProcedure
     .input(z.object({
       id: z.string().optional(),
@@ -60,6 +111,8 @@ export const userRouter = createTRPCRouter({
       const data = await ctx.prisma.user.findUniqueOrThrow({
         where: handle ? { handle } : { id },
         select: {
+          image: true,
+          handle: true,
           wordCount: true,
           wordEntries: true
         }
@@ -88,6 +141,8 @@ export const userRouter = createTRPCRouter({
       })
 
       return {
+        image: data.image,
+        handle: data.handle,
         acc,
         wpm,
         wordEntries,
