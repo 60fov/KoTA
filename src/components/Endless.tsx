@@ -1,5 +1,5 @@
 import Slider from "./ui/Slider";
-import { useEffect, useReducer, useRef } from "react";
+import { RefObject, useEffect, useReducer, useRef } from "react";
 import { nanoid } from "nanoid";
 import { createCtx, random } from "~/utils/fns";
 
@@ -11,7 +11,7 @@ import { decompose } from "lib/kime/jamo";
 import useSound from "~/hooks/useSound";
 
 import keySfxPath from "@/audio/key.mp3";
-import deleteSfxPath from  "@/audio/delete.mp3";
+import deleteSfxPath from "@/audio/delete.mp3";
 import successSfxPath from "@/audio/success.mp3";
 import Dict, { type DictionaryEntry } from "~/utils/dictionary";
 
@@ -41,6 +41,7 @@ type SliderState = {
 }
 
 interface EndlessModeContextInterface {
+  refInput: RefObject<HTMLInputElement>
   state: SliderState
   dispatch: React.Dispatch<SliderAction>
 }
@@ -109,6 +110,8 @@ export default function EndlessMode(props: {
 
   const [state, dispatch] = useReducer(reducer, props.pool, createInitialState)
 
+  const refInput = useRef<HTMLInputElement>(null)
+
   const currentItem = state.list[state.index]
   if (!currentItem) throw new Error("slider index out of bounds")
 
@@ -120,7 +123,15 @@ export default function EndlessMode(props: {
     }
   }, [])
 
+  useEffect(() => {
+    refInput.current?.focus()
+  }, [])
+
   const onKeyDown = (e: KeyboardEvent) => {
+    if (document.activeElement === document.body) {
+      refInput.current?.focus()
+    }
+    
     if (e.metaKey || e.ctrlKey) {
       if (e.key === "Enter") {
         if (e.shiftKey) dispatch({ type: "prev" })
@@ -130,8 +141,8 @@ export default function EndlessMode(props: {
   }
 
   return (
-    <div className={styles.base}>
-      <EndlessModeContextProvider value={{ state, dispatch }}>
+    <div className={styles.base} onClick={() => refInput.current?.focus()}>
+      <EndlessModeContextProvider value={{ refInput, state, dispatch }}>
         {children}
       </EndlessModeContextProvider>
     </div>
@@ -183,28 +194,20 @@ function Translation() {
 }
 
 function EndlessInput() {
-  const { state, dispatch } = useEndlessModeContext()
+  const { refInput, state, dispatch } = useEndlessModeContext()
 
-  const refInput = useRef<HTMLInputElement>(null)
   const kinput = useKime(refInput)
 
   const currentWord = state.list[state.index]
-
-  useEffect(() => {
-    refInput.current?.focus()
-  }, [])
 
   const keySfx = useSound(keySfxPath)
   const deleteSfx = useSound(deleteSfxPath)
   const successSfx = useSound(successSfxPath)
 
   useEventListener('keydown', (event) => {
-    if (document.activeElement === document.body) {
-      refInput.current?.focus()
-    }
     if (document.activeElement === refInput.current) {
-      if (event.key.length === 1 && event.key !== ' ') void keySfx.play({force: true})
-      else if (event.key === 'Backspace') void deleteSfx.play({force: true})
+      if (event.key.length === 1 && event.key !== ' ') void keySfx.play({ force: true })
+      else if (event.key === 'Backspace') void deleteSfx.play({ force: true })
     }
   })
 
@@ -212,9 +215,9 @@ function EndlessInput() {
     if (!currentWord) return
     if (event.code === 'Space' || event.code === 'Enter') {
       if (kinput.value === currentWord.kr) {
-        dispatch({type:"next"})
+        dispatch({ type: "next" })
         kinput.clear()
-        void successSfx.play({force:true})
+        void successSfx.play({ force: true })
       }
     }
   })
@@ -225,31 +228,31 @@ function EndlessInput() {
     const chars = kinput.value.split("")
 
     const Char = {
-      Space: () => <span style={{color: "var(--color-front-alt-100)"}}>•</span>,
-      Error: (props: {char: string}) => <span style={{color: "var(--color-error-100)"}}>{props.char}</span>,
-      Composing: (props: {char: string}) => <span style={{borderBottom: "solid 1px var(--color-front-100)"}}>{props.char}</span>,
-      Default: (props: {char: string}) => <span>{props.char}</span>,
+      Space: () => <span style={{ color: "var(--color-front-alt-100)" }}>•</span>,
+      Error: (props: { char: string }) => <span style={{ color: "var(--color-error-100)" }}>{props.char}</span>,
+      Composing: (props: { char: string }) => <span style={{ borderBottom: "solid 1px var(--color-front-100)" }}>{props.char}</span>,
+      Default: (props: { char: string }) => <span>{props.char}</span>,
     }
 
     return (
-      chars.map((c,i) => {
+      chars.map((c, i) => {
         const key = `${c}-${i}`
         if (c === ' ') return <Char.Space key={key} />
-        
+
         const inputLongerThanGoal = i >= currentWord.kr.length
         if (inputLongerThanGoal) return <Char.Error key={key} char={c} />
-        
+
         const isOnLastChar = i === kinput.value.length - 1
         if (isOnLastChar && kinput.isComposing) {
           // deep compare
-          const currentJamo = currentWord.kr[i] 
+          const currentJamo = currentWord.kr[i]
           if (!currentJamo) throw Error("∂∂∂")
           const decomGoal = decompose(currentJamo)
           const decomChar = decompose(c)
 
           const error = decomChar.some((dc, j) => {
             if (j >= decomGoal.length) {
-              const nextJamo = currentWord.kr[i+1]
+              const nextJamo = currentWord.kr[i + 1]
               if (!nextJamo) return true // there is no next char
               return dc !== decompose(nextJamo)[0] // too lazy  to explain
             }
@@ -262,7 +265,7 @@ function EndlessInput() {
 
           if (error) return <Char.Error key={key} char={c} />
 
-          return <Char.Default key={key} char={c} />  
+          return <Char.Default key={key} char={c} />
         }
 
         const inputMatchesGoal = c === currentWord.kr[i]
@@ -293,7 +296,7 @@ function EndlessInput() {
       }} />
       <span style={{
         color: 'var(--color-front-100)',
-        padding: '0 var(--spacing-sm)', 
+        padding: '0 var(--spacing-sm)',
         fontSize: 36,
         fontWeight: 600
       }}>{renderText()}</span>
@@ -305,7 +308,7 @@ function EndlessInput() {
         width: 4,
         background: 'var(--color-front-100)',
         animation: 'cursor 1s infinite alternate'
-      }}/>
+      }} />
     </div>
   )
 }
