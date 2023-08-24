@@ -13,8 +13,10 @@ import { useTheme } from "~/hooks/useTheme";
 import { RadixIconsMoon } from "./icons/Moon";
 import { RadixIconsSun } from "./icons/Sun";
 import { RadixIconsDesktop } from "./icons/Desktop";
-import { HiHome } from "react-icons/hi2";
+import { HiHome, HiPaintBrush } from "react-icons/hi2";
 import { RadixIconsSpeakerLoud, RadixIconsSpeakerModerate, RadixIconsSpeakerOff, RadixIconsSpeakerQuiet } from "./icons/Speaker";
+import KotaLogo from "./KotaLogo";
+import { RadixIconsComponent1 } from "./icons/Component";
 
 export default function AppMenu() {
 
@@ -56,7 +58,9 @@ export default function AppMenu() {
 
   return (
     <Menu.Base>
-      <Menu.Button />
+      <Menu.Button variant="none">
+        <KotaLogo size={32} />
+      </Menu.Button>
       <Menu.Portal>
         <Menu.Section>
           <Menu.Item
@@ -66,39 +70,48 @@ export default function AppMenu() {
           >
             Home
           </Menu.Item>
+          <Menu.Item
+            as={Link}
+            href="/design"
+            icon={<RadixIconsComponent1 />}
+          >
+            Design
+          </Menu.Item>
           <Menu.Divider />
-          <Menu.Item
-            as="button"
-            icon={themeIcon()}
-            onClick={handleThemeSwitch}
-            suffix={theme}
-          >
-            Change Theme
-          </Menu.Item>
-          <Menu.Item
-            as="button"
-            icon={audioIcon()}
-            toggle={audio.enabled}
-            onClick={handleAudioClick}
-            suffix={audio.getLevel()}
-          >
-            Sound Effects
-          </Menu.Item>
-          <Menu.Item.Toggle
-            icon={<Check />}
-            toggle={keyboardEnabled}
-            onToggleChange={setKeyboardEnabled}
-          >
-            Show Keyboard
-          </Menu.Item.Toggle>
-          {/* <Menu.Item.Toggle
+          <Menu.Section title="options">
+            <Menu.Item
+              as="button"
+              icon={themeIcon()}
+              onClick={handleThemeSwitch}
+              suffix={theme}
+            >
+              Change Theme
+            </Menu.Item>
+            <Menu.Item
+              as="button"
+              icon={audioIcon()}
+              toggle={audio.enabled}
+              onClick={handleAudioClick}
+              suffix={audio.getLevel()}
+            >
+              Sound Effects
+            </Menu.Item>
+            <Menu.Item.Toggle
+              icon={<Check />}
+              toggle={keyboardEnabled}
+              onToggleChange={setKeyboardEnabled}
+            >
+              Show Keyboard
+            </Menu.Item.Toggle>
+            {/* <Menu.Item.Toggle
             icon={<Check />}
             toggle={ttsEnabled}
             onToggleChange={setTTSEnabled}
           >
             Enabled TTS
           </Menu.Item.Toggle> */}
-          {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
+            {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
+          </Menu.Section>
         </Menu.Section>
         {/* <Menu.Item
           as="button"

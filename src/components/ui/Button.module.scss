@@ -14,7 +14,7 @@
     box-shadow: var(--shadow-md);
     padding: var(--spacing-md);
     line-height: 1;
-    
+
     transition: all 100ms;
 
     [data-prefix],
@@ -63,5 +63,11 @@
       transform: translateY(1px);
       background: var(--color-back-alt-50);
     }
+  }
+
+  &[data-variant=none] {
+    border: none;
+    border-radius: 0;
+    padding: 0;
   }
 }
