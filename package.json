@@ -43,6 +43,7 @@
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
     "@paralleldrive/cuid2": "^2.2.0",
+    "@svgr/webpack": "^8.1.0",
     "@types/eslint": "^8.40.0",
     "@types/node": "^18.16.16",
     "@types/prettier": "^2.7.3",
