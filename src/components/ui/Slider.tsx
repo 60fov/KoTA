@@ -1,6 +1,7 @@
-import { AnimationDefinition, LayoutGroup, motion, useInView, useSpring } from "framer-motion"
+import { type AnimationDefinition, LayoutGroup, motion, useInView, useSpring, HTMLMotionProps } from "framer-motion"
 import { type ReactElement, type ReactNode, useCallback, useRef, useEffect } from "react"
 import { cn } from "~/utils/fns"
+import { NonDuplicateProps } from "~/utils/types"
 
 interface SliderProps {
   index: number
@@ -79,12 +80,14 @@ function Base(props: SliderProps) {
     >
       {/* gradient */}
       <div className={cn(
+        "pointer-events-none",
         "absolute left-0 right-0 top-0 bottom-0 z-50",
         "bg-gradient-to-r from-back/90 via-transparent to-back/90"
       )} />
 
       {/* cursor */}
-      <motion.div className="absolute w-16 p-1 box-content border-[0.5px] border-front/25 rounded bg-front-alt/5"
+      <motion.div
+        className="absolute w-16 p-1 box-content border-[0.5px] border-front/25 rounded bg-front-alt/5"
         style={{
           width: widthMotionValue,
           height: heightMotionValue
@@ -114,7 +117,8 @@ function Base(props: SliderProps) {
   )
 }
 
-interface ItemProps {
+
+type ItemProps = HTMLMotionProps<"div"> & {
   id: string
   onViewEnter?: (el: HTMLDivElement | null) => void
   onViewLeave?: (el: HTMLDivElement | null) => void
@@ -126,6 +130,7 @@ function Item(props: ItemProps) {
     id,
     onViewLeave,
     onViewEnter,
+    className = "",
     children,
     ...restProps
   } = props;
@@ -144,10 +149,10 @@ function Item(props: ItemProps) {
 
   return (
     <motion.div
+      className={`font-semibold text-4xl text-front whitespace-nowrap ${className}`}
       ref={ref}
       layoutId={id}
       layout="position"
-      className="font-semibold text-4xl text-front whitespace-nowrap"
       {...restProps}
     >
       {children}

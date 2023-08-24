@@ -1,5 +1,5 @@
 import Slider from "./ui/Slider";
-import { RefObject, useEffect, useReducer, useRef } from "react";
+import React, { type RefObject, useEffect, useReducer, useRef } from "react";
 import { nanoid } from "nanoid";
 import { createCtx, random } from "~/utils/fns";
 
@@ -32,6 +32,7 @@ type SliderAction =
   | { type: "prev" }
   | { type: "close" }
   | { type: "open" }
+  | { type: "goto", index: number }
   | { type: "itemLeaveView", el: HTMLElement }
 
 type SliderState = {
@@ -99,6 +100,13 @@ function reducer(state: SliderState, action: SliderAction): SliderState {
         list: [...state.list.slice(1), newWord]
       }
     }
+    case "goto": {
+      if (action.index < 0 || action.index >= state.list.length) return state
+      return {
+        ...state,
+        index: action.index
+      }
+    }
   }
 }
 
@@ -140,6 +148,10 @@ export default function EndlessMode(props: {
     }
   }
 
+  const onClick = () => {
+    refInput.current?.focus()
+  }
+
   return (
     <div className={styles.base} onClick={() => refInput.current?.focus()}>
       <EndlessModeContextProvider value={{ refInput, state, dispatch }}>
@@ -158,6 +170,21 @@ function EndlessSlider() {
     dispatch({ type: "itemLeaveView", el })
   }
 
+  const onClick = (e: React.MouseEvent) => {
+    const indexStr = e.currentTarget.getAttribute("data-index")
+    if (!indexStr) return
+    const index = parseInt(indexStr)
+    if (isNaN(index)) return
+
+    const clickedOnCurrentWord = index === state.index
+    if (clickedOnCurrentWord) {
+      // open a menu with options (variants, use examples, tts)
+      // select and open context menu on right-click?
+    } else {
+      dispatch({ type: "goto", index })
+    }
+  }
+
   return (
     <Slider.Base index={state.index} open={true}>
       {
@@ -168,6 +195,8 @@ function EndlessSlider() {
             key={word.id}
             data-id={word.id}
             data-index={i}
+            onClick={onClick}
+            className="select-none cursor-pointer"
           >
             {word.kr}
           </Slider.Item>

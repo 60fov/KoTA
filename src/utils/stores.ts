@@ -94,7 +94,7 @@ interface KeyboardSettingsStore {
 export const useKeyboardSettingsStore = create<KeyboardSettingsStore>()(
   persist(
     (set) => ({
-      enabled: false,
+      enabled: true,
       enable: () => set(() => ({ enabled: true })),
       disable: () => set(() => ({ enabled: false })),
       setEnabled: (enabled) => set(() => ({ enabled })),
