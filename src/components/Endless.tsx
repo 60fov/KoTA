@@ -153,7 +153,7 @@ export default function EndlessMode(props: {
   }
 
   return (
-    <div className={styles.base} onClick={() => refInput.current?.focus()}>
+    <div className={styles.base} onClick={onClick}>
       <EndlessModeContextProvider value={{ refInput, state, dispatch }}>
         {children}
       </EndlessModeContextProvider>

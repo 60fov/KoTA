@@ -1,9 +1,6 @@
 import Menu from "~/components/ui/Menu";
-import Person from "~/components/icons/Person";
-
 
 import { nextThemeOption } from "~/utils/theme";
-import Exit from "./icons/Exit";
 
 import Link from "next/link";
 
@@ -13,7 +10,7 @@ import { useTheme } from "~/hooks/useTheme";
 import { RadixIconsMoon } from "./icons/Moon";
 import { RadixIconsSun } from "./icons/Sun";
 import { RadixIconsDesktop } from "./icons/Desktop";
-import { HiHome, HiPaintBrush } from "react-icons/hi2";
+import { HiHome } from "react-icons/hi2";
 import { RadixIconsSpeakerLoud, RadixIconsSpeakerModerate, RadixIconsSpeakerOff, RadixIconsSpeakerQuiet } from "./icons/Speaker";
 import KotaLogo from "./KotaLogo";
 import { RadixIconsComponent1 } from "./icons/Component";
@@ -90,7 +87,6 @@ export default function AppMenu() {
             <Menu.Item
               as="button"
               icon={audioIcon()}
-              toggle={audio.enabled}
               onClick={handleAudioClick}
               suffix={audio.getLevel()}
             >
