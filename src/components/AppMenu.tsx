@@ -55,7 +55,7 @@ export default function AppMenu() {
 
   return (
     <Menu.Base>
-      <Menu.Button variant="none">
+      <Menu.Button variant="passive">
         <KotaLogo size={32} />
       </Menu.Button>
       <Menu.Portal>
