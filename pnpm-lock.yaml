@@ -68,6 +68,9 @@ dependencies:
   tailwind-merge:
     specifier: ^1.13.0
     version: 1.13.0
+  uWebSockets.js:
+    specifier: github:uNetworking/uWebSockets.js#v20.31.0
+    version: github.com/uNetworking/uWebSockets.js/809b99d2d7d12e2cbf89b7135041e9b41ff84084
   usehooks-ts:
     specifier: ^2.9.1
     version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
@@ -6455,4 +6458,10 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  github.com/uNetworking/uWebSockets.js/809b99d2d7d12e2cbf89b7135041e9b41ff84084:
+    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/809b99d2d7d12e2cbf89b7135041e9b41ff84084}
+    name: uWebSockets.js
+    version: 20.31.0
     dev: false

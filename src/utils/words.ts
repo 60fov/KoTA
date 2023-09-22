@@ -24,6 +24,7 @@ export function wordKey(word: { kr: string, en: string }) {
 }
 
 export const wordList = [
+    
     { "kr": "책", "roman": "chaek", "en": "book" },
     { "kr": "몇", "roman": "myeot", "en": "how many" },
     { "kr": "없다", "roman": "eopda", "en": "to not exist" },
