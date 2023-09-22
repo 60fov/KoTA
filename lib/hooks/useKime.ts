@@ -4,6 +4,14 @@ import { jamo, decomposeBlock, compose } from "../kime/jamo"
 
 // TODO: clean up
 
+declare global {
+    interface HTMLElementEventMap {
+        'kimeinput': KimeInputEvent
+    }
+}
+
+export type KimeInputEvent = CustomEvent<{ value: string }>
+
 export interface KimeInput {
     value: string
     clear: () => void

@@ -313,6 +313,8 @@ function EndlessInput() {
       height: 36,
       gap: 'var(--spacing-md)',
       justifyContent: "center",
+      padding: 'var(--spacing-sm) var(--spacing-md)',
+      boxSizing: 'content-box',
     }}>
       <input ref={refInput} type="text" style={{
         width: "1px",
@@ -325,7 +327,6 @@ function EndlessInput() {
       }} />
       <span style={{
         color: 'var(--color-front-100)',
-        padding: '0 var(--spacing-sm)',
         fontSize: 36,
         fontWeight: 600
       }}>{renderText()}</span>
@@ -333,6 +334,7 @@ function EndlessInput() {
         transition: "all 150ms ease-in-out",
         position: 'absolute',
         left: '100%',
+        transform: 'translateX(-100%)',
         height: kinput.hasFocus ? "100%" : 0,
         width: 4,
         background: 'var(--color-front-100)',
