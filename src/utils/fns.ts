@@ -106,4 +106,8 @@ export function isCSR() {
     return typeof window !== 'undefined'
 }
 
+export function queryDOMElement<T>(query: string): T {
+    const element = document.querySelector(query)
+    if (!element) throw Error(`element ${query} not found`)
+    return element as T
 }
