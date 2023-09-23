@@ -97,3 +97,13 @@ export async function copyToClipboard(text: string) {
 export function getProfileUrl(id: string) {
     return new URL(`user/${id}`, window.location.origin)
 }
+
+export function isSSR() {
+    return typeof window === 'undefined'
+}
+
+export function isCSR() {
+    return typeof window !== 'undefined'
+}
+
+}

@@ -13,7 +13,8 @@ import useSound from "~/hooks/useSound";
 import keySfxPath from "@/audio/key.mp3";
 import deleteSfxPath from "@/audio/delete.mp3";
 import successSfxPath from "@/audio/success.mp3";
-import Dict, { type DictionaryEntry } from "~/utils/dictionary";
+import { Dict, type TWord } from "~/utils/dictionary";
+import drawLine from "~/utils/line";
 
 /*
 TODO
@@ -23,7 +24,7 @@ user objectives
 achievements
 */
 
-type Word = DictionaryEntry & {
+type TSliderWord = TWord & {
   id: string
 }
 
@@ -38,7 +39,7 @@ type SliderAction =
 type SliderState = {
   open: boolean
   index: number
-  list: Word[]
+  list: TSliderWord[]
 }
 
 interface EndlessModeContextInterface {
@@ -49,7 +50,7 @@ interface EndlessModeContextInterface {
 
 const [useEndlessModeContext, EndlessModeContextProvider] = createCtx<EndlessModeContextInterface>()
 
-function createInitialState(pool: Word[]): SliderState {
+function createInitialState(pool: TSliderWord[]): SliderState {
   return {
     open: true,
     index: 0,
@@ -93,7 +94,7 @@ function reducer(state: SliderState, action: SliderAction): SliderState {
       const i = parseInt(indexAttrib)
       if (i >= state.index) return state
 
-      const newWord = { ...Dict.getRandomEntry(), id: nanoid() }
+      const newWord = { ...Dict.getRandomWord(), id: nanoid() }
 
       return {
         ...reducer(state, { type: "prev" }),
@@ -111,7 +112,7 @@ function reducer(state: SliderState, action: SliderAction): SliderState {
 }
 
 export default function EndlessMode(props: {
-  pool: Word[]
+  pool: TSliderWord[]
   children: React.ReactNode
 }) {
   const { children } = props
@@ -139,7 +140,7 @@ export default function EndlessMode(props: {
     if (document.activeElement === document.body) {
       refInput.current?.focus()
     }
-    
+
     if (e.metaKey || e.ctrlKey) {
       if (e.key === "Enter") {
         if (e.shiftKey) dispatch({ type: "prev" })

@@ -28,7 +28,8 @@ const Key = (props: Props) => {
 
   return (
     <div
-      style={{width: size, height: size}}
+      id={`key-${code}`}
+      style={{ width: size, height: size }}
       className={cn(
         "relative",
         "flex items-center justify-center",

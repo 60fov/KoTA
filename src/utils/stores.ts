@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import { type ThemeOption } from './theme'
-import Word, { type WordTable, type WordType } from './words'
+import Dictionary, { Dict } from './dictionary'
 
 
 interface ThemeStore {
@@ -36,7 +36,7 @@ export const useAudioSettingsStore = create<AudioSettingsStore>()(
       enabled: true,
       volume: 1,
       getLevel: () => {
-        const {volume, enabled} = get()
+        const { volume, enabled } = get()
         if (volume === 0 || !enabled) return "mute"
         if (volume < 0.34) return "quiet"
         if (volume < 0.67) return "moderate"
@@ -103,97 +103,27 @@ export const useKeyboardSettingsStore = create<KeyboardSettingsStore>()(
   )
 )
 
-export interface WordTableStore {
-  wordTable: WordTable
-  // setWordMap: (words: Word[]) => void
-  setWord: (key: string, word: WordType) => void
-  toggleWord: (key: string) => void
-  enableWord: (key: string) => void
-  disableWord: (key: string) => void
-  addWord: (word: WordType) => void
-  removeWord: (word: WordType) => void
-  addWords: (...word: WordType[]) => void
-  removeWords: (...word: WordType[]) => void
+export interface DictionaryStore {
+  dictionaryTable: Record<string, Dictionary>
+  add: (name: string, dict: Dictionary) => void
+  remove: (name: string) => void
+  // enable: (name: string) => void
+  // disable: (name: string) => void
+  // write: (name: string ,dict: Dictionary) 
 }
 
-export const useWordTableStore = create<WordTableStore>()(
+export const useDictionaryStore = create<DictionaryStore>()(
   persist(
     (set) => ({
-      wordTable: Word.list.reduce((accum, word) => {
-        const key = Word.key(word)
-        accum[key] = {
-          ...word,
-          enabled: true,
-          key
-        }
-        return accum
-      }, {} as WordTable),
-      setWord: (key: string, word: WordType) => set(({ wordTable }) => {
-        wordTable[key] = word
-        return {
-          ...wordTable,
-          [key]: word
-        }
-      }),
-      toggleWord: (key: string) => set(({ wordTable }) => {
-        const word = wordTable[key]
-        if (!word) throw new Error("word not in table")
-        word.enabled = !word.enabled
-        return {
-          ...wordTable,
-          [key]: word
-        }
-      }),
-      enableWord: (key: string) => set(({ wordTable }) => {
-        const word = wordTable[key]
-        if (!word) throw new Error("word not in table")
-        word.enabled = true
-        return {
-          ...wordTable,
-          [key]: word
-        }
-      }),
-      disableWord: (key: string) => set(({ wordTable }) => {
-        const word = wordTable[key]
-        if (!word) throw new Error("word not in table")
-        word.enabled = false
-        return {
-          ...wordTable,
-          [key]: word
-        }
-      }),
-      addWord: (word: WordType) => set(({ wordTable }) => {
-        const key = Word.key(word)
-        if (wordTable[key]) throw new Error("Word Error: word already in table, fn: addWord()")
-        return {
-          ...wordTable,
-          [key]: word
-        }
-      }),
-      removeWord: (word: WordType) => set(({ wordTable }) => {
-        const key = Word.key(word)
-        delete wordTable[key]
-        return wordTable
-      }),
-      addWords: (...words: WordType[]) => set(({ wordTable }) => {
-        words.forEach(word => {
-          const key = Word.key(word)
-          if (wordTable[key]) throw new Error("Word Error: word already in table, fn: addWord()")
-          wordTable[key] = word
-        })
-        return wordTable
-      }),
-      removeWords: (...words: WordType[]) => set(({ wordTable }) => {
-        words.forEach(word => {
-          const key = Word.key(word)
-          if (wordTable[key]) throw new Error("Word Error: word already in table, fn: addWord()")
-          delete wordTable[key]
-        })
-        return wordTable
+      dictionaryTable: { defaultDictionary: new Dictionary(Dict.defaultWords) },
+      add: (name, dict) => set((state) => ({ dictionaryTable: { ...state.dictionaryTable, [name]: dict } })),
+      remove: (name) => set((state) => {
+        delete state.dictionaryTable[name]
+        return state
       }),
     }),
     {
-      name: 'wordlist',
+      name: 'dicitionary',
       skipHydration: true
     }
   )

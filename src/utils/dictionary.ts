@@ -1,14 +1,17 @@
 import { random } from "./fns"
 
+export type TWord = typeof Shiritori
+export type DictionaryEntry = TWord & {
+  enabled: boolean
+}
+
 const Shiritori = {
   "kr": "끝말잇기",
   "roman": "Kkeunmaritgi",
-  "en": "shiritori"
+  "en": "shiritori",
 }
 
-export type DictionaryEntry = typeof Shiritori
-
-const entries: DictionaryEntry[] = [
+const defaultWords: TWord[] = [
   Shiritori,
   { "kr": "끝말잇기", "roman": "Kkeunmaritgi", "en": "shiritori" },
   { "kr": "책", "roman": "chaek", "en": "book" },
@@ -363,16 +366,77 @@ const entries: DictionaryEntry[] = [
 ]
 
 
-function getRandomEntry(): DictionaryEntry {
-  const word = random.fromArray(entries)
+export default class Dictionary {
+  static id(word: TWord): string {
+    return word.kr
+  }
+
+  map: Map<string, DictionaryEntry>;
+
+  constructor(wordList: TWord[]) {
+    const entries = wordList.map(word => [
+      Dictionary.id(word), // map key
+      { ...word, enabled: true } // map value
+    ] as const)
+    this.map = new Map(entries.values())
+  }
+
+  getEntry(entry: string) {
+    return this.map.get(entry)
+  }
+
+  getRandomEntry() {
+    const index = random.int(0, this.map.size)
+    const entry = Array.from(this.map.values())[index]
+    return entry
+  }
+
+  remove(id: string | string[]) {
+    if (Array.isArray(id)) {
+      id.forEach(i => this.map.delete(i))
+    } else {
+      this.map.delete(id)
+    }
+  }
+
+  add(word: TWord | TWord[], enabled = true) {
+    const ad = (word: TWord, enabled: boolean) => {
+      this.map.set(Dictionary.id(word), { ...word, enabled })
+    }
+    
+    if (Array.isArray(word)) {
+      word.forEach(w => ad(w, enabled))
+    } else {
+      ad(word, enabled)
+    }
+  }
+
+  enable(id: string | string[]) {
+    const enbl = (id: string) => {
+      const entry = this.map.get(id)
+      if (entry) {
+        entry.enabled = true
+      } else {
+        console.error(`[dictionary] entry ${id} doesn't exist`)
+      }
+    }
+
+    if (Array.isArray(id)) {
+      id.forEach(i => enbl(i))
+    } else {
+      enbl(id)
+    }
+  }
+}
+
+function getRandomWord(): TWord {
+  const word = random.fromArray(defaultWords)
   if (!word) throw Error("DICT ERROR: Empty Dictionary???")
   return word
 }
 
-const Dict = {
+export const Dict = {
   Shiritori,
-  entries,
-  getRandomEntry
+  defaultWords,
+  getRandomWord
 }
-
-export default Dict
