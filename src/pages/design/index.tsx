@@ -13,12 +13,7 @@ import Button from "~/components/ui/Button";
 import Slider from "~/components/ui/Slider";
 import UserCard from "~/components/UserCard";
 
-import LeftArrow from "~/components/icons/LeftArrow";
-import RightArrow from "~/components/icons/RightArrow";
-import Plus from "~/components/icons/Plus";
-import Minus from "~/components/icons/Minus";
 import Menu from "~/components/ui/Menu";
-import { RadixIconsMoon } from "~/components/icons/Moon";
 
 import { cn, min, max, random } from "~/utils/fns";
 
@@ -27,9 +22,8 @@ import Input from "~/components/ui/Input";
 import toast from "~/components/Toast";
 import Dynamic from "~/components/Dynamic";
 import { useTheme } from "~/hooks/useTheme";
-import { RadixIconsSun } from "~/components/icons/Sun";
-import { RadixIconsDesktop } from "~/components/icons/Desktop";
 import KotaLogo from "~/components/KotaLogo";
+import RadixIcons from "~/components/icons/RadixIcons";
 
 const Home: NextPage = () => {
   const [theme, setTheme] = useTheme()
@@ -119,9 +113,9 @@ const Home: NextPage = () => {
               }}
               prompt="this is just an example of a multi-toggle button"
             >
-              <MultiToggle.Item value="light"><RadixIconsSun /></MultiToggle.Item>
-              <MultiToggle.Item value="dark"><RadixIconsMoon /></MultiToggle.Item>
-              <MultiToggle.Item value="system"><RadixIconsDesktop /></MultiToggle.Item>
+              <MultiToggle.Item value="light"><RadixIcons.Sun /></MultiToggle.Item>
+              <MultiToggle.Item value="dark"><RadixIcons.Moon /></MultiToggle.Item>
+              <MultiToggle.Item value="system"><RadixIcons.Desktop /></MultiToggle.Item>
             </MultiToggle.Base>
           </Tile>
 
@@ -146,10 +140,10 @@ const Home: NextPage = () => {
                 <Menu.Section>
                   <Menu.Item.Toggle>Toggle Option 1</Menu.Item.Toggle>
                   <Menu.Item.Toggle initialToggle>Toggle Option 2</Menu.Item.Toggle>
-                  <Menu.Item.Toggle icon={<Plus />}>Toggle Option 3</Menu.Item.Toggle>
+                  <Menu.Item.Toggle icon={<RadixIcons.Plus />}>Toggle Option 3</Menu.Item.Toggle>
                 </Menu.Section>
                 <Menu.Divider />
-                <Menu.Item as="button" icon={<RadixIconsMoon />}>Button With Icon</Menu.Item>
+                <Menu.Item as="button" icon={<RadixIcons.Moon />}>Button With Icon</Menu.Item>
                 <Menu.Item as="button">Button without Icon</Menu.Item>
                 <Menu.Section title="section title">
                   <Menu.Item as="button" disabled>Disabled Button</Menu.Item>
@@ -177,17 +171,17 @@ const Home: NextPage = () => {
               <div className="flex gap-2">
                 <Button
                   onClick={() => setSliderIndex(max(sliderIndex - 1, 0))}
-                  prefix={<LeftArrow />}
+                  prefix={<RadixIcons.ArrowLeft />}
                 />
                 <Button onClick={removeWord}
-                  prefix={<Minus />} />
+                  prefix={<RadixIcons.Minus />} />
                 <Button onClick={() => setSliderOpen(!sliderOpen)}>{sliderOpen ? "close" : "open"}</Button>
                 <Button
                   onClick={() => { setWords([...words, randomWord()]) }}
-                  prefix={<Plus />} />
+                  prefix={<RadixIcons.Plus />} />
                 <Button
                   onClick={() => setSliderIndex(min(sliderIndex + 1, words.length - 1))}
-                  prefix={<RightArrow />}
+                  prefix={<RadixIcons.ArrowRight />}
                 />
               </div>
             </div>

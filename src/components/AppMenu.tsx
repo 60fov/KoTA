@@ -4,16 +4,10 @@ import { nextThemeOption } from "~/utils/theme";
 
 import Link from "next/link";
 
-import Check from "./icons/Check";
 import { useAudioSettingsStore, useKeyboardSettingsStore } from "~/utils/stores";
 import { useTheme } from "~/hooks/useTheme";
-import { RadixIconsMoon } from "./icons/Moon";
-import { RadixIconsSun } from "./icons/Sun";
-import { RadixIconsDesktop } from "./icons/Desktop";
-import { HiHome } from "react-icons/hi2";
-import { RadixIconsSpeakerLoud, RadixIconsSpeakerModerate, RadixIconsSpeakerOff, RadixIconsSpeakerQuiet } from "./icons/Speaker";
 import KotaLogo from "./KotaLogo";
-import { RadixIconsComponent1 } from "./icons/Component";
+import RadixIcons from "./icons/RadixIcons";
 
 export default function AppMenu() {
 
@@ -25,17 +19,17 @@ export default function AppMenu() {
 
   const themeIcon = () => {
     switch (theme) {
-      case "dark": return <RadixIconsMoon />
-      case "light": return <RadixIconsSun />
-      case "system": return <RadixIconsDesktop />
+      case "dark": return <RadixIcons.Moon />
+      case "light": return <RadixIcons.Sun />
+      case "system": return <RadixIcons.Desktop />
     }
   }
 
   const audioIcon = () => {
-    if (!audio.enabled || audio.volume === 0) return <RadixIconsSpeakerOff />
-    if (audio.volume < 0.34) return <RadixIconsSpeakerQuiet />
-    if (audio.volume < 0.67) return <RadixIconsSpeakerModerate />
-    return <RadixIconsSpeakerLoud />
+    if (!audio.enabled || audio.volume === 0) return <RadixIcons.SpeakerOff />
+    if (audio.volume < 0.34) return <RadixIcons.SpeakerQuiet />
+    if (audio.volume < 0.67) return <RadixIcons.SpeakerModerate />
+    return <RadixIcons.SpeakerLoud />
   }
 
   function handleAudioClick() {
@@ -63,14 +57,14 @@ export default function AppMenu() {
           <Menu.Item
             as={Link}
             href="/"
-            icon={<HiHome />}
+            icon={<RadixIcons.Home />}
           >
             Home
           </Menu.Item>
           <Menu.Item
             as={Link}
             href="/design"
-            icon={<RadixIconsComponent1 />}
+            icon={<RadixIcons.Component1 />}
           >
             Design
           </Menu.Item>
@@ -92,13 +86,13 @@ export default function AppMenu() {
             >
               Sound Effects
             </Menu.Item>
-            <Menu.Item.Toggle
-              icon={<Check />}
-              toggle={keyboardEnabled}
-              onToggleChange={setKeyboardEnabled}
+            <Menu.Item
+              as="button"
+              icon={<RadixIcons.Keyboard />}
+              onClick={() => setKeyboardEnabled(!keyboardEnabled)}
             >
-              Show Keyboard
-            </Menu.Item.Toggle>
+              {keyboardEnabled ? "Hide Keyboard" : "Show Keyboard"}
+            </Menu.Item>
             {/* <Menu.Item.Toggle
             icon={<Check />}
             toggle={ttsEnabled}

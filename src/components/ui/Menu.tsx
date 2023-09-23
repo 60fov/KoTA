@@ -1,11 +1,10 @@
 import React, { type ReactNode, type ReactElement, useState, useRef, useEffect } from "react";
 import { cn, createCtx } from "~/utils/fns";
-import Check from "../icons/Check";
 import Portal from "./Portal";
 
 import Button, { type ButtonProps } from "./Button";
-import HBMenu from "../icons/HBMenu";
 import { useOnClickOutsideMany } from "~/utils/hooks";
+import RadixIcons from "../icons/RadixIcons";
 
 /*
 TODO: 
@@ -48,7 +47,7 @@ function Base(props: Props) {
 
 function MenuButton(props: ButtonProps) {
   const {
-    children = <HBMenu />,
+    children = <RadixIcons.HamburgerMenu />,
     ...restProps
   } = props
 
@@ -238,7 +237,7 @@ Item.Toggle = function ItemToggle(props: ToggleProps) {
     initialToggle = false,
     toggle: toggleProp,
     onToggleChange,
-    icon = <Check />,
+    icon = <RadixIcons.Check />,
     ...restProps
   } = props
 

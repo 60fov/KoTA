@@ -1,7 +1,7 @@
 import type { ReactElement } from "react"
 import { cn } from "~/utils/fns"
+import RadixIcons from "../icons/RadixIcons"
 // import { useState } from "react"
-import { HiChevronDown } from "react-icons/hi2"
 interface Props {
   name: string
   label?: string
@@ -51,7 +51,7 @@ const Base = (props: Props) => {
         {children}
       </select>
       <span className="absolute right-3 pointer-events-none peer-hover:text-front/90">
-        <HiChevronDown />
+        <RadixIcons.ChevronDown />
       </span>
     </div>
   )
