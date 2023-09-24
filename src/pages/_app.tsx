@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import { type AppProps } from "next/app";
 
-import { api } from "~/utils/api";
 import { KioContextProvider, useKio } from "~/hooks/kio";
 
 import { Toaster } from "sonner";
@@ -35,7 +34,7 @@ const MyApp = ({
   );
 };
 
-export default api.withTRPC(MyApp);
+export default MyApp;
 
 
 const themeScript = `(function () {
