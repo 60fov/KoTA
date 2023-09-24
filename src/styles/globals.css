@@ -129,12 +129,3 @@
     @apply text-lg;
   }
 }
-
-@keyframes cursor {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: .25;
-  }
-}

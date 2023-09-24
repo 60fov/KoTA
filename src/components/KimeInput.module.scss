@@ -2,12 +2,19 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  font-size: 36px;
   height: 36px;
+  font-size: 36px;
+  font-weight: 600;
   gap: var(--spacing-md);
   justify-content: center;
   padding: var(--spacing-sm) var(--spacing-md);
   box-sizing: content-box;
+
+  &:focus-within {
+    [data-caret] {
+      height: 100%;
+    }
+  }
 
   [data-input] {
     width: 1px;
@@ -21,8 +28,6 @@
 
   [data-output] {
     color: var(--color-front-100);
-    font-size: 36;
-    font-weight: 600;
   }
 
   [data-caret] {
@@ -32,11 +37,18 @@
     width: 4px;
     transform: translateX(-100%);
     transition: all 150ms ease-in-out;
-    animation: cursor 1s infinite alternate;
+    animation: caret 1s infinite alternate;
     height: 0;
+    border-radius: 1px;
+  }
+}
 
-    &:focus {
-     height: 100%;
-    }
+@keyframes caret {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: .25;
   }
 }
