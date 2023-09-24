@@ -1,18 +1,11 @@
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react"
 import kime from "../kime"
 import { jamo, decomposeBlock, compose } from "../kime/jamo"
+import { KimeEvent } from "lib/kime/event"
 
 // TODO: clean up
 
-declare global {
-    interface HTMLElementEventMap {
-        'kimeinput': KimeInputEvent
-    }
-}
-
-export type KimeInputEvent = CustomEvent<{ value: string }>
-
-export interface KimeInput {
+export interface TKime {
     value: string
     clear: () => void
     setValue: (v: string) => void
@@ -24,20 +17,31 @@ const useKime = (
     // TODO: consider content editable elements
     inputRef: RefObject<HTMLInputElement>,
     // options?: AddEventListenerOptions
-): KimeInput => {
-
-    const [isComposing, setIsComposing] = useState(false)
+): TKime => {
     const [hasFocus, setHasFocus] = useState(false)
+    const [isComposing, setIsComposing] = useState(false)
     const [value, setValue] = useState('')
 
+    const refValue = useRef("")
+    const refIsComposing = useRef(false)
 
-    function dispatchKimeInputEvent(v: string) {
-        inputRef.current?.dispatchEvent(new CustomEvent('kimeinput', {
-            detail: { value: v }
-        }))
+
+    function dispatchKimeInputEvent(value: string) {
+        if (!inputRef.current) return
+        KimeEvent.dispatchInputEvent(value, inputRef.current)
     }
 
+    function dispatchKimeCompositionEvent(composing: boolean) {
+        if (!inputRef.current) return
+        KimeEvent.dispatchCompositionEvent(composing, inputRef.current)
+    }
+
+    // TODO check of not using a callback here
+    // TODO clean up logic
     const onKeyDown = useCallback((e: KeyboardEvent) => {
+        const value = refValue.current
+        const isComposing = refIsComposing.current
+
         const typedJamo = jamo.single.includes(e.key) ? e.key : kime.keyLookUp(e.key)
 
         if (typedJamo) {
@@ -50,10 +54,10 @@ const useKime = (
                 const ending = kime.compose([...kime.decompose(block), typedJamo])
                 splitInput.push(...ending)
                 const newValue = splitInput.join('')
-                dispatchKimeInputEvent(newValue)
+                refValue.current = newValue
             } else {
-                dispatchKimeInputEvent(value + typedJamo)
-                setIsComposing(true)
+                refValue.current = value + typedJamo
+                refIsComposing.current = true
             }
 
         } else if (e.key.length === 1) {
@@ -61,8 +65,8 @@ const useKime = (
             // TODO: audit e.key.length === 1
             // is there a non typabled key with a length of 1?
             e.preventDefault()
-            setIsComposing(false)
-            dispatchKimeInputEvent(value + e.key)
+            refIsComposing.current = false
+            refValue.current = value + e.key
 
         } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault()
@@ -70,7 +74,7 @@ const useKime = (
             e.preventDefault()
             // TODO: consider mac vs windows
             if (e.ctrlKey || e.metaKey) {
-                dispatchKimeInputEvent('')
+                refValue.current = ''
             } else {
                 const splitInput = value.split('')
                 const last = splitInput.pop()
@@ -80,11 +84,11 @@ const useKime = (
                     if (dl.length) {
                         splitInput.push(compose(dl as string[]).join(''))
                     } else {
-                        setIsComposing(false)
+                        refIsComposing.current = false
                     }
                 }
                 const newValue = splitInput.join('')
-                dispatchKimeInputEvent(newValue)
+                refValue.current = newValue
             }
 
         } else if (e.key === 'Enter') {
@@ -93,14 +97,20 @@ const useKime = (
             // inputRef.current.dispatchEvent(event)
 
         } else if (e.key === 'Escape') {
-            setIsComposing(false)
+            refIsComposing.current = false
         }
         else {
             // ???
             // console.log('key???', e.key)
             // TODO: leave console user feedback note if someone checks this
         }
-    }, [isComposing, value])
+
+
+        // TODO technically composition events should fire when ending and starting with same key
+        // find logic for recomposing
+        if (value !== refValue.current) dispatchKimeInputEvent(refValue.current)
+        if (isComposing !== refIsComposing.current) dispatchKimeCompositionEvent(refIsComposing.current)
+    }, [])
 
     const onFocus = () => {
         setHasFocus(true)
@@ -110,10 +120,24 @@ const useKime = (
         setHasFocus(false)
     }
 
-    const onKimeInput = (e: Event) => {
-        const event = e as CustomEvent<{ value: string }>
-        setValue(event.detail.value)
+    const onKimeEvent = (event: KimeEvent) => {
+        // console.log(event.detail)
+        switch (event.detail.type) {
+            case "input": {
+                setValue(event.detail.value)
+            } break;
+            case "composition": {
+                setIsComposing(event.detail.composing)
+            } break;
+        }
     }
+
+    // TODO can i do this instead?
+    // useEventListener("keydown", onKeyDown, inputRef)
+    // useEventListener("keydown", onKeyDown, inputRef)
+    // useEventListener("keydown", onKeyDown, inputRef)
+    // useEventListener("keydown", onKeyDown, inputRef)
+
 
     const keyDownHandlerRef = useRef(onKeyDown)
 
@@ -131,21 +155,33 @@ const useKime = (
 
         const internalKeyDownHandler = (e: KeyboardEvent) => keyDownHandlerRef.current(e)
         inputElement.addEventListener('keydown', internalKeyDownHandler)
-        inputElement.addEventListener('kimeinput', onKimeInput)
+        inputElement.addEventListener('kime', onKimeEvent)
         inputElement.addEventListener('focus', onFocus)
         inputElement.addEventListener('blur', onBlur)
         return () => {
             inputElement.removeEventListener('keydown', internalKeyDownHandler)
-            inputElement.removeEventListener('kimeinput', onKimeInput)
+            inputElement.removeEventListener('kime', onKimeEvent)
             inputElement.removeEventListener('focus', onFocus)
             inputElement.removeEventListener('blur', onBlur)
         }
     }, [])
 
+    function clear() {
+        refIsComposing.current = false
+        refValue.current = ''
+        setValue('')
+        setIsComposing(false)
+        // use if kimeevent consumed outside of hook
+        // if (inputRef.current) {
+        //     KimeEvent.dispatchCompositionEvent(false, inputRef.current)
+        //     KimeEvent.dispatchInputEvent('', inputRef.current)
+        // }
+    }
+
     return {
         value,
         setValue,
-        clear: () => setValue(''),
+        clear,
         isComposing,
         hasFocus,
     }

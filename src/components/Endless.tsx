@@ -3,7 +3,7 @@ import React, { type RefObject, useEffect, useReducer, useRef } from "react";
 import { nanoid } from "nanoid";
 import { createCtx, random } from "~/utils/fns";
 
-import useKime from "lib/hooks/useKime";
+import useKime, { type TKime } from "lib/hooks/useKime";
 import { useEventListener } from "usehooks-ts";
 
 import styles from "./EndlessSlider.module.scss"
@@ -14,7 +14,7 @@ import keySfxPath from "@/audio/key.mp3";
 import deleteSfxPath from "@/audio/delete.mp3";
 import successSfxPath from "@/audio/success.mp3";
 import { Dict, type TWord } from "~/utils/dictionary";
-import drawLine from "~/utils/line";
+import KimeInput from "./KimeInput";
 
 /*
 TODO
@@ -22,6 +22,9 @@ user metrics
 user metic baased dynamic words
 user objectives
 achievements
+
+NOTE
+is disable space submission all multi submit on enter (mp could have bonuses)
 */
 
 type TSliderWord = TWord & {
@@ -223,10 +226,11 @@ function Translation() {
   )
 }
 
+// TODO figure out how to use kimeinput here
 function EndlessInput() {
   const { refInput, state, dispatch } = useEndlessModeContext()
 
-  const kinput = useKime(refInput)
+  const kime = useKime(refInput)
 
   const currentWord = state.list[state.index]
 
@@ -235,27 +239,28 @@ function EndlessInput() {
   const successSfx = useSound(successSfxPath)
 
   useEventListener('keydown', (event) => {
-    if (document.activeElement === refInput.current) {
-      if (event.key.length === 1 && event.key !== ' ') void keySfx.play({ force: true })
-      else if (event.key === 'Backspace') void deleteSfx.play({ force: true })
+    if (event.key.length === 1 && event.key !== ' ') {
+      void keySfx.play({ force: true })
+    } else if (event.key === 'Backspace') {
+      void deleteSfx.play({ force: true })
     }
-  })
+  }, refInput)
 
   useEventListener('keydown', event => {
     if (!currentWord) return
     if (event.code === 'Space' || event.code === 'Enter') {
-      if (kinput.value === currentWord.kr) {
+      if (kime.value === currentWord.kr) {
         dispatch({ type: "next" })
-        kinput.clear()
+        kime.clear()
         void successSfx.play({ force: true })
       }
     }
   })
 
-
-  const renderText = () => {
+  // TODO simplify + useCallback?
+  const renderText = (kime: TKime) => {
     if (!currentWord) return
-    const chars = kinput.value.split("")
+    const chars = kime.value.split("")
 
     const Char = {
       Space: () => <span style={{ color: "var(--color-front-alt-100)" }}>•</span>,
@@ -272,8 +277,8 @@ function EndlessInput() {
         const inputLongerThanGoal = i >= currentWord.kr.length
         if (inputLongerThanGoal) return <Char.Error key={key} char={c} />
 
-        const isOnLastChar = i === kinput.value.length - 1
-        if (isOnLastChar && kinput.isComposing) {
+        const isOnLastChar = i === kime.value.length - 1
+        if (isOnLastChar && kime.isComposing) {
           // deep compare
           const currentJamo = currentWord.kr[i]
           if (!currentJamo) throw Error("∂∂∂")
@@ -306,42 +311,9 @@ function EndlessInput() {
     )
   }
 
+
   return (
-    <div style={{
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      height: 36,
-      gap: 'var(--spacing-md)',
-      justifyContent: "center",
-      padding: 'var(--spacing-sm) var(--spacing-md)',
-      boxSizing: 'content-box',
-    }}>
-      <input ref={refInput} type="text" style={{
-        width: "1px",
-        height: "1px",
-        clip: "rect(0 0 0 0)",
-        clipPath: "inset(50%)",
-        overflow: "hidden",
-        position: "absolute",
-        whiteSpace: "nowrap",
-      }} />
-      <span style={{
-        color: 'var(--color-front-100)',
-        fontSize: 36,
-        fontWeight: 600
-      }}>{renderText()}</span>
-      <div style={{
-        transition: "all 150ms ease-in-out",
-        position: 'absolute',
-        left: '100%',
-        transform: 'translateX(-100%)',
-        height: kinput.hasFocus ? "100%" : 0,
-        width: 4,
-        background: 'var(--color-front-100)',
-        animation: 'cursor 1s infinite alternate'
-      }} />
-    </div>
+    <KimeInput ref={refInput} kime={kime} renderFn={renderText} />
   )
 }
 
