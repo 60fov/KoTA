@@ -1,3 +1,4 @@
+// TODO use module singleton pattern 
 let instance: KeyboardInputObservable | undefined;
 
 export class KeyboardInputObservable {
