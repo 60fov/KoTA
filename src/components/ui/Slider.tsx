@@ -1,7 +1,8 @@
-import { type AnimationDefinition, LayoutGroup, motion, useInView, useSpring, HTMLMotionProps } from "framer-motion"
+import { LayoutGroup, motion, useInView, useSpring, type HTMLMotionProps, type AnimationDefinition } from "framer-motion"
 import { type ReactElement, type ReactNode, useCallback, useRef, useEffect } from "react"
 import { cn } from "~/utils/fns"
-import { NonDuplicateProps } from "~/utils/types"
+
+import styles from "./Slider.module.scss"
 
 interface SliderProps {
   index: number
@@ -67,27 +68,16 @@ function Base(props: SliderProps) {
 
   return (
     <motion.div
-      className={cn(
-        "relative isolate",
-        "overflow-x-clip w-full flex items-center justify-center py-1",
-        "border-x-[1px] border-front-alt/50 ",
-      )}
+      className={styles.base}
       initial={defaultOpen ? "open" : "close"}
       animate={open ? "open" : "close"}
       onAnimationComplete={onAnimationStart}
       onAnimationStart={onAnimationComplete}
       variants={sliderFramerVariants}
     >
-      {/* gradient */}
-      <div className={cn(
-        "pointer-events-none",
-        "absolute left-0 right-0 top-0 bottom-0 z-50",
-        "bg-gradient-to-r from-back/90 via-transparent to-back/90"
-      )} />
-
-      {/* cursor */}
+      <div data-gradient />
       <motion.div
-        className="absolute w-16 p-1 box-content border-[0.5px] border-front/25 rounded bg-front-alt/5"
+        data-cursor
         style={{
           width: widthMotionValue,
           height: heightMotionValue
@@ -96,21 +86,13 @@ function Base(props: SliderProps) {
 
       {/* items */}
       <div
+        data-item-container
         ref={currentItemRef}
-        className={cn(
-          "relative flex gap-3",
-        )}
       >
         <LayoutGroup>
-          <div className="absolute flex gap-3 right-full mr-3">
-            {prevItems}
-          </div>
-          <div className="relative">
-            {currentItem}
-          </div>
-          <div className="absolute flex gap-3 left-full ml-3">
-            {nextItems}
-          </div>
+          <div data-past>{prevItems}</div>
+          <div data-present>{currentItem}</div>
+          <div data-future>{nextItems}</div>
         </LayoutGroup>
       </div>
     </motion.div>
@@ -149,7 +131,7 @@ function Item(props: ItemProps) {
 
   return (
     <motion.div
-      className={`font-semibold text-4xl text-front whitespace-nowrap ${className}`}
+      className={`${styles.item || ""} ${className}`}
       ref={ref}
       layoutId={id}
       layout="position"

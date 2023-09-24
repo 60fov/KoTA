@@ -1,7 +1,11 @@
 import type { ReactElement } from "react"
 import { cn } from "~/utils/fns"
 import RadixIcons from "../icons/RadixIcons"
-// import { useState } from "react"
+
+import styles from "./Select.module.scss"
+
+// TODO remake select component
+
 interface Props {
   name: string
   label?: string
@@ -26,12 +30,9 @@ const Base = (props: Props) => {
   // const [value, setValue] = useState<string | undefined>(valueProp ?? defaultValue)
 
   return (
-    <div className={cn(
-      "group relative",
-      "p-[2px] flex gap-1 items-center",
-      "text-front/90 bg-back-alt/75 border-[0.5px] border-front/10 rounded-md outline-access outline-1",
-    )}>
+    <div className={styles.base}>
       <select
+        data-select
         name={name}
         id={`${name}-select`}
         onInput={(e) => {
@@ -39,14 +40,6 @@ const Base = (props: Props) => {
           if (onValueChange) onValueChange(newValue)
           // setValue(newValue)
         }}
-        className={cn(
-          "peer transition-all duration-150",
-          "appearance-none pl-3 pr-8 leading-loose w-full",
-          "text-front/90 rounded-md outline-access outline-1",
-          "focus-visible:outline",
-          "hover:text-front/90",
-          "bg-back border-front/5 border-[0.5px] shadow-md",
-        )}
       >
         {children}
       </select>
