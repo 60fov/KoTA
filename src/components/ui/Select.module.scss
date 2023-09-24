@@ -1,0 +1,38 @@
+.base {
+  position: relative;
+  padding: var(--spacing-sm);
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  color: var(--color-front-90);
+  background-color: var(--color-back-alt-75);
+  border: var(--border);
+  border-radius: var(--radius-md);
+
+  &:has(:focus-visible) {
+    outline: var(--outline);
+  }
+
+  [data-select] {
+    appearance: none;
+    padding-left: 12px;
+    padding-right: 32px;
+    line-height: 2;
+    width: 100%;
+    color: var(--color-front-90);
+    border-radius: var(--radius-md);
+    outline: none;
+
+    background: var(--color-back-100);
+    border: var(--border);
+
+    @apply shadow-md;
+
+    &:focus-visible {}
+
+    &:hover {
+      color: var(--color-front-90);
+    }
+
+  }
+}

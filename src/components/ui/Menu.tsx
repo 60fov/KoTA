@@ -1,11 +1,10 @@
 import React, { type ReactNode, type ReactElement, useState, useRef, useEffect } from "react";
 import { cn, createCtx } from "~/utils/fns";
-import Check from "../icons/Check";
 import Portal from "./Portal";
 
 import Button, { type ButtonProps } from "./Button";
-import HBMenu from "../icons/HBMenu";
 import { useOnClickOutsideMany } from "~/utils/hooks";
+import RadixIcons from "../icons/RadixIcons";
 
 /*
 TODO: 
@@ -48,7 +47,7 @@ function Base(props: Props) {
 
 function MenuButton(props: ButtonProps) {
   const {
-    children = <HBMenu />,
+    children = <RadixIcons.HamburgerMenu />,
     ...restProps
   } = props
 
@@ -164,7 +163,7 @@ function Section(props: SectionProps) {
         </p>
       }
       <div className={cn(
-        "flex flex-col gap-1",
+        "flex flex-col",
       )}>
         {children}
       </div>
@@ -202,7 +201,7 @@ function Item<T extends ItemTag>(props: ItemProps<T>) {
   return (
     <TagName {...restProps} className={cn(
       "appearance-none transition-colors duration-75",
-      "flex items-center gap-2 p-2",
+      "flex items-center gap-2 p-[10px]",
       "rounded text-sm leading-none text-front whitespace-nowrap",
       "focus-visible:outline outline-1 outline-access",
       disabled ?
@@ -238,7 +237,7 @@ Item.Toggle = function ItemToggle(props: ToggleProps) {
     initialToggle = false,
     toggle: toggleProp,
     onToggleChange,
-    icon = <Check />,
+    icon = <RadixIcons.Check />,
     ...restProps
   } = props
 
@@ -268,7 +267,7 @@ Item.Toggle = function ItemToggle(props: ToggleProps) {
 // DIVIDER
 
 function Divider() {
-  return <div className="mr-2 ml-9 h-[0.5px] bg-front-alt/50"></div>
+  return <div className="my-1 mr-2 ml-9 h-[0.5px] bg-front-alt/50"></div>
 }
 
 const Menu = {

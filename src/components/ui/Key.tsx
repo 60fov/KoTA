@@ -1,6 +1,6 @@
-import { cn } from "~/utils/fns"
 import { useKioKey } from "~/hooks/kio"
 
+import styles from "./Key.module.scss"
 
 type Props = {
   size?: number
@@ -28,17 +28,13 @@ const Key = (props: Props) => {
 
   return (
     <div
-      style={{width: size, height: size}}
-      className={cn(
-        "relative",
-        "flex items-center justify-center",
-        "rounded-md text-front/90 bg-front-alt/10 border-[rgb(0,0,0)]/20",
-        "transition-all duration-[25ms] select-none",
-        expand ? 'grow' : '',
-        down ? 'border-b-0 translate-y-[2px] bg-front-alt/90 text-back/90' : 'border-b-2 translate-y-0'
-      )}>
-      <span>{label}</span>
-      <span className="absolute bottom-1 right-1 text-xs text-neutral-500 italic">{code}</span>
+      className={styles.base}
+      data-down={down}
+      data-expand={expand}
+      id={`key-${code}`}
+      style={{ width: size, height: size }}>
+      <span data-label>{label}</span>
+      <span data-keycode>{code}</span>
     </div>
   )
 }

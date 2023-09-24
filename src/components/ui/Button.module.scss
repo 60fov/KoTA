@@ -1,6 +1,6 @@
 .base {
   position: relative;
-  border: var(--border);
+  // border: var(--border);
   border-radius: var(--radius-md);
   padding: var(--spacing-sm);
   // color: var(--color-front-100);
@@ -8,13 +8,13 @@
   transition: all 100ms;
 
   [data-label=true] {
-    background: var(--color-back-100);
+    // background: var(--color-back-100);
     // border: var(--border);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-md);
-    padding: var(--spacing-md);
-    line-height: 1;
-    
+    // border-radius: var(--radius-sm);
+    // box-shadow: var(--shadow-md);
+    // padding: var(--spacing-md);
+    // line-height: 1;
+
     transition: all 100ms;
 
     [data-prefix],
@@ -24,12 +24,12 @@
 
   &:hover {}
 
-  &:active {
-    [data-label] {
-      transform: scale(0.95);
-      box-shadow: var(--shadow-sm);
-    }
-  }
+  // &:active {
+  //   [data-label] {
+  //     transform: scale(0.95);
+  //     box-shadow: var(--shadow-sm);
+  //   }
+  // }
 
   &:disabled {
     color: var(--color-front-alt-100);
@@ -37,6 +37,22 @@
   }
 
   &[data-variant=default] {
+
+    [data-label=true] {
+      background: var(--color-back-100);
+      // border: var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-md);
+      padding: var(--spacing-md);
+      line-height: 1;
+
+      transition: all 100ms;
+
+      [data-prefix],
+      [data-suffix],
+      [data-children] {}
+    }
+
     background: var(--color-back-alt-50);
     color: var(--color-front-100);
 
@@ -50,18 +66,20 @@
   }
 
   &[data-variant=passive] {
-    background: var(--color-back-alt-0);
     color: var(--color-front-90);
-    border-color: var(--color-front-0);
-
-    &:hover {
-      background: var(--color-back-alt-50);
-      border-color: var(--color-front-5);
-    }
-
+    border-color: transparent;
+  
     &:active {
-      transform: translateY(1px);
-      background: var(--color-back-alt-50);
+      [data-label=true] {
+        transform: translateY(1px);
+        transform: scale(.97);
+      }
     }
+  }
+
+  &[data-variant=none] {
+    border: none;
+    border-radius: 0;
+    padding: 0;
   }
 }

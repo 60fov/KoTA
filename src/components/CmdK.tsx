@@ -1,11 +1,9 @@
 import { Command } from 'cmdk'
 import { useEffect, useRef, useState } from 'react'
-import Keyboard from './icons/Keyboard'
 
 import { useKeyboardSettingsStore, useThemeStore } from '~/utils/stores'
 import { nextThemeOption } from '~/utils/theme'
-import { RadixIconsDesktop } from './icons/Desktop'
-
+import RadixIcons from './icons/RadixIcons'
 
 
 // import styles from './CmdK.module.scss'
@@ -55,7 +53,7 @@ const CmdKMenu = () => {
 
           <Command.Group heading="Options">
             <Command.Item onSelect={() => setKeyboardEnabled(!keyboardEnabled)}>
-              <Keyboard />
+              <RadixIcons.Keyboard />
               <p>Keyboard</p>
               <div cmdk-item-state-display="">
                 {keyboardEnabled ? "on" : "off"}
@@ -66,7 +64,7 @@ const CmdKMenu = () => {
             </Command.Item>
             <Command.Item value={theme} onSelect={() => setTheme(nextThemeOption(theme))}>
               <div className="icon-wrapper">
-                <RadixIconsDesktop />
+                <RadixIcons.Desktop />
               </div>
               <p>
                 Theme

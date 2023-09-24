@@ -1,20 +1,13 @@
 import Menu from "~/components/ui/Menu";
-import Person from "~/components/icons/Person";
-
 
 import { nextThemeOption } from "~/utils/theme";
-import Exit from "./icons/Exit";
 
 import Link from "next/link";
 
-import Check from "./icons/Check";
 import { useAudioSettingsStore, useKeyboardSettingsStore } from "~/utils/stores";
 import { useTheme } from "~/hooks/useTheme";
-import { RadixIconsMoon } from "./icons/Moon";
-import { RadixIconsSun } from "./icons/Sun";
-import { RadixIconsDesktop } from "./icons/Desktop";
-import { HiHome } from "react-icons/hi2";
-import { RadixIconsSpeakerLoud, RadixIconsSpeakerModerate, RadixIconsSpeakerOff, RadixIconsSpeakerQuiet } from "./icons/Speaker";
+import KotaLogo from "./KotaLogo";
+import RadixIcons from "./icons/RadixIcons";
 
 export default function AppMenu() {
 
@@ -26,17 +19,17 @@ export default function AppMenu() {
 
   const themeIcon = () => {
     switch (theme) {
-      case "dark": return <RadixIconsMoon />
-      case "light": return <RadixIconsSun />
-      case "system": return <RadixIconsDesktop />
+      case "dark": return <RadixIcons.Moon />
+      case "light": return <RadixIcons.Sun />
+      case "system": return <RadixIcons.Desktop />
     }
   }
 
   const audioIcon = () => {
-    if (!audio.enabled || audio.volume === 0) return <RadixIconsSpeakerOff />
-    if (audio.volume < 0.34) return <RadixIconsSpeakerQuiet />
-    if (audio.volume < 0.67) return <RadixIconsSpeakerModerate />
-    return <RadixIconsSpeakerLoud />
+    if (!audio.enabled || audio.volume === 0) return <RadixIcons.SpeakerOff />
+    if (audio.volume < 0.34) return <RadixIcons.SpeakerQuiet />
+    if (audio.volume < 0.67) return <RadixIcons.SpeakerModerate />
+    return <RadixIcons.SpeakerLoud />
   }
 
   function handleAudioClick() {
@@ -56,49 +49,59 @@ export default function AppMenu() {
 
   return (
     <Menu.Base>
-      <Menu.Button />
+      <Menu.Button variant="passive">
+        <KotaLogo size={32} />
+      </Menu.Button>
       <Menu.Portal>
         <Menu.Section>
           <Menu.Item
             as={Link}
             href="/"
-            icon={<HiHome />}
+            icon={<RadixIcons.Home />}
           >
             Home
           </Menu.Item>
+          <Menu.Item
+            as={Link}
+            href="/design"
+            icon={<RadixIcons.Component1 />}
+          >
+            Design
+          </Menu.Item>
           <Menu.Divider />
-          <Menu.Item
-            as="button"
-            icon={themeIcon()}
-            onClick={handleThemeSwitch}
-            suffix={theme}
-          >
-            Change Theme
-          </Menu.Item>
-          <Menu.Item
-            as="button"
-            icon={audioIcon()}
-            toggle={audio.enabled}
-            onClick={handleAudioClick}
-            suffix={audio.getLevel()}
-          >
-            Sound Effects
-          </Menu.Item>
-          <Menu.Item.Toggle
-            icon={<Check />}
-            toggle={keyboardEnabled}
-            onToggleChange={setKeyboardEnabled}
-          >
-            Show Keyboard
-          </Menu.Item.Toggle>
-          {/* <Menu.Item.Toggle
+          <Menu.Section title="options">
+            <Menu.Item
+              as="button"
+              icon={themeIcon()}
+              onClick={handleThemeSwitch}
+              suffix={theme}
+            >
+              Change Theme
+            </Menu.Item>
+            <Menu.Item
+              as="button"
+              icon={audioIcon()}
+              onClick={handleAudioClick}
+              suffix={audio.getLevel()}
+            >
+              Sound Effects
+            </Menu.Item>
+            <Menu.Item
+              as="button"
+              icon={<RadixIcons.Keyboard />}
+              onClick={() => setKeyboardEnabled(!keyboardEnabled)}
+            >
+              {keyboardEnabled ? "Hide Keyboard" : "Show Keyboard"}
+            </Menu.Item>
+            {/* <Menu.Item.Toggle
             icon={<Check />}
             toggle={ttsEnabled}
             onToggleChange={setTTSEnabled}
           >
             Enabled TTS
           </Menu.Item.Toggle> */}
-          {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
+            {/* <Menu.Item.Toggle icon={<Check />}>Show Decomposed</Menu.Item.Toggle> */}
+          </Menu.Section>
         </Menu.Section>
         {/* <Menu.Item
           as="button"

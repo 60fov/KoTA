@@ -1,9 +1,9 @@
 import Slider from "./ui/Slider";
-import { useEffect, useReducer, useRef } from "react";
+import React, { type RefObject, useEffect, useReducer, useRef } from "react";
 import { nanoid } from "nanoid";
 import { createCtx, random } from "~/utils/fns";
 
-import useKime from "lib/hooks/useKime";
+import useKime, { type TKime } from "lib/hooks/useKime";
 import { useEventListener } from "usehooks-ts";
 
 import styles from "./EndlessSlider.module.scss"
@@ -11,9 +11,10 @@ import { decompose } from "lib/kime/jamo";
 import useSound from "~/hooks/useSound";
 
 import keySfxPath from "@/audio/key.mp3";
-import deleteSfxPath from  "@/audio/delete.mp3";
+import deleteSfxPath from "@/audio/delete.mp3";
 import successSfxPath from "@/audio/success.mp3";
-import Dict, { type DictionaryEntry } from "~/utils/dictionary";
+import { Dict, type TWord } from "~/utils/dictionary";
+import KimeInput from "./KimeInput";
 
 /*
 TODO
@@ -21,9 +22,12 @@ user metrics
 user metic baased dynamic words
 user objectives
 achievements
+
+NOTE
+is disable space submission all multi submit on enter (mp could have bonuses)
 */
 
-type Word = DictionaryEntry & {
+type TSliderWord = TWord & {
   id: string
 }
 
@@ -32,22 +36,24 @@ type SliderAction =
   | { type: "prev" }
   | { type: "close" }
   | { type: "open" }
+  | { type: "goto", index: number }
   | { type: "itemLeaveView", el: HTMLElement }
 
 type SliderState = {
   open: boolean
   index: number
-  list: Word[]
+  list: TSliderWord[]
 }
 
 interface EndlessModeContextInterface {
+  refInput: RefObject<HTMLInputElement>
   state: SliderState
   dispatch: React.Dispatch<SliderAction>
 }
 
 const [useEndlessModeContext, EndlessModeContextProvider] = createCtx<EndlessModeContextInterface>()
 
-function createInitialState(pool: Word[]): SliderState {
+function createInitialState(pool: TSliderWord[]): SliderState {
   return {
     open: true,
     index: 0,
@@ -91,23 +97,32 @@ function reducer(state: SliderState, action: SliderAction): SliderState {
       const i = parseInt(indexAttrib)
       if (i >= state.index) return state
 
-      const newWord = { ...Dict.getRandomEntry(), id: nanoid() }
+      const newWord = { ...Dict.getRandomWord(), id: nanoid() }
 
       return {
         ...reducer(state, { type: "prev" }),
         list: [...state.list.slice(1), newWord]
       }
     }
+    case "goto": {
+      if (action.index < 0 || action.index >= state.list.length) return state
+      return {
+        ...state,
+        index: action.index
+      }
+    }
   }
 }
 
 export default function EndlessMode(props: {
-  pool: Word[]
+  pool: TSliderWord[]
   children: React.ReactNode
 }) {
   const { children } = props
 
   const [state, dispatch] = useReducer(reducer, props.pool, createInitialState)
+
+  const refInput = useRef<HTMLInputElement>(null)
 
   const currentItem = state.list[state.index]
   if (!currentItem) throw new Error("slider index out of bounds")
@@ -120,7 +135,15 @@ export default function EndlessMode(props: {
     }
   }, [])
 
+  useEffect(() => {
+    refInput.current?.focus()
+  }, [])
+
   const onKeyDown = (e: KeyboardEvent) => {
+    if (document.activeElement === document.body) {
+      refInput.current?.focus()
+    }
+
     if (e.metaKey || e.ctrlKey) {
       if (e.key === "Enter") {
         if (e.shiftKey) dispatch({ type: "prev" })
@@ -129,9 +152,13 @@ export default function EndlessMode(props: {
     }
   }
 
+  const onClick = () => {
+    refInput.current?.focus()
+  }
+
   return (
-    <div className={styles.base}>
-      <EndlessModeContextProvider value={{ state, dispatch }}>
+    <div className={styles.base} onClick={onClick}>
+      <EndlessModeContextProvider value={{ refInput, state, dispatch }}>
         {children}
       </EndlessModeContextProvider>
     </div>
@@ -147,6 +174,21 @@ function EndlessSlider() {
     dispatch({ type: "itemLeaveView", el })
   }
 
+  const onClick = (e: React.MouseEvent) => {
+    const indexStr = e.currentTarget.getAttribute("data-index")
+    if (!indexStr) return
+    const index = parseInt(indexStr)
+    if (isNaN(index)) return
+
+    const clickedOnCurrentWord = index === state.index
+    if (clickedOnCurrentWord) {
+      // open a menu with options (variants, use examples, tts)
+      // select and open context menu on right-click?
+    } else {
+      dispatch({ type: "goto", index })
+    }
+  }
+
   return (
     <Slider.Base index={state.index} open={true}>
       {
@@ -157,6 +199,8 @@ function EndlessSlider() {
             key={word.id}
             data-id={word.id}
             data-index={i}
+            onClick={onClick}
+            className="select-none cursor-pointer"
           >
             {word.kr}
           </Slider.Item>
@@ -182,74 +226,68 @@ function Translation() {
   )
 }
 
+// TODO figure out how to use kimeinput here
 function EndlessInput() {
-  const { state, dispatch } = useEndlessModeContext()
+  const { refInput, state, dispatch } = useEndlessModeContext()
 
-  const refInput = useRef<HTMLInputElement>(null)
-  const kinput = useKime(refInput)
+  const kime = useKime(refInput)
 
   const currentWord = state.list[state.index]
-
-  useEffect(() => {
-    refInput.current?.focus()
-  }, [])
 
   const keySfx = useSound(keySfxPath)
   const deleteSfx = useSound(deleteSfxPath)
   const successSfx = useSound(successSfxPath)
 
   useEventListener('keydown', (event) => {
-    if (document.activeElement === document.body) {
-      refInput.current?.focus()
+    if (event.key.length === 1 && event.key !== ' ') {
+      void keySfx.play({ force: true })
+    } else if (event.key === 'Backspace') {
+      void deleteSfx.play({ force: true })
     }
-    if (document.activeElement === refInput.current) {
-      if (event.key.length === 1 && event.key !== ' ') void keySfx.play({force: true})
-      else if (event.key === 'Backspace') void deleteSfx.play({force: true})
-    }
-  })
+  }, refInput)
 
   useEventListener('keydown', event => {
     if (!currentWord) return
     if (event.code === 'Space' || event.code === 'Enter') {
-      if (kinput.value === currentWord.kr) {
-        dispatch({type:"next"})
-        kinput.clear()
-        void successSfx.play({force:true})
+      if (kime.value === currentWord.kr) {
+        dispatch({ type: "next" })
+        kime.clear()
+        void successSfx.play({ force: true })
       }
     }
   })
 
-
-  const renderText = () => {
+  // TODO simplify + useCallback?
+  const renderText = (kime: TKime) => {
     if (!currentWord) return
-    const chars = kinput.value.split("")
+    const chars = kime.value.split("")
 
     const Char = {
-      Space: () => <span style={{color: "var(--color-front-alt-100)"}}>•</span>,
-      Error: (props: {char: string}) => <span style={{color: "var(--color-error-100)"}}>{props.char}</span>,
-      Composing: (props: {char: string}) => <span style={{borderBottom: "solid 1px var(--color-front-100)"}}>{props.char}</span>,
-      Default: (props: {char: string}) => <span>{props.char}</span>,
+      Space: () => <span style={{ color: "var(--color-front-alt-100)" }}>•</span>,
+      Error: (props: { char: string }) => <span style={{ color: "var(--color-error-100)" }}>{props.char}</span>,
+      Composing: (props: { char: string }) => <span style={{ borderBottom: "solid 1px var(--color-front-100)" }}>{props.char}</span>,
+      Default: (props: { char: string }) => <span>{props.char}</span>,
     }
 
     return (
-      chars.map((c,i) => {
+      chars.map((c, i) => {
         const key = `${c}-${i}`
         if (c === ' ') return <Char.Space key={key} />
-        
+
         const inputLongerThanGoal = i >= currentWord.kr.length
         if (inputLongerThanGoal) return <Char.Error key={key} char={c} />
-        
-        const isOnLastChar = i === kinput.value.length - 1
-        if (isOnLastChar && kinput.isComposing) {
+
+        const isOnLastChar = i === kime.value.length - 1
+        if (isOnLastChar && kime.isComposing) {
           // deep compare
-          const currentJamo = currentWord.kr[i] 
+          const currentJamo = currentWord.kr[i]
           if (!currentJamo) throw Error("∂∂∂")
           const decomGoal = decompose(currentJamo)
           const decomChar = decompose(c)
 
           const error = decomChar.some((dc, j) => {
             if (j >= decomGoal.length) {
-              const nextJamo = currentWord.kr[i+1]
+              const nextJamo = currentWord.kr[i + 1]
               if (!nextJamo) return true // there is no next char
               return dc !== decompose(nextJamo)[0] // too lazy  to explain
             }
@@ -262,7 +300,7 @@ function EndlessInput() {
 
           if (error) return <Char.Error key={key} char={c} />
 
-          return <Char.Default key={key} char={c} />  
+          return <Char.Default key={key} char={c} />
         }
 
         const inputMatchesGoal = c === currentWord.kr[i]
@@ -273,40 +311,9 @@ function EndlessInput() {
     )
   }
 
+
   return (
-    <div style={{
-      position: 'relative',
-      display: 'flex',
-      flexDirection: 'column',
-      height: 36,
-      gap: 'var(--spacing-md)',
-      justifyContent: "center",
-    }}>
-      <input ref={refInput} type="text" style={{
-        width: "1px",
-        height: "1px",
-        clip: "rect(0 0 0 0)",
-        clipPath: "inset(50%)",
-        overflow: "hidden",
-        position: "absolute",
-        whiteSpace: "nowrap",
-      }} />
-      <span style={{
-        color: 'var(--color-front-100)',
-        padding: '0 var(--spacing-sm)', 
-        fontSize: 36,
-        fontWeight: 600
-      }}>{renderText()}</span>
-      <div style={{
-        transition: "all 150ms ease-in-out",
-        position: 'absolute',
-        left: '100%',
-        height: kinput.hasFocus ? "100%" : 0,
-        width: 4,
-        background: 'var(--color-front-100)',
-        animation: 'cursor 1s infinite alternate'
-      }}/>
-    </div>
+    <KimeInput ref={refInput} kime={kime} renderFn={renderText} />
   )
 }
 
