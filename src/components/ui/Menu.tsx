@@ -6,6 +6,9 @@ import Button, { type ButtonProps } from "./Button";
 import { useOnClickOutsideMany } from "~/utils/hooks";
 import RadixIcons from "../icons/RadixIcons";
 
+import styles from "./Menu.module.scss";
+import Stack from "./Stack";
+
 /*
 TODO: 
 animate menu open / close
@@ -36,7 +39,7 @@ function Base(props: Props) {
 
   return (
     <MenuContextProvider value={{ open: openProp ?? open, setOpen, baseRef }}>
-      <div ref={baseRef} className="relative flex">
+      <div ref={baseRef} className={"relative flex"}>
         {children}
       </div>
     </MenuContextProvider>
@@ -115,14 +118,10 @@ function MenuPortal(props: PortalProps) {
   return (
     <Portal>{
       open ?
-        <div className="absolute inset-0">
+        <div className={styles.portal}>
           <div
             ref={menuRef}
-            className={cn(
-              "absolute",
-              "flex flex-col gap-2 top-full p-1 w-64",
-              "bg-back border border-front/10 rounded-lg text-front",
-            )}
+            data-menu-window
           >
             {children}
           </div>
@@ -150,23 +149,16 @@ function Section(props: SectionProps) {
   } = props
 
   return (
-    <div className={cn(
-      "flex flex-col",
-      "text-front-alt leading-none"
-    )}>
+    <div data-menu-section>
       {
         title &&
-        <p className={cn(
-          "ml-9 py-2 text-xs leading-none"
-        )}>
+        <p data-menu-section-title>
           {title}
         </p>
       }
-      <div className={cn(
-        "flex flex-col",
-      )}>
+      <Stack gap={0}>
         {children}
-      </div>
+      </Stack>
     </div>
   )
 }
@@ -199,23 +191,17 @@ function Item<T extends ItemTag>(props: ItemProps<T>) {
   } = props
 
   return (
-    <TagName {...restProps} className={cn(
-      "appearance-none transition-colors duration-75",
-      "flex items-center gap-2 p-[10px]",
-      "rounded text-sm leading-none text-front whitespace-nowrap",
-      "focus-visible:outline outline-1 outline-access",
-      disabled ?
-        "cursor-not-allowed text-front-alt/25" :
-        "hover:bg-back-alt active:bg-back-alt/50",
-      className
-    )}>
-      <div className="flex items-center justify-center h-5 aspect-square">
+    <TagName {...restProps}
+      data-menu-item
+      data-disabled={disabled}
+    >
+      <div data-menu-item-icon>
         {icon}
       </div>
-      <div className="grow text-left overflow-ellipsis">
+      <div data-menu-item-content>
         {children}
       </div>
-      <div className="text-front-alt ">
+      <div data-menu-item-suffix>
         {suffix}
       </div>
     </TagName>
@@ -267,7 +253,7 @@ Item.Toggle = function ItemToggle(props: ToggleProps) {
 // DIVIDER
 
 function Divider() {
-  return <div className="my-1 mr-2 ml-9 h-[0.5px] bg-front-alt/50"></div>
+  return <div data-menu-divider />
 }
 
 const Menu = {

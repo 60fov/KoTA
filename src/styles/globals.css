@@ -4,61 +4,71 @@
 
 @layer base {
   :root {
-    --color-front: 5 5 5;
-    --color-front-alt: 125 125 125;
-    --color-back: 245 245 245;
-    --color-back-alt: 220 220 220;
+    --rgb-light-fg: 5 5 5;
+    --rgb-light-fg-alt: 125 125 125;
+    --rgb-light-bg: 245 245 245;
+    --rgb-light-bg-alt: 220 220 220;
+    
+    --rgb-dark-fg: 250 250 250;
+    --rgb-dark-fg-alt: 180 180 180;
+    --rgb-dark-bg: 12 12 12;
+    --rgb-dark-bg-alt: 30 30 30;
+    
+    --rgb-error: 242 88 88;
+    --rgb-access: 50 50 255;
 
-    --color-error: 242 88 88;
-    --color-access: 50 50 255;
+    --rgb-front: var(--rgb-light-fg);
+    --rgb-front-alt: var(--rgb-light-fg-alt);
+    --rgb-back: var(--rgb-light-bg);
+    --rgb-back-alt: var(--rgb-light-bg-alt);
 
-    --color-front-100: rgb(var(--color-front) / 1);
-    --color-front-90: rgb(var(--color-front) / 0.9);
-    --color-front-75: rgb(var(--color-front) / 0.75);
-    --color-front-50: rgb(var(--color-front) / 0.5);
-    --color-front-25: rgb(var(--color-front) / 0.25);
-    --color-front-10: rgb(var(--color-front) / 0.1);
-    --color-front-5: rgb(var(--color-front) / 0.05);
+    --color-front-100: rgb(var(--rgb-front) / 1);
+    --color-front-90: rgb(var(--rgb-front) / 0.9);
+    --color-front-75: rgb(var(--rgb-front) / 0.75);
+    --color-front-50: rgb(var(--rgb-front) / 0.5);
+    --color-front-25: rgb(var(--rgb-front) / 0.25);
+    --color-front-10: rgb(var(--rgb-front) / 0.1);
+    --color-front-5: rgb(var(--rgb-front) / 0.05);
 
-    --color-front-alt-100: rgb(var(--color-front-alt) / 1);
-    --color-front-alt-90: rgb(var(--color-front-alt) / 0.9);
-    --color-front-alt-75: rgb(var(--color-front-alt) / 0.75);
-    --color-front-alt-50: rgb(var(--color-front-alt) / 0.5);
-    --color-front-alt-25: rgb(var(--color-front-alt) / 0.25);
-    --color-front-alt-10: rgb(var(--color-front-alt) / 0.1);
-    --color-front-alt-5: rgb(var(--color-front-alt) / 0.05);
+    --color-front-alt-100: rgb(var(--rgb-front-alt) / 1);
+    --color-front-alt-90: rgb(var(--rgb-front-alt) / 0.9);
+    --color-front-alt-75: rgb(var(--rgb-front-alt) / 0.75);
+    --color-front-alt-50: rgb(var(--rgb-front-alt) / 0.5);
+    --color-front-alt-25: rgb(var(--rgb-front-alt) / 0.25);
+    --color-front-alt-10: rgb(var(--rgb-front-alt) / 0.1);
+    --color-front-alt-5: rgb(var(--rgb-front-alt) / 0.05);
 
-    --color-back-100: rgb(var(--color-back) / 1);
-    --color-back-90: rgb(var(--color-back) / 0.9);
-    --color-back-75: rgb(var(--color-back) / 0.75);
-    --color-back-50: rgb(var(--color-back) / 0.5);
-    --color-back-25: rgb(var(--color-back) / 0.25);
-    --color-back-10: rgb(var(--color-back) / 0.1);
-    --color-back-5: rgb(var(--color-back) / 0.05);
+    --color-back-100: rgb(var(--rgb-back) / 1);
+    --color-back-90: rgb(var(--rgb-back) / 0.9);
+    --color-back-75: rgb(var(--rgb-back) / 0.75);
+    --color-back-50: rgb(var(--rgb-back) / 0.5);
+    --color-back-25: rgb(var(--rgb-back) / 0.25);
+    --color-back-10: rgb(var(--rgb-back) / 0.1);
+    --color-back-5: rgb(var(--rgb-back) / 0.05);
 
-    --color-back-alt-100: rgb(var(--color-back-alt) / 1);
-    --color-back-alt-90: rgb(var(--color-back-alt) / 0.9);
-    --color-back-alt-75: rgb(var(--color-back-alt) / 0.75);
-    --color-back-alt-50: rgb(var(--color-back-alt) / 0.5);
-    --color-back-alt-25: rgb(var(--color-back-alt) / 0.25);
-    --color-back-alt-10: rgb(var(--color-back-alt) / 0.1);
-    --color-back-alt-5: rgb(var(--color-back-alt) / 0.05);
+    --color-back-alt-100: rgb(var(--rgb-back-alt) / 1);
+    --color-back-alt-90: rgb(var(--rgb-back-alt) / 0.9);
+    --color-back-alt-75: rgb(var(--rgb-back-alt) / 0.75);
+    --color-back-alt-50: rgb(var(--rgb-back-alt) / 0.5);
+    --color-back-alt-25: rgb(var(--rgb-back-alt) / 0.25);
+    --color-back-alt-10: rgb(var(--rgb-back-alt) / 0.1);
+    --color-back-alt-5: rgb(var(--rgb-back-alt) / 0.05);
 
-    --color-access-100: rgb(var(--color-access) / 1);
-    --color-access-90: rgb(var(--color-access) / 0.9);
-    --color-access-75: rgb(var(--color-access) / 0.75);
-    --color-access-50: rgb(var(--color-access) / 0.5);
-    --color-access-25: rgb(var(--color-access) / 0.25);
-    --color-access-10: rgb(var(--color-access) / 0.1);
-    --color-access-5: rgb(var(--color-access) / 0.05);
+    --color-access-100: rgb(var(--rgb-access) / 1);
+    --color-access-90: rgb(var(--rgb-access) / 0.9);
+    --color-access-75: rgb(var(--rgb-access) / 0.75);
+    --color-access-50: rgb(var(--rgb-access) / 0.5);
+    --color-access-25: rgb(var(--rgb-access) / 0.25);
+    --color-access-10: rgb(var(--rgb-access) / 0.1);
+    --color-access-5: rgb(var(--rgb-access) / 0.05);
 
-    --color-error-100: rgb(var(--color-error) / 1);
-    --color-error-90: rgb(var(--color-error) / 0.9);
-    --color-error-75: rgb(var(--color-error) / 0.75);
-    --color-error-50: rgb(var(--color-error) / 0.5);
-    --color-error-25: rgb(var(--color-error) / 0.25);
-    --color-error-10: rgb(var(--color-error) / 0.1);
-    --color-error-5: rgb(var(--color-error) / 0.05);
+    --color-error-100: rgb(var(--rgb-error) / 1);
+    --color-error-90: rgb(var(--rgb-error) / 0.9);
+    --color-error-75: rgb(var(--rgb-error) / 0.75);
+    --color-error-50: rgb(var(--rgb-error) / 0.5);
+    --color-error-25: rgb(var(--rgb-error) / 0.25);
+    --color-error-10: rgb(var(--rgb-error) / 0.1);
+    --color-error-5: rgb(var(--rgb-error) / 0.05);
 
     --spacing-sm: 3px;
     --spacing-md: 6px;
@@ -71,8 +81,9 @@
     --radius-md: 6px;
     --radius-lg: 12px;
 
-    --border: 0.5px solid rgb(var(--color-front) / 0.1);
-    --outline: var(--color-front-alt-75) solid 2px;
+    --border: 0.5px solid var(--color-front-25);
+    --border-alt: 0.5px solid var(--color-front-10);
+    --outline: var(--front-alt-75) solid 2px;
 
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -86,17 +97,18 @@
     -webkit-text-size-adjust: 100%;
   }
 
-  html,
-  body {
-    background: rgb(var(--color-back));
-    overflow: hidden;
+  
+  html[data-theme='dark'] {
+    --rgb-front: var(--rgb-dark-fg);
+    --rgb-front-alt: var(--rgb-dark-fg-alt);
+    --rgb-back: var(--rgb-dark-bg);
+    --rgb-back-alt: var(--rgb-dark-bg-alt);
   }
 
-  html[data-theme='dark'] {
-    --color-front: 250 250 250;
-    --color-front-alt: 180 180 180;
-    --color-back: 10 10 10;
-    --color-back-alt: 30 30 30;
+  html,
+  body {
+    background: var(--color-back-100);
+    overflow: hidden;
   }
 }
 
