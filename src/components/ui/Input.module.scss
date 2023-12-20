@@ -1,0 +1,31 @@
+.base {
+  border: var(--border);
+  border-radius: var(--radius-md);
+  background: var(--color-back-alt-50);
+  padding: var(--spacing-sm);
+  display: flex;
+  color: var(--color-front-100);
+  // gap: var(--spacing-sm);
+
+  [data-input] {
+    padding: var(--spacing-md);
+    line-height: 100%;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    background: var(--color-back-100);
+    box-shadow: var(--shadow-md);
+    &:focus-visible {
+      outline: var(--outline);
+    }
+  }
+
+
+  [data-prefix],
+  [data-suffix] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    min-width: 36px;
+  }
+}

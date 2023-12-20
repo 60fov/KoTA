@@ -12,7 +12,7 @@
     --rgb-dark-fg: 250 250 250;
     --rgb-dark-fg-alt: 180 180 180;
     --rgb-dark-bg: 12 12 12;
-    --rgb-dark-bg-alt: 30 30 30;
+    --rgb-dark-bg-alt: 45 45 45;
     
     --rgb-error: 242 88 88;
     --rgb-access: 50 50 255;
@@ -35,6 +35,7 @@
     --color-front-alt-75: rgb(var(--rgb-front-alt) / 0.75);
     --color-front-alt-50: rgb(var(--rgb-front-alt) / 0.5);
     --color-front-alt-25: rgb(var(--rgb-front-alt) / 0.25);
+    --color-front-alt-15: rgb(var(--rgb-front-alt) / 0.15);
     --color-front-alt-10: rgb(var(--rgb-front-alt) / 0.1);
     --color-front-alt-5: rgb(var(--rgb-front-alt) / 0.05);
 
@@ -81,10 +82,11 @@
     --radius-md: 6px;
     --radius-lg: 12px;
 
-    --border: 0.5px solid var(--color-front-25);
-    --border-alt: 0.5px solid var(--color-front-10);
+    --border: 0.5px solid var(--color-front-alt-15);
+    --border-alt: 0.5px solid var(--color-front-alt-5);
     --outline: var(--front-alt-75) solid 2px;
 
+    --shadow-inset: inset 0 2px 3px 0 rgb(0 0 0 / 0.05);
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 

@@ -3,9 +3,14 @@ import CmdKMenu from "../CmdK"
 import AppMenu from "../AppMenu"
 import Head from "next/head"
 import Button from "../ui/Button"
-import KotaLogo from "../KotaLogo"
+import Dictionary from "../Dictionary"
+import { HiOutlineBookOpen } from "react-icons/hi2"
+import { useRef, useState } from "react"
+import { useOnClickOutside } from "usehooks-ts"
 
 export default function RootLayout(page: React.ReactElement) {
+
+
   return (
     <>
       <Head>
@@ -29,7 +34,34 @@ export default function RootLayout(page: React.ReactElement) {
           </div>
         </div>
 
+
+        <DictionaryView></DictionaryView>
+
       </main>
     </>
+  )
+}
+
+function DictionaryView() {
+  const [showDictionary, setShowDictionary] = useState(false)
+
+  const baseRef = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(baseRef, () => {
+    setShowDictionary(false)
+  }, "mousedown")
+
+  return (
+    <div ref={baseRef} className="absolute bottom-6 right-6 flex flex-col items-end justify-end gap-2">
+      {showDictionary &&
+        <div className="h-[800px] w-[384px] flex justify-end">
+          <Dictionary />
+        </div>
+      }
+      <Button
+        onClick={() => setShowDictionary(!showDictionary)}>
+        <HiOutlineBookOpen />
+      </Button>
+    </div>
   )
 }

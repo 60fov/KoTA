@@ -4,7 +4,6 @@ export interface Controllable<T> {
   onValueChange?: (value: T) => void
 }
 
-
 export interface Propagatable {
   propagate?: boolean
 }

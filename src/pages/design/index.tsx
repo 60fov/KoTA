@@ -86,11 +86,12 @@ const Home: NextPage = () => {
 
           <Tile name="Input" className="col-span-2">
             <Input
-              label={"label"}
               prefix={<HiMagnifyingGlass />}
-              suffix={<HiXMark />}
-              defaultValue={"hello"}
-              placeholder="placeholder" />
+              suffix={<Button variant="passive"><HiXMark /></Button>}
+              inputProps={{
+                placeholder: "placeholder",
+                defaultValue: "hello"
+              }} />
           </Tile>
 
           <Tile name="Toggle">
@@ -208,7 +209,7 @@ const Tile = (props: Props) => {
       className={cn(
         "relative p-12",
         "size-base flex gap-4 items-center justify-center p-var",
-        "border border-front/10 bg-back rounded-v",
+        "[border:var(--border)] bg-back rounded-v",
         className
       )}
     // style={{ "--padding": "12px" } as CSSVariableProperties}
