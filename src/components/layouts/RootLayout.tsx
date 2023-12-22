@@ -7,6 +7,11 @@ import Dictionary from "../Dictionary"
 import { HiOutlineBookOpen } from "react-icons/hi2"
 import { useRef, useState } from "react"
 import { useOnClickOutside } from "usehooks-ts"
+import Dynamic from "../Dynamic"
+import Select from "../ui/Select"
+import tts from "~/utils/tts"
+import { useTTSSettingsStore } from "~/utils/stores"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function RootLayout(page: React.ReactElement) {
 
@@ -23,7 +28,9 @@ export default function RootLayout(page: React.ReactElement) {
         "h-screen"
       )}>
 
-        <CmdKMenu />
+        <Dynamic>
+          <CmdKMenu />
+        </Dynamic>
 
         {page}
 
@@ -34,11 +41,53 @@ export default function RootLayout(page: React.ReactElement) {
           </div>
         </div>
 
+        {/* <Dynamic>
+          <VoiceView />
+        </Dynamic> */}
 
         <DictionaryView></DictionaryView>
 
       </main>
     </>
+  )
+}
+
+function VoiceView() {
+  const ttsStore = useTTSSettingsStore()
+
+  function onKrValueChange(value: string) {
+    ttsStore.setKrVoiceId(value);
+  }
+
+  function onEnValueChange(value: string) {
+    ttsStore.setEnVoiceId(value);
+  }
+
+  return (
+    <div className="flex flex-col absolute bottom-6 left-48">
+      <Select.Base name='tts-voice' onValueChange={onKrValueChange}>
+        {
+          tts.getVoicesByLang("ko-KR").map((voice) =>
+            <Select.Option
+              key={voice.voiceURI}
+              value={tts.voiceId(voice)}>
+              {`${voice.name} - ${voice.lang}`}
+            </Select.Option>
+          )
+        }
+      </Select.Base>
+      <Select.Base name='tts-voice' onValueChange={onEnValueChange}>
+        {
+          tts.getVoicesByLang("en-US").map((voice) =>
+            <Select.Option
+              key={voice.voiceURI}
+              value={tts.voiceId(voice)}>
+              {`${voice.name} - ${voice.lang}`}
+            </Select.Option>
+          )
+        }
+      </Select.Base>
+    </div>
   )
 }
 
@@ -53,11 +102,18 @@ function DictionaryView() {
 
   return (
     <div ref={baseRef} className="absolute bottom-6 right-6 flex flex-col items-end justify-end gap-2">
-      {showDictionary &&
-        <div className="h-[800px] w-[384px] flex justify-end">
-          <Dictionary />
-        </div>
-      }
+      <AnimatePresence>
+        {showDictionary &&
+          <motion.div
+            
+            initial={{ x: '110%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '110%' }}
+            className="h-[800px] w-[384px] flex justify-end">
+            <Dictionary />
+          </motion.div>
+        }
+      </AnimatePresence>
       <Button
         onClick={() => setShowDictionary(!showDictionary)}>
         <HiOutlineBookOpen />

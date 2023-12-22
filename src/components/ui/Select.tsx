@@ -12,7 +12,8 @@ interface Props {
   defaultValue?: string
   value?: string
   onValueChange?: (newValue: string) => void
-  children: ReactElement<OptionProps>[] | ReactElement<OptionProps>
+  // children: ReactElement<OptionProps>[] | ReactElement<OptionProps>
+  children: React.ReactNode
 }
 
 
