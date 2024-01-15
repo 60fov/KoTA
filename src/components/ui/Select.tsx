@@ -1,5 +1,4 @@
-import type { ReactElement } from "react"
-import { cn } from "~/utils/fns"
+import { useState } from "react"
 import RadixIcons from "../icons/RadixIcons"
 
 import styles from "./Select.module.scss"
@@ -27,19 +26,20 @@ const Base = (props: Props) => {
     children
   } = props
 
-  // TODO: use for refs
-  // const [value, setValue] = useState<string | undefined>(valueProp ?? defaultValue)
+  // NOTE: i think there's supposed to be a better way, but :shrug:
+  const [value, setValue] = useState<string | undefined>(valueProp ?? defaultValue)
 
   return (
     <div className={styles.base}>
       <select
         data-select
         name={name}
+        value={value}
         id={`${name}-select`}
         onInput={(e) => {
           const newValue = e.currentTarget.value
           if (onValueChange) onValueChange(newValue)
-          // setValue(newValue)
+          setValue(newValue)
         }}
       >
         {children}

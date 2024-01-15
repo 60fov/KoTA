@@ -185,7 +185,7 @@ function BlocsMode() {
                         // disabled={!state.solved}
                         variant="default"
                         suffix={<RadixIcons.SpeakerLoud />}
-                        onClick={() => tts.speak(state.word.kr, { lang: "ko-KR" })}
+                        onClick={() => tts.speak(state.word.kr, { lang: "ko-KR", force: true })}
                     ></Button>
                     <Button
                         disabled={!state.solved}

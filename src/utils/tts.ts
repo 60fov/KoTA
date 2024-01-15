@@ -1,4 +1,11 @@
-export type TTSLang = "en-US" | "ko-KR";
+import toast from "~/components/ui/Toast";
+
+const TTSLangMap = {
+  "en-US": "English",
+  "ko-KR": "Korean",
+} as const;
+
+export type TTSLang = keyof typeof TTSLangMap;
 
 export interface SpeakOptions {
   force?: boolean;
@@ -15,7 +22,7 @@ export interface SpeakOptions {
   onboundary?: (e: SpeechSynthesisEvent) => void;
 }
 
-// TODO 
+// TODO
 // lang to voice maps
 // load voices from local storage
 // auto defaults
@@ -62,6 +69,15 @@ export function speak(text: string, options?: SpeakOptions) {
     lang,
     voiceId,
   } = options || {};
+  if (lang) {
+    const voices = getVoicesByLang(lang);
+    if (voices.length === 0) {
+      toast.pop({
+        desc: `Your browser does not have Text-To-Speech voices in ${TTSLangMap[lang]}.`,
+      });
+      console.warn("no voices");
+    }
+  }
 
   const utterance = new SpeechSynthesisUtterance(text);
 
@@ -74,7 +90,9 @@ export function speak(text: string, options?: SpeakOptions) {
 
   if (utterance.voice) {
     if (lang != utterance.voice.lang) {
-      console.log(`ttslang=${lang || "undefined"} != voice.lang=${utterance.voice.lang}`);
+      console.log(
+        `ttslang=${lang || "undefined"} != voice.lang=${utterance.voice.lang}`
+      );
       return;
     }
   }
