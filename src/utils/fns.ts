@@ -111,3 +111,10 @@ export function queryDOMElement<T>(query: string): T {
     if (!element) throw Error(`element ${query} not found`)
     return element as T
 }
+
+export function arrayValueOffset<T>(arr: readonly T[], value: T, offset: number) {
+    let idx = arr.indexOf(value);
+    idx += offset;
+    const new_idx = (idx + arr.length) % arr.length;
+    return arr[new_idx];
+  }

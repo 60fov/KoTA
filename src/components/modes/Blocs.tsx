@@ -1,12 +1,12 @@
 import { useEffect, useReducer, useState } from "react";
-import Dynamic from "~/components/Dynamic";
+import Dynamic from "~/components/ui/Dynamic";
 import RootLayout from "~/components/layouts/RootLayout";
 import Spacer from "~/components/ui/Spacer";
 import { TWord, Dict } from "~/utils/dictionary";
 import { cn, random } from "~/utils/fns";
 
 
-import styles from "./Vocab.module.scss";
+import styles from "./Blocs.module.scss";
 import Button from "~/components/ui/Button";
 import RadixIcons from "~/components/icons/RadixIcons";
 import { HTMLMotionProps, Variant, motion, useAnimation } from "framer-motion";
@@ -19,6 +19,7 @@ import keySfxPath from "@/audio/keyAlt.mp3";
 import deleteSfxPath from "@/audio/delete.mp3";
 import successSfxPath from "@/audio/success.mp3";
 import errorSfxPath from "@/audio/error.mp3";
+import dynamic from "next/dynamic";
 
 
 const SYLLABLE_CHOICE_COUNT = 10
@@ -122,14 +123,13 @@ function reducer(state: State, action: Action): State {
                 syllables
             }
         }
-
         // default: {
         //     throw new Error(`unhandled ui action type: ${action.type}`);
         // }
     }
 }
 
-function BlocksPage() {
+function BlocsMode() {
     const [state, dispatch] = useReducer(reducer, Dict.getRandomWord(), initialState)
 
     const ttsEn = useTTS({ lang: "en-US", rate: 1 })
@@ -140,10 +140,6 @@ function BlocksPage() {
     const keySfx = useSound(keySfxPath)
     const errorSfx = useSound(errorSfxPath)
 
-    useEffect(() => {
-        // console.log(state)
-    }, [state])
-
 
     function handleSyllableClick(i: number) {
         dispatch({ type: "SyllableClick", index: i })
@@ -151,7 +147,7 @@ function BlocksPage() {
         if (!syl) {
             return
         }
-        ttsKo(`${syl.str}`, { force: true })
+        // ttsKo(`${syl.str}`, { force: true })
         void keySfx.play({ force: true })
     }
 
@@ -186,6 +182,12 @@ function BlocksPage() {
                         onClick={() => dispatch({ type: "Shuffle" })}
                     >shuffle</Button>
                     <Button
+                        // disabled={!state.solved}
+                        variant="default"
+                        suffix={<RadixIcons.SpeakerLoud />}
+                        onClick={() => tts.speak(state.word.kr, { lang: "ko-KR" })}
+                    ></Button>
+                    <Button
                         disabled={!state.solved}
                         variant="default"
                         suffix={<RadixIcons.ArrowRight />}
@@ -193,14 +195,12 @@ function BlocksPage() {
                     >next</Button>
                 </div>
             </motion.div>
-        </Dynamic>
+        </Dynamic >
     )
 }
 
 
-BlocksPage.getLayout = RootLayout;
-
-export default BlocksPage;
+export default BlocsMode;
 
 
 function VocabImage(props: { state: State, word: TWord }) {
@@ -397,3 +397,6 @@ function SylBlock(props:
         </div>
     )
 }
+
+
+BlocsMode.Dynamic = dynamic(() => Promise.resolve(BlocsMode), { ssr: false })

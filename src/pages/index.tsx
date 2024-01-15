@@ -1,38 +1,40 @@
-import KeyboardDisplay from "~/components/KeyboardDisplay";
-import Dynamic from "~/components/Dynamic";
 import RootLayout from "~/components/layouts/RootLayout";
-import EndlessMode from "~/components/Endless";
+import EndlessMode from "~/components/modes/Endless";
 import { type NextPageWithLayout } from "./_app";
-import { Dict } from "~/utils/dictionary";
-import { nanoid } from "nanoid";
-import { useMemo } from "react";
+import BlocsMode from "~/components/modes/Blocs";
+import Dynamic from "~/components/ui/Dynamic";
+import { Mode, useModeStore } from "~/utils/stores";
 
 const Home: NextPageWithLayout = () => {
-  const pool = useMemo(() => {
-    return Dict.defaultWords.map(word => ({ ...word, id: nanoid() }))
-  }, [])
+  const { mode } = useModeStore();
 
   return (
     <>
-      <div className="h-screen flex flex-col items-center gap-16">
-        <div className="h-1/2 w-[90%] max-w-6xl flex flex-col items-stretch justify-end">
-          <Dynamic>
-            <EndlessMode pool={pool}>
-              <EndlessMode.Translation />
-              <EndlessMode.Slider />
-              <EndlessMode.Input />
-            </EndlessMode>
-          </Dynamic>
-        </div>
-        <div className="h-1/2">
-          <Dynamic>
-            <KeyboardDisplay />
-          </Dynamic>
-        </div>
+      <div className="w-full h-full flex flex-col justify-center p-6">
+        {
+          mode &&
+          <ModeView mode={mode} />
+        }
       </div>
     </>
   );
 };
+
+function ModeView(props: { mode: Mode }) {
+
+  function getMode(mode: Mode) {
+    switch (mode) {
+      case "Blocs": return <BlocsMode />
+      case "Endless": return <EndlessMode />
+    }
+  }
+
+  return (
+    <Dynamic>
+      {getMode(props.mode)}
+    </Dynamic>
+  )
+}
 
 Home.getLayout = RootLayout;
 
