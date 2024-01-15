@@ -21,6 +21,7 @@
       "~/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
       "@/ui/*": ["./src/components/ui/*"],
+      "@/modes/*": ["./src/components/modes/*"],
       "@/utils/*": ["./src/utils/*"],
       "@/audio/*": ["./data/audio/*"],
       "@/images/*": ["./data/images/*"],

@@ -62,20 +62,20 @@ export default function AppMenu() {
           >
             Home
           </Menu.Item>
-          <Menu.Item
+          {/* <Menu.Item
             as={Link}
             href="/blocks"
             icon={<HiOutlineSquares2X2/>}
           >
             Blocks
-          </Menu.Item>
-          <Menu.Item
+          </Menu.Item> */}
+          {/* <Menu.Item
             as={Link}
             href="/design"
             icon={<RadixIcons.Component1 />}
           >
             Design
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Divider />
           <Menu.Section title="options">
             <Menu.Item

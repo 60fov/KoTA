@@ -1,12 +1,12 @@
-import Slider from "./ui/Slider";
-import React, { type RefObject, useEffect, useReducer, useRef } from "react";
+import Slider from "../ui/Slider";
+import React, { type RefObject, useEffect, useReducer, useRef, useMemo } from "react";
 import { nanoid } from "nanoid";
 import { createCtx, random } from "~/utils/fns";
 
 import useKime, { type TKime } from "lib/hooks/useKime";
 import { useEventListener } from "usehooks-ts";
 
-import styles from "./EndlessSlider.module.scss"
+import styles from "./Endless.module.scss"
 import { decompose } from "lib/kime/jamo";
 import useSound from "~/hooks/useSound";
 
@@ -14,7 +14,11 @@ import keySfxPath from "@/audio/key.mp3";
 import deleteSfxPath from "@/audio/delete.mp3";
 import successSfxPath from "@/audio/success.mp3";
 import { Dict, type TWord } from "~/utils/dictionary";
-import KimeInput from "./KimeInput";
+import KimeInput from "../KimeInput";
+import dynamic from "next/dynamic";
+import KeyboardView from "../KeyboardView";
+import { useKeyboardSettingsStore } from "~/utils/stores";
+import { AnimatePresence, motion } from "framer-motion";
 
 /*
 TODO
@@ -114,13 +118,14 @@ function reducer(state: SliderState, action: SliderAction): SliderState {
   }
 }
 
-export default function EndlessMode(props: {
-  pool: TSliderWord[]
-  children: React.ReactNode
-}) {
-  const { children } = props
+export default function EndlessMode() {
+  const pool = useMemo(() => {
+    return Dict.defaultWords.map(word => ({ ...word, id: nanoid() }))
+  }, [])
 
-  const [state, dispatch] = useReducer(reducer, props.pool, createInitialState)
+  const [state, dispatch] = useReducer(reducer, pool, createInitialState)
+  const kbSettingsStore = useKeyboardSettingsStore();
+
 
   const refInput = useRef<HTMLInputElement>(null)
 
@@ -157,14 +162,26 @@ export default function EndlessMode(props: {
   }
 
   return (
-    <div className={styles.base} onClick={onClick}>
-      <EndlessModeContextProvider value={{ refInput, state, dispatch }}>
-        {children}
-      </EndlessModeContextProvider>
-    </div>
+    <>
+      <div className={styles.base} onClick={onClick}>
+        <EndlessModeContextProvider value={{ refInput, state, dispatch }}>
+          <EndlessMode.Translation />
+          <EndlessMode.Slider />
+          <EndlessMode.Input />
+        </EndlessModeContextProvider>
+        <AnimatePresence
+          // presenceAffectsLayout={false}
+          >
+          {
+            kbSettingsStore.enabled &&
+            <KeyboardView />
+          }
+        </AnimatePresence>
+      </div>
+
+    </>
   )
 }
-
 
 function EndlessSlider() {
   const { state, dispatch } = useEndlessModeContext()
@@ -190,7 +207,7 @@ function EndlessSlider() {
   }
 
   return (
-    <Slider.Base index={state.index} open={true}>
+    <Slider.Base index={state.index} open={true} defaultOpen={false}>
       {
         state.list.map((word, i) => (
           <Slider.Item
@@ -220,9 +237,9 @@ function Translation() {
   }
 
   return (
-    <p data-en>
+    <motion.p data-en layoutId={"slider-translation"}>
       {word.en}
-    </p>
+    </motion.p>
   )
 }
 
@@ -321,3 +338,4 @@ function EndlessInput() {
 EndlessMode.Slider = EndlessSlider
 EndlessMode.Translation = Translation
 EndlessMode.Input = EndlessInput
+EndlessMode.Dynamic = dynamic(() => Promise.resolve(EndlessMode), { ssr: false });

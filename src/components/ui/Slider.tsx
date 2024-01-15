@@ -67,35 +67,43 @@ function Base(props: SliderProps) {
   const nextItems = children && children.slice(index + 1)
 
   return (
-    <motion.div
-      className={styles.base}
-      initial={defaultOpen ? "open" : "close"}
-      animate={open ? "open" : "close"}
-      onAnimationComplete={onAnimationStart}
-      onAnimationStart={onAnimationComplete}
-      variants={sliderFramerVariants}
-    >
-      <div data-gradient />
+    <div className="overflow-x-clip w-full">
       <motion.div
-        data-cursor
-        style={{
-          width: widthMotionValue,
-          height: heightMotionValue
-        }}>
-      </motion.div>
-
-      {/* items */}
-      <div
-        data-item-container
-        ref={currentItemRef}
+        layoutId={"slider-base"}
+        layout="position"
+        className={styles.base}
+        initial={defaultOpen ? "open" : "close"}
+        animate={open ? "open" : "close"}
+        onAnimationComplete={onAnimationStart}
+        onAnimationStart={onAnimationComplete}
+        variants={sliderFramerVariants}
       >
-        <LayoutGroup>
-          <div data-past>{prevItems}</div>
-          <div data-present>{currentItem}</div>
-          <div data-future>{nextItems}</div>
-        </LayoutGroup>
-      </div>
-    </motion.div>
+        <motion.div
+          layoutId={"gradient"}
+          data-gradient />
+
+        <motion.div
+          layoutId={"cursor"}
+          data-cursor
+          style={{
+            width: widthMotionValue,
+            height: heightMotionValue
+          }}>
+        </motion.div>
+
+        {/* items */}
+        <div
+          data-item-container
+          ref={currentItemRef}
+        >
+          <LayoutGroup>
+            <div data-past>{prevItems}</div>
+            <div data-present>{currentItem}</div>
+            <div data-future>{nextItems}</div>
+          </LayoutGroup>
+        </div>
+      </motion.div>
+    </div>
   )
 }
 

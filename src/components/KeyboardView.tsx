@@ -3,8 +3,9 @@ import Key from "./ui/Key";
 
 import { useKeyboardSettingsStore } from "~/utils/stores";
 import { useKioKey } from "~/hooks/kio";
+import { motion } from "framer-motion";
 
-export default function KeyboardDisplay(props: {
+export default function KeyboardView(props: {
   keySize?: number,
   hgap?: number,
   vgap?: number
@@ -27,7 +28,13 @@ export default function KeyboardDisplay(props: {
   const width = (keySize + hgap) * 14.4
 
   return (
-    <div
+    <motion.div
+      key="keyboard-view"
+      transition={{ type: "spring", duration: 0.5 }}
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -100, opacity: 0 }}
+
       style={{ width, gap: vgap }}
       className={cn(
         "flex flex-col items-stretch",
@@ -101,6 +108,6 @@ export default function KeyboardDisplay(props: {
         <Key size={keySize} code="/" />
         <Key size={keySize} code="Shift" expand />
       </div>
-    </div>
+    </motion.div>
   )
 }

@@ -20,7 +20,7 @@ import { cn, min, max, random } from "~/utils/fns";
 import alluraGlare from "@/images/allura_glare.jpg"
 import Input from "~/components/ui/Input";
 import toast from "~/components/Toast";
-import Dynamic from "~/components/Dynamic";
+import Dynamic from "~/components/ui/Dynamic";
 import { useTheme } from "~/hooks/useTheme";
 import KotaLogo from "~/components/KotaLogo";
 import RadixIcons from "~/components/icons/RadixIcons";
