@@ -27,7 +27,7 @@ const MyApp = ({
 
   return (
     <KioContextProvider value={kio}>
-      <Toaster />
+      <Toaster expand={false} />
       {getLayout(<Component {...pageProps} />)}
       <script dangerouslySetInnerHTML={{ __html: themeScript }} />
     </KioContextProvider>

@@ -41,7 +41,9 @@ export default function RootLayout(page: React.ReactElement) {
         </div>
 
         <DictionaryView />
-        <ModeChangeView />
+        <Dynamic>
+          <ModeChangeView />
+        </Dynamic>
 
       </main>
     </>
@@ -124,22 +126,16 @@ function DictionaryView() {
 
 
 function ModeChangeView() {
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  // useOnClickOutside(contentRef, () => {
-
-  // }, "mousedown")
-
   const modeStore = useModeStore()
-
+  
   const onValueChange = (value: string) => {
     modeStore.setMode(value as Mode)
   }
 
   return (
     <div className="absolute inset-6 flex items-end pointer-events-none">
-      <div ref={contentRef} className="pointer-events-auto">
-        <Select.Base name="mode" onValueChange={onValueChange}>
+      <div className="pointer-events-auto">
+        <Select.Base name="mode" onValueChange={onValueChange} value={modeStore.mode}>
           {modes.map(mode =>
             <Select.Option key={mode} value={mode} />
           )}

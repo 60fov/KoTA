@@ -19,7 +19,7 @@ import { cn, min, max, random } from "~/utils/fns";
 
 import alluraGlare from "@/images/allura_glare.jpg"
 import Input from "~/components/ui/Input";
-import toast from "~/components/Toast";
+import toast from "~/components/ui/Toast";
 import Dynamic from "~/components/ui/Dynamic";
 import { useTheme } from "~/hooks/useTheme";
 import KotaLogo from "~/components/KotaLogo";
@@ -101,7 +101,7 @@ const Home: NextPage = () => {
           </Tile>
 
           <Tile name="Toast">
-            <Button onClick={() => { toast.pop("Congrats on your Toast!", "you successfully pop'd a toast, time to celebrate! 🎉") }}>Pop Toast</Button>
+            <Button onClick={() => { toast.pop({ title: "Congrats on your Toast!", desc: "you successfully pop'd a toast, time to celebrate! 🎉" }) }}>Pop Toast</Button>
           </Tile>
 
           <Tile name="Multi-Toggle">

@@ -1,0 +1,21 @@
+.base {
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    border: var(--border);
+    box-shadow: var(--shadow-lg);
+    background: var(--color-back-100);
+    user-select: none;
+
+    [data-title] {
+        font-weight: bold;
+        font-size: 1.125em;
+    }
+
+    [data-desc] {
+        font-size: 0.825em;
+        color: var(--color-front-alt-100);
+    }
+}
