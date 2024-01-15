@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useKeyboardSettingsStore, useThemeStore } from '~/utils/stores'
 import { nextThemeOption } from '~/utils/theme'
 import RadixIcons from './icons/RadixIcons'
+import Select from './ui/Select'
+import tts from '~/utils/tts'
 
 
 // import styles from './CmdK.module.scss'
@@ -50,6 +52,22 @@ const CmdKMenu = () => {
           {/* {loading && <Command.Loading>Hang on…</Command.Loading>} */}
 
           <Command.Empty>No results found.</Command.Empty>
+
+          <Command.Group heading="Text-To-Speech (TTS)">
+            <Command.Input>
+              <Select.Base name='tts-voice'>
+                {
+                  tts.getVoices().map((voice) =>
+                    <Select.Option
+                      key={voice.voiceURI}
+                      value={voice.name}>
+                      {`${voice.name} - ${voice.lang}`}
+                    </Select.Option>
+                  )
+                }
+              </Select.Base>
+            </Command.Input>
+          </Command.Group>
 
           <Command.Group heading="Options">
             <Command.Item onSelect={() => setKeyboardEnabled(!keyboardEnabled)}>

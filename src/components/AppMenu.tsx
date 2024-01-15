@@ -8,6 +8,7 @@ import { useAudioSettingsStore, useKeyboardSettingsStore } from "~/utils/stores"
 import { useTheme } from "~/hooks/useTheme";
 import KotaLogo from "./KotaLogo";
 import RadixIcons from "./icons/RadixIcons";
+import { HiArchiveBox, HiBackspace, HiOutlineInboxStack, HiOutlineSquares2X2, HiSquare2Stack, HiSquares2X2, HiSquaresPlus } from "react-icons/hi2";
 
 export default function AppMenu() {
 
@@ -60,6 +61,13 @@ export default function AppMenu() {
             icon={<RadixIcons.Home />}
           >
             Home
+          </Menu.Item>
+          <Menu.Item
+            as={Link}
+            href="/blocks"
+            icon={<HiOutlineSquares2X2/>}
+          >
+            Blocks
           </Menu.Item>
           <Menu.Item
             as={Link}

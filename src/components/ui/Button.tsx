@@ -5,7 +5,7 @@ import type { NonDuplicateProps, VariantValue } from "~/utils/types";
 import styles from "./Button.module.scss"
 import ui from "./UI.module.scss"
 
-const ButtonVariantList = ["default", "cta", "passive", "none"] as const
+const ButtonVariantList = ["default", "cta", "passive", "no-bg", "none"] as const
 export type ButtonVariantValue = VariantValue<typeof ButtonVariantList>
 
 interface OwnProps {

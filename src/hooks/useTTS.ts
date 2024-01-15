@@ -2,19 +2,24 @@ import { useTTSSettingsStore } from "~/utils/stores";
 import tts, { type SpeakOptions } from "~/utils/tts";
 
 export default function useTTS(options?: SpeakOptions) {
-  const settings = useTTSSettingsStore(({
-    pitch,
-    rate,
-    volume,
-    enabled,
-    voice,
-  }) => ({ pitch, rate, volume, enabled, voice }))
+  const settings = useTTSSettingsStore();
 
-  const opts = { ...settings, ...options }
-
-  const speak = (text: string) => {
-    if (settings.enabled) tts.speak(text, opts)
+  if (options) {
+    switch (options.lang) {
+      case "en-US":
+        options.voiceId = settings.enVoiceId;
+        break;
+      case "ko-KR":
+        options.voiceId = settings.krVoiceId;
+        break;
+    }
   }
 
-  return speak
+  const opts = { ...settings, ...options };
+
+  const speak = (text: string, o?: SpeakOptions) => {
+    if (settings.enabled) tts.speak(text, {...opts, ...o});
+  };
+
+  return speak;
 }
